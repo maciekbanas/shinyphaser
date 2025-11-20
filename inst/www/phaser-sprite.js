@@ -88,6 +88,18 @@ function playAnimation(name, animName) {
   sprite.play(animName, true);
 }
 
+function playAnimationForDuration(name, animName, duration) {
+  const sprite = scene[name];
+  sprite.play(animName, true);
+  scene.time.delayedCall(duration, () => {
+    if (scene.anims.exists(name + "_idle")) {
+      sprite.play(name + "_idle", true);
+    } else {
+      sprite.anims.stop();
+    }
+  });
+}
+
 function setGravity(name, x, y) {
   const sprite = scene[name];
   sprite.body.setGravity(x, y);
@@ -106,6 +118,11 @@ function setVelocityY(name, x) {
 function setBounce(name, x) {
   const sprite = scene[name];
   sprite.setBounce(x);
+}
+
+function destroySprite(name) {
+  const sprite = scene[name];
+  sprite.destroy();
 }
 
 function addKeyControl(key) {

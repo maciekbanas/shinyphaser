@@ -170,6 +170,27 @@ function addOverlap(objectOneName, objectTwoName, inputId) {
   );
 }
 
+function areOverlap(objectOneName, objectTwoName, inputId) {
+  const objectOne = scene.children.getByName(objectOneName);
+  const objectTwo = scene.children.getByName(objectTwoName);
+  if (Phaser.Geom.Intersects.RectangleToRectangle(
+      objectOne.getBounds(),
+      objectTwo.getBounds()
+  )) {
+     Shiny.setInputValue(
+        inputId,
+        'true',
+        { priority: "event" }
+      );
+  } else {
+    Shiny.setInputValue(
+        inputId,
+        'false',
+        { priority: "event" }
+      );
+  }
+};
+
 function addOverlapEnd(objectOneName, objectTwoName, inputId) {
   const obj1 = scene.children.getByName(objectOneName);
   const obj2 = scene.children.getByName(objectTwoName);
