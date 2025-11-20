@@ -244,6 +244,18 @@ PhaserGame <- R6::R6Class(
        evt <- input[[input_id]]
        callback_fun(evt)
      })
+   },
+
+   #' @key A character, accepts Javascript key events (they need to align with
+   #'   event.code).
+   #' @action A function to be run after key is pressed.
+   add_control = function(key, action, input) {
+     event <- paste0(key, "_action")
+     js <- sprintf("addKeyControl('%s');", key)
+     send_js(private, js)
+     shiny::observeEvent(input[[event]], {
+       action()
+     })
    }
   ),
   private = list(
