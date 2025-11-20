@@ -42,9 +42,9 @@ Sprite <- R6::R6Class(
       Sys.sleep(0.1)
       js <- if (is.infinite(duration)) {
         sprintf(
-        "playAnimation('%s','%s');",
-        private$name, anim_name
-      )
+          "playAnimation('%s','%s');",
+          private$name, anim_name
+        )
       } else {
         sprintf(
           "playAnimationForDuration('%s','%s', %d);",
