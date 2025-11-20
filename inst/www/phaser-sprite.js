@@ -37,27 +37,6 @@ function addStaticSprite(name, url, x, y) {
   scene.load.start();
 }
 
-function moveSprite(name, dirX, dirY, speed, distance, addAnim) {
-  const spr = scene[name];
-
-  const endX = spr.x + dirX * distance;
-  const endY = spr.y + dirY * distance;
-  const duration = (distance / speed) * 1000;
-  scene.tweens.add({
-    targets: spr,
-    x: endX,
-    y: endY,
-    duration: duration,
-    ease: 'Linear',
-    onStart: () => {
-      if (scene.anims.exists(addAnim)) {
-        spr.anims.play(addAnim, true);
-      }
-    }
-  });
-
-}
-
 function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCount, frameRate) {
   if (!scene) {
     console.warn(`addSpriteAnimation("${name}", "${suffix}"): scene not ready`);
@@ -84,7 +63,6 @@ function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCou
 
 function playAnimation(name, animName) {
   const sprite = scene[name];
-  debugger;
   sprite.play(animName, true);
 }
 
