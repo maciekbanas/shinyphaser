@@ -10,8 +10,8 @@ server <- function(input, output, session) {
   game$set_shiny_session()
 
   game$add_image(
-    imageName = "sky",
-    imageUrl = "assets/bear_game/terrain/sky.png",
+    name = "sky",
+    url = "assets/bear_game/terrain/sky.png",
     x = 800,
     y = 300
   )
@@ -55,7 +55,7 @@ server <- function(input, output, session) {
     speed = 300
   )
   Sys.sleep(0.1)
-  bear$add_control(
+  game$add_control(
     "ArrowUp",
     action = function() {
       bear$move(
@@ -66,7 +66,7 @@ server <- function(input, output, session) {
     },
     input
   )
-  bear$add_control(
+  game$add_control(
     "Space",
     action = function() {
       bear$play_animation(
