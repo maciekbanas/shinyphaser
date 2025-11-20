@@ -68,13 +68,22 @@ server <- function(input, output, session) {
     "Space",
     action = function() {
       hero$play_animation("hero_attack", duration = 1e3)
-      are_overlap <- game$are_overlap(
+      are_overlap_skeleton <- game$are_overlap(
         object_one = "hero",
         object_two = "skeleton",
         input = input
       )
-      if (are_overlap()) {
+      Sys.sleep(0.1)
+      are_overlap_wizard <- game$are_overlap(
+        object_one = "hero",
+        object_two = "wizard",
+        input = input
+      )
+      if (are_overlap_skeleton()) {
         skeleton$destroy()
+      }
+      if (are_overlap_wizard()) {
+        show_wizard_window(game, input)
       }
     },
     input
@@ -172,14 +181,14 @@ server <- function(input, output, session) {
 
   talk_btn$click(
     event_fun = function(evt) {
-      show_wizard_window(game)
+      show_wizard_window(game, input)
     },
     input = input
   )
 }
 
-show_wizard_window <- function(game) {
-  game$add_rectangle(
+show_wizard_window <- function(game, input) {
+  redbox <- game$add_rectangle(
     name = "redbox",
     x = 700,
     y = 200,
