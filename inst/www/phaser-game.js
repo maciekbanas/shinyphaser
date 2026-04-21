@@ -3,6 +3,14 @@ let controlledSprite = null;
 
 window.GameBridge = window.GameBridge || {};
 GameBridge.playerControls = {};
+GameBridge.overlapEndWatchers = {};
+
+function playIfChanged(sprite, animKey) {
+  if (!sprite || !animKey) return;
+  if (!sprite.anims || sprite.anims.currentAnim?.key !== animKey) {
+    sprite.play(animKey, true);
+  }
+}
 
 function playTypeAnim(sprite, type, suffix) {
   const key1 = type + "_" + suffix;
@@ -46,23 +54,22 @@ function initPhaserGame(containerId, config) {
 
           sprite.body.setVelocity(0);
 
-          const { speed, directions } = opts;
-          const dir = directions;
+          const { speed, directionMap } = opts;
 
-          if (cursors.left.isDown && dir.includes("left")) {
+          if (cursors.left.isDown && directionMap.left) {
             sprite.body.setVelocityX(-speed);
-            sprite.anims.play(name + '_move_left', true);
-          } else if (cursors.right.isDown && dir.includes("right")) {
+            playIfChanged(sprite, name + '_move_left');
+          } else if (cursors.right.isDown && directionMap.right) {
             sprite.body.setVelocityX(speed);
-            sprite.anims.play(name + '_move_right', true);
-          } else if (cursors.up.isDown && dir.includes("up")) {
+            playIfChanged(sprite, name + '_move_right');
+          } else if (cursors.up.isDown && directionMap.up) {
             sprite.body.setVelocityY(-speed);
-            sprite.anims.play(name + '_move_up', true);
-          } else if (cursors.down.isDown && dir.includes("down")) {
+            playIfChanged(sprite, name + '_move_up');
+          } else if (cursors.down.isDown && directionMap.down) {
             sprite.body.setVelocityY(speed);
-            sprite.anims.play(name + '_move_down', true);
+            playIfChanged(sprite, name + '_move_down');
           } else {
-            sprite.anims.play(name + '_idle', true);
+            playIfChanged(sprite, name + '_idle');
           }
         });
   }
@@ -77,7 +84,15 @@ function setText(text, id) {
 }
 
 function addPlayerControls(name, directions, speed) {
-  GameBridge.playerControls[name] = { speed, directions };
+  GameBridge.playerControls[name] = {
+    speed,
+    directionMap: {
+      left: directions.includes("left"),
+      right: directions.includes("right"),
+      up: directions.includes("up"),
+      down: directions.includes("down")
+    }
+  };
 };
 
 function addMap(mapKey, mapUrl, tilesetUrls, tilesetNames, layerName) {
@@ -194,7 +209,11 @@ function areOverlap(objectOneName, objectTwoName, inputId) {
 function addOverlapEnd(objectOneName, objectTwoName, inputId) {
   const obj1 = scene.children.getByName(objectOneName);
   const obj2 = scene.children.getByName(objectTwoName);
+  if (!obj1 || !obj2) return;
 
+  const watcherKey = `${objectOneName}::${objectTwoName}::${inputId}`;
+  if (GameBridge.overlapEndWatchers[watcherKey]) return;
+  GameBridge.overlapEndWatchers[watcherKey] = true;
   let wasOverlapping = false;
 
   scene.events.on("update", () => {
