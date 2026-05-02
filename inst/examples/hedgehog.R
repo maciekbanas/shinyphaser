@@ -34,27 +34,23 @@ server <- function(input, output, session) {
   hedgehog$add_animation(
     suffix = "move_left",
     url = "assets/hedgehog/sprites/hedgehog_move_left_32.png",
-    frameWidth = 32, frameHeight = 32,
-    frameCount = 2, frameRate = 4
+    frameWidth = 32, frameHeight = 32, frameRate = 4
   )
   hedgehog$add_animation(
     suffix = "move_right",
     url = "assets/hedgehog/sprites/hedgehog_move_right_32.png",
-    frameWidth = 32, frameHeight = 32,
-    frameCount = 2, frameRate = 4
+    frameWidth = 32, frameHeight = 32, frameRate = 4
   )
 
   hedgehog$add_animation(
     suffix = "move_up",
     url = "assets/hedgehog/sprites/hedgehog_move_up_32.png",
-    frameWidth = 32, frameHeight = 32,
-    frameCount = 2, frameRate = 4
+    frameWidth = 32, frameHeight = 32, frameRate = 4
   )
   hedgehog$add_animation(
     suffix = "move_down",
     url = "assets/hedgehog/sprites/hedgehog_move_down_32.png",
-    frameWidth = 32, frameHeight = 32,
-    frameCount = 2, frameRate = 4
+    frameWidth = 32, frameHeight = 32, frameRate = 4
   )
 
   apples <- game$add_static_group(
