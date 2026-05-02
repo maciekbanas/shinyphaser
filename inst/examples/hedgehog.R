@@ -20,8 +20,8 @@ server <- function(input, output, session) {
     }
   }
 
-  player <- game$add_sprite(
-    name = "player",
+  hedgehog <- game$add_sprite(
+    name = "hedgehog",
     url = "assets/hedgehog/sprites/hedgehog_32.png",
     x = 120,
     y = 300,
@@ -29,6 +29,32 @@ server <- function(input, output, session) {
     frameHeight = 32,
     frameCount = 1,
     frameRate = 1
+  )
+
+  hedgehog$add_animation(
+    suffix = "move_left",
+    url = "assets/hedgehog/sprites/hedgehog_move_left_32.png",
+    frameWidth = 32, frameHeight = 32,
+    frameCount = 2, frameRate = 4
+  )
+  hedgehog$add_animation(
+    suffix = "move_right",
+    url = "assets/hedgehog/sprites/hedgehog_move_right_32.png",
+    frameWidth = 32, frameHeight = 32,
+    frameCount = 2, frameRate = 4
+  )
+
+  hedgehog$add_animation(
+    suffix = "move_up",
+    url = "assets/hedgehog/sprites/hedgehog_move_up_32.png",
+    frameWidth = 32, frameHeight = 32,
+    frameCount = 2, frameRate = 4
+  )
+  hedgehog$add_animation(
+    suffix = "move_down",
+    url = "assets/hedgehog/sprites/hedgehog_move_down_32.png",
+    frameWidth = 32, frameHeight = 32,
+    frameCount = 2, frameRate = 4
   )
 
   apples <- game$add_static_group(
@@ -47,7 +73,7 @@ server <- function(input, output, session) {
     y = 30
   )
 
-  player$add_player_controls(
+  hedgehog$add_player_controls(
     directions = c("left", "right", "up", "down"),
     speed = 250
   )
@@ -55,7 +81,7 @@ server <- function(input, output, session) {
   Sys.sleep(0.1)
 
   game$add_overlap(
-    object_one_name = "player",
+    object_one_name = "hedgehog",
     group_name = "apples",
     callback_fun = function(evt) {
       score <<- score + 1
