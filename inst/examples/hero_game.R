@@ -156,6 +156,7 @@ server <- function(input, output, session) {
     object_two = "wizard",
     callback_fun = function(evt) {
       talk_btn$hide()
+      wizard$play_animation("wizard_idle")
     },
     input = input
   )
