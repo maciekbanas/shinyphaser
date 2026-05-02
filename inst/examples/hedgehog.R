@@ -85,34 +85,34 @@ server <- function(input, output, session) {
 
     enemy <- game$add_sprite(
       name = paste0("attacker_", i),
-      url = "assets/hedgehog/sprites/hedgehog_move_right_32.png",
+      url = "assets/hedgehog/sprites/badger_left_50.png",
       x = spawn_point$x,
       y = spawn_point$y,
-      frameWidth = 32,
-      frameHeight = 32,
-      frameCount = 5,
-      frameRate = 6
+      frameWidth = 50,
+      frameHeight = 50,
+      frameCount = 1,
+      frameRate = 1
     )
 
     enemy$add_animation(
       suffix = "move_left",
-      url = "assets/hedgehog/sprites/hedgehog_move_left_32.png",
-      frameWidth = 32, frameHeight = 32, frameRate = 6
+      url = "assets/hedgehog/sprites/badger_left_50.png",
+      frameWidth = 50, frameHeight = 50, frameRate = 4
     )
     enemy$add_animation(
       suffix = "move_right",
-      url = "assets/hedgehog/sprites/hedgehog_move_right_32.png",
-      frameWidth = 32, frameHeight = 32, frameRate = 6
+      url = "assets/hedgehog/sprites/badger_right_50.png",
+      frameWidth = 50, frameHeight = 50, frameRate = 4
     )
     enemy$add_animation(
       suffix = "move_up",
-      url = "assets/hedgehog/sprites/hedgehog_move_up_32.png",
-      frameWidth = 32, frameHeight = 32, frameRate = 6
+      url = "assets/hedgehog/sprites/badger_right_50.png",
+      frameWidth = 50, frameHeight = 50, frameRate = 4
     )
     enemy$add_animation(
       suffix = "move_down",
-      url = "assets/hedgehog/sprites/hedgehog_move_down_32.png",
-      frameWidth = 32, frameHeight = 32, frameRate = 6
+      url = "assets/hedgehog/sprites/badger_left_50.png",
+      frameWidth = 50, frameHeight = 50, frameRate = 4
     )
 
     enemy
@@ -143,8 +143,8 @@ server <- function(input, output, session) {
       enemy$set_in_motion(
         dirX = dir[1],
         dirY = dir[2],
-        speed = sample(c(120, 160, 200), 1),
-        distance = sample(c(60, 90, 120, 150), 1),
+        speed = sample(c(30, 40, 50), 1),
+        distance = sample(c(80, 110, 120, 150), 1),
         lag = 0
       )
     }
