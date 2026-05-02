@@ -23,6 +23,8 @@ function playTypeAnim(sprite, type, suffix) {
 }
 
 function initPhaserGame(containerId, config) {
+  GameBridge.overlapEndWatchers = {};
+
   window.game = new Phaser.Game({
     type: Phaser.AUTO,
     width: config.width,
@@ -141,7 +143,8 @@ function addCollider(objectOneName, objectTwoName, inputId) {
         inputId,
         {
           name1: obj1.name, x1: obj1.x, y1: obj1.y,
-          name2: obj2.name, x2: obj2.x, y2: obj2.y
+          name2: obj2.name, x2: obj2.x, y2: obj2.y,
+          evt_nonce: Date.now() + Math.random()
         },
         { priority: "event" }
       );
@@ -159,7 +162,8 @@ function addGroupCollider(objectName, groupName, inputId) {
         inputId,
         {
           name1: obj1.name, x1: obj1.x, y1: obj1.y,
-          name2: obj2.name, x2: obj2.x, y2: obj2.y
+          name2: obj2.name, x2: obj2.x, y2: obj2.y,
+          evt_nonce: Date.now() + Math.random()
         },
         { priority: "event" }
       );
@@ -177,7 +181,8 @@ function addOverlap(objectOneName, objectTwoName, inputId) {
         inputId,
         {
           name1: obj1.name, x1: obj1.x, y1: obj1.y,
-          name2: obj2.name, x2: obj2.x, y2: obj2.y
+          name2: obj2.name, x2: obj2.x, y2: obj2.y,
+          evt_nonce: Date.now() + Math.random()
         },
         { priority: "event" }
       );
@@ -227,7 +232,8 @@ function addOverlapEnd(objectOneName, objectTwoName, inputId) {
         inputId,
         {
           name1: obj1.name, x1: obj1.x, y1: obj1.y,
-          name2: obj2.name, x2: obj2.x, y2: obj2.y
+          name2: obj2.name, x2: obj2.x, y2: obj2.y,
+          evt_nonce: Date.now() + Math.random()
         },
         { priority: "event" }
       );
@@ -247,7 +253,8 @@ function addGroupOverlap(objectName, groupName, inputId) {
         inputId,
         {
           name1: obj1.name, x1: obj1.x, y1: obj1.y,
-          name2: obj2.name, x2: obj2.x, y2: obj2.y
+          name2: obj2.name, x2: obj2.x, y2: obj2.y,
+          evt_nonce: Date.now() + Math.random()
         },
         { priority: "event" }
       );
