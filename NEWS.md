@@ -1,3 +1,7 @@
-# phaserR (development version)
+# phaserR 0.0.0.9019
 
-First release.
+- Hedgehog example now shows a level-passed modal dialog after collecting all apples; clicking `OK` closes the app.
+
+# phaserR 0.0.0.9018
+
+- First release.

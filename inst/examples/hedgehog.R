@@ -78,6 +78,11 @@ server <- function(input, output, session) {
 
   Sys.sleep(0.1)
 
+  shiny::observeEvent(input$close_game, {
+    shiny::removeModal()
+    shiny::stopApp()
+  })
+
   game$add_overlap(
     object_one_name = "hedgehog",
     group_name = "apples",
@@ -88,9 +93,14 @@ server <- function(input, output, session) {
 
       if (!level_passed && score >= total_apples) {
         level_passed <<- TRUE
-        shiny::showNotification("Level passed! All apples collected.",
-                                type = "message",
-                                duration = NULL)
+        shiny::showModal(
+          shiny::modalDialog(
+            title = "Level passed!",
+            "Congratulations! You collected all apples.",
+            footer = shiny::actionButton("close_game", "OK"),
+            easyClose = FALSE
+          )
+        )
       }
     },
     input = input
