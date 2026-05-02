@@ -9,25 +9,22 @@ server <- function(input, output, session) {
 
   game$set_shiny_session()
 
-  game$add_image(
-    name = "sky",
-    url = "assets/bear_game/terrain/sky.png",
-    x = 500,
-    y = 250
+  grass <- game$add_static_group(
+    name = "grass",
+    url = "assets/bear_game/terrain/grass.png"
   )
 
-  grass <- game$add_static_sprite(
-    name = "grass",
-    url = "assets/bear_game/terrain/grass.png",
-    x = 500,
-    y = 560
-  )
+  for (x in seq(100, 900, by = 200)) {
+    for (y in seq(80, 560, by = 160)) {
+      grass$create(x = x, y = y)
+    }
+  }
 
   player <- game$add_sprite(
     name = "player",
     url = "assets/rpg_game/sprites/hero_idle.png",
     x = 120,
-    y = 470,
+    y = 300,
     frameWidth = 100,
     frameHeight = 100,
     frameCount = 1,
@@ -39,9 +36,9 @@ server <- function(input, output, session) {
     url = "assets/bear_game/perks/apple.png"
   )
 
-  apples$create(x = 350, y = 520)
-  apples$create(x = 550, y = 520)
-  apples$create(x = 750, y = 520)
+  apples$create(x = 250, y = 120)
+  apples$create(x = 820, y = 180)
+  apples$create(x = 700, y = 460)
 
   score_text <- game$add_text(
     text = "score: 0",
@@ -50,17 +47,12 @@ server <- function(input, output, session) {
     y = 30
   )
 
-  Sys.sleep(0.1)
-
-  game$add_collider(
-    object_one_name = "player",
-    object_two_name = "grass"
-  )
-
   player$add_player_controls(
-    directions = c("left", "right"),
+    directions = c("left", "right", "up", "down"),
     speed = 250
   )
+
+  Sys.sleep(0.1)
 
   game$add_overlap(
     object_one_name = "player",
