@@ -7,7 +7,6 @@ ui <- game$ui()
 server <- function(input, output, session) {
   score <- 0
   level_passed <- FALSE
-  total_apples <- 3
 
   game$set_shiny_session()
 
@@ -60,9 +59,16 @@ server <- function(input, output, session) {
     url = "assets/hedgehog/perks/apple_20.png"
   )
 
-  apples$create(x = 250, y = 120)
-  apples$create(x = 820, y = 180)
-  apples$create(x = 700, y = 460)
+  apple_positions <- data.frame(
+    x = c(250, 820, 700, 140, 480, 900),
+    y = c(120, 180, 460, 520, 300, 80)
+  )
+
+  for (i in seq_len(nrow(apple_positions))) {
+    apples$create(x = apple_positions$x[i], y = apple_positions$y[i])
+  }
+
+  total_apples <- nrow(apple_positions)
 
   score_text <- game$add_text(
     text = "score: 0",
