@@ -2,12 +2,14 @@ devtools::load_all()
 
 game <- PhaserGame$new(width = 1000, height = 600)
 
-ui <- game$ui()
+ui <- shiny::tagList(
+  shinyalert::useShinyalert(),
+  game$ui()
+)
 
 server <- function(input, output, session) {
   score <- 0
   level_passed <- FALSE
-  level_complete <- shiny::reactiveVal(FALSE)
 
   game$set_shiny_session()
 
@@ -85,22 +87,6 @@ server <- function(input, output, session) {
 
   Sys.sleep(0.1)
 
-  shiny::observeEvent(level_complete(), {
-    shiny::showModal(
-      shiny::modalDialog(
-        title = "Level passed!",
-        "Congratulations! You collected all apples.",
-        footer = shiny::actionButton("close_game", "OK"),
-        easyClose = FALSE
-      )
-    )
-  }, ignoreInit = TRUE)
-
-  shiny::observeEvent(input$close_game, {
-    shiny::removeModal()
-    shiny::stopApp()
-  })
-
   game$add_overlap(
     object_one_name = "hedgehog",
     group_name = "apples",
@@ -111,7 +97,16 @@ server <- function(input, output, session) {
 
       if (!level_passed && score >= total_apples) {
         level_passed <<- TRUE
-        level_complete(TRUE)
+        shinyalert::shinyalert(
+          title = "Level passed!",
+          text = "Congratulations! You collected all apples.",
+          type = "success",
+          closeOnClickOutside = FALSE,
+          showCancelButton = FALSE,
+          callbackR = function(value) {
+            shiny::stopApp()
+          }
+        )
       }
     },
     input = input

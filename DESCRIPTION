@@ -1,6 +1,6 @@
 Package: phaserR
 Title: An R Interface to the Phaser.js Game Framework
-Version: 0.0.0.9019
+Version: 0.0.0.9020
 Authors@R: 
     person(
       given = "Maciej", 
@@ -22,5 +22,6 @@ Imports:
   rlang,
   shiny
 Suggests: 
+  shinyalert,
   testthat (>= 3.0.0)
 Config/testthat/edition: 3
