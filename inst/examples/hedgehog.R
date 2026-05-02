@@ -11,7 +11,7 @@ server <- function(input, output, session) {
 
   grass <- game$add_static_group(
     name = "grass",
-    url = "assets/bear_game/terrain/grass.png"
+    url = "assets/hedgehog/terrain/grass.png"
   )
 
   for (x in seq(100, 900, by = 200)) {
@@ -22,7 +22,7 @@ server <- function(input, output, session) {
 
   player <- game$add_sprite(
     name = "player",
-    url = "assets/rpg_game/sprites/hero_idle.png",
+    url = "assets/hedgehog/sprites/hedgehog.png",
     x = 120,
     y = 300,
     frameWidth = 100,
@@ -33,7 +33,7 @@ server <- function(input, output, session) {
 
   apples <- game$add_static_group(
     name = "apples",
-    url = "assets/bear_game/perks/apple.png"
+    url = "assets/hedgehog/perks/apple.png"
   )
 
   apples$create(x = 250, y = 120)
