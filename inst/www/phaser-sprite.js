@@ -1,6 +1,24 @@
 window.GameBridge = window.GameBridge || {};
 GameBridge.keyControlHandlers = GameBridge.keyControlHandlers || {};
 
+
+function resolveFrameCount(textureKey, frameWidth, frameHeight, frameCount) {
+  if (Number.isFinite(frameCount) && frameCount > 0) {
+    return Math.floor(frameCount);
+  }
+
+  const texture = scene.textures.get(textureKey);
+  const sourceImage = texture && texture.source && texture.source[0] && texture.source[0].image;
+  if (!sourceImage || frameWidth <= 0 || frameHeight <= 0) {
+    return 1;
+  }
+
+  const cols = Math.floor(sourceImage.width / frameWidth);
+  const rows = Math.floor(sourceImage.height / frameHeight);
+  const detected = cols * rows;
+  return detected > 0 ? detected : 1;
+}
+
 function addSprite(name, url, x, y, frameWidth, frameHeight, frameCount, frameRate) {
   scene.load.spritesheet(name, url, {
     frameWidth: frameWidth,
@@ -8,11 +26,13 @@ function addSprite(name, url, x, y, frameWidth, frameHeight, frameCount, frameRa
   });
 
   scene.load.once('complete', () => {
+    const resolvedFrameCount = resolveFrameCount(name, frameWidth, frameHeight, frameCount);
+
     scene.anims.create({
       key: name + '_idle',
       frames: scene.anims.generateFrameNumbers(name, {
         start: 0,
-        end: frameCount - 1
+        end: resolvedFrameCount - 1
       }),
       frameRate: frameRate,
       repeat: -1
@@ -51,11 +71,13 @@ function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCou
     frameHeight: frameHeight
   });
   scene.load.once("complete", () => {
+    const resolvedFrameCount = resolveFrameCount(animKey, frameWidth, frameHeight, frameCount);
+
     scene.anims.create({
       key: animKey,
       frames: scene.anims.generateFrameNumbers(animKey, {
         start: 0,
-        end: frameCount - 1
+        end: resolvedFrameCount - 1
       }),
       frameRate: frameRate,
       repeat: -1
