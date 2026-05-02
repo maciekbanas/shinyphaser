@@ -1,3 +1,6 @@
+window.GameBridge = window.GameBridge || {};
+GameBridge.keyControlHandlers = GameBridge.keyControlHandlers || {};
+
 function addSprite(name, url, x, y, frameWidth, frameHeight, frameCount, frameRate) {
   scene.load.spritesheet(name, url, {
     frameWidth: frameWidth,
@@ -104,7 +107,11 @@ function destroySprite(name) {
 }
 
 function addKeyControl(key) {
-  document.addEventListener('keydown', function(e) {
+  if (GameBridge.keyControlHandlers[key]) {
+    return;
+  }
+
+  const handler = function(e) {
     const inputId = key + "_action";
     if (key == e.code) {
       Shiny.setInputValue(
@@ -113,7 +120,10 @@ function addKeyControl(key) {
         { priority: "event" }
       );
     }
-  });
+  };
+
+  GameBridge.keyControlHandlers[key] = handler;
+  document.addEventListener('keydown', handler);
 }
 
 function setSpriteInMotion(name, dirX, dirY, speed, distance) {

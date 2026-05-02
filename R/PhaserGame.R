@@ -206,7 +206,7 @@ PhaserGame <- R6::R6Class(
       shiny::observeEvent(input[[input_id]], {
         evt <- input[[input_id]]
         callback_fun(evt)
-      }, ignoreNULL = TRUE, once = TRUE)
+      }, ignoreNULL = TRUE)
     },
 
    are_overlap = function(object_one_name,
