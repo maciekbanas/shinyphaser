@@ -7,6 +7,7 @@ ui <- game$ui()
 server <- function(input, output, session) {
   score <- 0
   level_passed <- FALSE
+  level_complete <- shiny::reactiveVal(FALSE)
 
   game$set_shiny_session()
 
@@ -84,6 +85,17 @@ server <- function(input, output, session) {
 
   Sys.sleep(0.1)
 
+  shiny::observeEvent(level_complete(), {
+    shiny::showModal(
+      shiny::modalDialog(
+        title = "Level passed!",
+        "Congratulations! You collected all apples.",
+        footer = shiny::actionButton("close_game", "OK"),
+        easyClose = FALSE
+      )
+    )
+  }, ignoreInit = TRUE)
+
   shiny::observeEvent(input$close_game, {
     shiny::removeModal()
     shiny::stopApp()
@@ -99,14 +111,7 @@ server <- function(input, output, session) {
 
       if (!level_passed && score >= total_apples) {
         level_passed <<- TRUE
-        shiny::showModal(
-          shiny::modalDialog(
-            title = "Level passed!",
-            "Congratulations! You collected all apples.",
-            footer = shiny::actionButton("close_game", "OK"),
-            easyClose = FALSE
-          )
-        )
+        level_complete(TRUE)
       }
     },
     input = input
