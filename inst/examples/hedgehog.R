@@ -27,8 +27,8 @@ server <- function(input, output, session) {
     y = 300,
     frameWidth = 32,
     frameHeight = 32,
-    frameCount = 1,
-    frameRate = 1
+    frameCount = 5,
+    frameRate = 6
   )
 
   hedgehog$add_animation(
