@@ -7,16 +7,20 @@ Sprite <- R6::R6Class(
     #' @param y Numeric. Y-coordinate in pixels.
     #' @param frameWidth Numeric. Width of each frame.
     #' @param frameHeight Numeric. Height of each frame.
-    #' @param frameCount Numeric. Number of frames in the spritesheet.
+    #' @param frameCount Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
     #' @param frameRate Numeric. Frames per second for the idle animation.
     initialize = function(name, url, x, y,
-                          frameWidth, frameHeight, frameCount, frameRate,
+                          frameWidth, frameHeight, frameCount = NULL, frameRate,
                           session = getDefaultReactiveDomain()) {
       private$session <- session
       private$name <- name
       js <- sprintf(
-        "addSprite('%s', '%s', %d, %d, %d, %d, %d, %d);",
-        name, url, x, y, frameWidth, frameHeight, frameCount, frameRate
+        "addSprite(%s, %s, %d, %d, %d, %d, %s, %d);",
+        jsonlite::toJSON(name, auto_unbox = TRUE),
+        jsonlite::toJSON(url, auto_unbox = TRUE),
+        x, y, frameWidth, frameHeight,
+        if (is.null(frameCount)) "null" else as.character(as.integer(frameCount)),
+        frameRate
       )
       send_js(private, js)
     },
@@ -25,15 +29,20 @@ Sprite <- R6::R6Class(
     #' @param url Character. URL or path to the spritesheet.
     #' @param frameWidth Numeric. Width of each frame.
     #' @param frameHeight Numeric. Height of each frame.
-    #' @param frameCount Numeric. Number of frames in the spritesheet.
+    #' @param frameCount Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
     #' @param frameRate Numeric. Frames per second for playback.
     #' @return Invisible; sends a custom message to the client.
     add_animation = function(suffix, url,
                              frameWidth, frameHeight,
-                             frameCount, frameRate) {
+                             frameCount = NULL, frameRate) {
       js <- sprintf(
-        "addSpriteAnimation('%s','%s','%s',%d,%d,%d,%d);",
-        private$name, suffix, url, frameWidth, frameHeight, frameCount, frameRate
+        "addSpriteAnimation(%s,%s,%s,%d,%d,%s,%d);",
+        jsonlite::toJSON(private$name, auto_unbox = TRUE),
+        jsonlite::toJSON(suffix, auto_unbox = TRUE),
+        jsonlite::toJSON(url, auto_unbox = TRUE),
+        frameWidth, frameHeight,
+        if (is.null(frameCount)) "null" else as.character(as.integer(frameCount)),
+        frameRate
       )
       send_js(private, js)
     },
