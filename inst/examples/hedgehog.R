@@ -6,6 +6,8 @@ ui <- game$ui()
 
 server <- function(input, output, session) {
   score <- 0
+  level_passed <- FALSE
+  total_apples <- 3
 
   game$set_shiny_session()
 
@@ -83,6 +85,13 @@ server <- function(input, output, session) {
       score <<- score + 1
       score_text$set(paste0("score: ", score))
       apples$disable(evt)
+
+      if (!level_passed && score >= total_apples) {
+        level_passed <<- TRUE
+        shiny::showNotification("Level passed! All apples collected.",
+                                type = "message",
+                                duration = NULL)
+      }
     },
     input = input
   )
