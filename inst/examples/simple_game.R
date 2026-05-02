@@ -57,20 +57,9 @@ server <- function(input, output, session) {
     object_two_name = "grass"
   )
 
-  game$add_control(
-    "ArrowLeft",
-    action = function() {
-      player$move(dirX = -1, dirY = 0, speed = 300, distance = 60)
-    },
-    input
-  )
-
-  game$add_control(
-    "ArrowRight",
-    action = function() {
-      player$move(dirX = 1, dirY = 0, speed = 300, distance = 60)
-    },
-    input
+  player$add_player_controls(
+    directions = c("left", "right"),
+    speed = 250
   )
 
   game$add_overlap(
