@@ -1,3 +1,6 @@
+window.GameBridge = window.GameBridge || {};
+GameBridge.keyControlHandlers = GameBridge.keyControlHandlers || {};
+
 function addSprite(name, url, x, y, frameWidth, frameHeight, frameCount, frameRate) {
   scene.load.spritesheet(name, url, {
     frameWidth: frameWidth,
@@ -37,27 +40,6 @@ function addStaticSprite(name, url, x, y) {
   scene.load.start();
 }
 
-function moveSprite(name, dirX, dirY, speed, distance, addAnim) {
-  const spr = scene[name];
-
-  const endX = spr.x + dirX * distance;
-  const endY = spr.y + dirY * distance;
-  const duration = (distance / speed) * 1000;
-  scene.tweens.add({
-    targets: spr,
-    x: endX,
-    y: endY,
-    duration: duration,
-    ease: 'Linear',
-    onStart: () => {
-      if (scene.anims.exists(addAnim)) {
-        spr.anims.play(addAnim, true);
-      }
-    }
-  });
-
-}
-
 function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCount, frameRate) {
   if (!scene) {
     console.warn(`addSpriteAnimation("${name}", "${suffix}"): scene not ready`);
@@ -84,8 +66,19 @@ function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCou
 
 function playAnimation(name, animName) {
   const sprite = scene[name];
-  debugger;
   sprite.play(animName, true);
+}
+
+function playAnimationForDuration(name, animName, duration) {
+  const sprite = scene[name];
+  sprite.play(animName, true);
+  scene.time.delayedCall(duration, () => {
+    if (scene.anims.exists(name + "_idle")) {
+      sprite.play(name + "_idle", true);
+    } else {
+      sprite.anims.stop();
+    }
+  });
 }
 
 function setGravity(name, x, y) {
@@ -108,8 +101,17 @@ function setBounce(name, x) {
   sprite.setBounce(x);
 }
 
+function destroySprite(name) {
+  const sprite = scene[name];
+  sprite.destroy();
+}
+
 function addKeyControl(key) {
-  document.addEventListener('keydown', function(e) {
+  if (GameBridge.keyControlHandlers[key]) {
+    return;
+  }
+
+  const handler = function(e) {
     const inputId = key + "_action";
     if (key == e.code) {
       Shiny.setInputValue(
@@ -118,7 +120,10 @@ function addKeyControl(key) {
         { priority: "event" }
       );
     }
-  });
+  };
+
+  GameBridge.keyControlHandlers[key] = handler;
+  document.addEventListener('keydown', handler);
 }
 
 function setSpriteInMotion(name, dirX, dirY, speed, distance) {

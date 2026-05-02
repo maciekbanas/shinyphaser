@@ -209,6 +209,22 @@ PhaserGame <- R6::R6Class(
       }, ignoreNULL = TRUE)
     },
 
+   are_overlap = function(object_one_name,
+                          object_two_name,
+                          input) {
+     input_id <- paste(
+       c("are_overlap", object_one_name,
+         object_two_name %||% group_name),
+       collapse = "_"
+     )
+     js <- sprintf("areOverlap('%s','%s','%s')",
+            object_one_name, object_two_name, input_id)
+     send_js(private, js)
+     shiny::eventReactive(input[[input_id]], {
+       input[[input_id]]
+     })
+    },
+
    add_overlap_end = function(object_one_name,
                               object_two_name = NULL,
                               group_name = NULL,
@@ -227,6 +243,18 @@ PhaserGame <- R6::R6Class(
      shiny::observeEvent(input[[input_id]], {
        evt <- input[[input_id]]
        callback_fun(evt)
+     })
+   },
+
+   #' @key A character, accepts Javascript key events (they need to align with
+   #'   event.code).
+   #' @action A function to be run after key is pressed.
+   add_control = function(key, action, input) {
+     event <- paste0(key, "_action")
+     js <- sprintf("addKeyControl('%s');", key)
+     send_js(private, js)
+     shiny::observeEvent(input[[event]], {
+       action()
      })
    }
   ),

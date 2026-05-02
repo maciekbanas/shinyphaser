@@ -38,12 +38,19 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
-    play_animation = function(anim_name) {
+    play_animation = function(anim_name, duration = Inf) {
       Sys.sleep(0.1)
-      js <- sprintf(
-        "playAnimation('%s','%s');",
-        private$name, anim_name
-      )
+      js <- if (is.infinite(duration)) {
+        sprintf(
+          "playAnimation('%s','%s');",
+          private$name, anim_name
+        )
+      } else {
+        sprintf(
+          "playAnimationForDuration('%s','%s', %d);",
+          private$name, anim_name, duration
+        )
+      }
       send_js(private, js)
     },
 
@@ -55,18 +62,6 @@ Sprite <- R6::R6Class(
       js_dirs <- jsonlite::toJSON(directions, auto_unbox = TRUE)
       js <- sprintf("addPlayerControls('%s', %s, %d);", private$name, js_dirs, speed)
       send_js(private, js)
-    },
-
-    #' @key A character, accepts Javascript key events (they need to align with
-    #'   event.code).
-    #' @action A function to be run after key is pressed.
-    add_control = function(key, action, input) {
-      event <- paste0(key, "_action")
-      js <- sprintf("addKeyControl('%s');", key)
-      send_js(private, js)
-      shiny::observeEvent(input[[event]], {
-        action()
-      })
     },
 
     set_velocity_x = function(x = 100) {
@@ -95,13 +90,9 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
-    #' @param dirX Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).
-    #' @param dirY Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).
-    #' @param speed Numeric. Speed in pixels/second.
-    #' @param distance Numeric. Distance in pixels to travel before stopping.
-    move = function(dirX = 0, dirY = 0, speed, distance) {
-      js <- sprintf("moveSprite('%s', %d, %d, %d, %d);",
-                    private$name, dirX, dirY, speed, distance)
+    destroy = function() {
+      js <- sprintf("destroySprite('%s');",
+                    private$name)
       send_js(private, js)
     },
 

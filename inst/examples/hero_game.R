@@ -9,6 +9,8 @@ ui <- shiny::tagList(
 
 server <- function(input, output, session) {
 
+  life_points <- 100
+
   game$set_shiny_session()
 
   game$add_image(
@@ -54,6 +56,46 @@ server <- function(input, output, session) {
     frameWidth = 100, frameHeight = 100,
     frameCount = 4, frameRate = 8
   )
+  hero$add_animation(
+    suffix = "attack",
+    url = "assets/hero_game/sprites/hero_attack.png",
+    frameWidth = 100, frameHeight = 100,
+    frameCount = 2, frameRate = 4
+  )
+  Sys.sleep(0.1)
+
+  game$add_control(
+    "Space",
+    action = function() {
+      hero$play_animation("hero_attack", duration = 1e3)
+      are_overlap_skeleton <- game$are_overlap(
+        object_one = "hero",
+        object_two = "skeleton",
+        input = input
+      )
+      Sys.sleep(0.1)
+      are_overlap_wizard <- game$are_overlap(
+        object_one = "hero",
+        object_two = "wizard",
+        input = input
+      )
+      if (are_overlap_skeleton()) {
+        skeleton$destroy()
+      }
+      if (are_overlap_wizard()) {
+        show_wizard_window(game, input)
+      }
+    },
+    input
+  )
+
+  life_points_text <- game$add_text(
+    text = "life: 100/100",
+    id = "life_points",
+    x = 1200,
+    y = 50
+  )
+
   wizard <- game$add_sprite(
     name = "wizard",
     url = "assets/hero_game/sprites/wizard_idle.png",
@@ -64,6 +106,32 @@ server <- function(input, output, session) {
     frameCount = 17,
     frameRate = 4
   )
+  wizard$add_animation(
+    suffix = "talk",
+    url = "assets/hero_game/sprites/wizard_talk.png",
+    frameWidth = 100, frameHeight = 100,
+    frameCount = 2, frameRate = 4
+  )
+
+  skeleton <- game$add_sprite(
+    name = "skeleton",
+    url = "assets/hero_game/sprites/skeleton_idle.png",
+    x = 700,
+    y = 500,
+    frameWidth = 100,
+    frameHeight = 100,
+    frameCount = 8,
+    frameRate = 4
+  )
+
+  skeleton$add_animation(
+    suffix = "attack",
+    url = "assets/hero_game/sprites/skeleton_attack.png",
+    frameWidth = 100, frameHeight = 100,
+    frameCount = 2, frameRate = 4
+  )
+
+  Sys.sleep(0.1)
   talk_btn <- game$add_rectangle(
     name = "talk_btn",
     y = 600,
@@ -79,6 +147,7 @@ server <- function(input, output, session) {
     object_two = "wizard",
     callback_fun = function(evt) {
       talk_btn$show()
+      wizard$play_animation("wizard_talk", 2e3)
     },
     input = input
   )
@@ -87,21 +156,42 @@ server <- function(input, output, session) {
     object_two = "wizard",
     callback_fun = function(evt) {
       talk_btn$hide()
+      wizard$play_animation("wizard_idle")
     },
     input = input
   )
+
+  game$add_overlap(
+    object_one = "hero",
+    object_two = "skeleton",
+    callback_fun = function(evt) {
+      print("Skeleton attacks you!")
+      skeleton$play_animation("skeleton_attack")
+    },
+    input = input
+  )
+  game$add_overlap_end(
+    object_one = "hero",
+    object_two = "skeleton",
+    callback_fun = function(evt) {
+      print("Skeleton stops.")
+      skeleton$play_animation("skeleton_idle")
+    },
+    input = input
+  )
+
   talk_btn$click(
     event_fun = function(evt) {
-      show_wizard_window(game)
+      show_wizard_window(game, input)
     },
     input = input
   )
 }
 
-show_wizard_window <- function(game) {
-  game$add_rectangle(
+show_wizard_window <- function(game, input) {
+  redbox <- game$add_rectangle(
     name = "redbox",
-    x = 500,
+    x = 700,
     y = 200,
     width = 400,
     height = 400,
@@ -109,4 +199,4 @@ show_wizard_window <- function(game) {
   )
 }
 
-shinyApp(ui, server)
+shiny::shinyApp(ui, server)
