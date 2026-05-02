@@ -22,18 +22,18 @@ server <- function(input, output, session) {
 
   player <- game$add_sprite(
     name = "player",
-    url = "assets/hedgehog/sprites/hedgehog.png",
+    url = "assets/hedgehog/sprites/hedgehog_32.png",
     x = 120,
     y = 300,
-    frameWidth = 100,
-    frameHeight = 100,
+    frameWidth = 32,
+    frameHeight = 32,
     frameCount = 1,
     frameRate = 1
   )
 
   apples <- game$add_static_group(
     name = "apples",
-    url = "assets/hedgehog/perks/apple.png"
+    url = "assets/hedgehog/perks/apple_20.png"
   )
 
   apples$create(x = 250, y = 120)
