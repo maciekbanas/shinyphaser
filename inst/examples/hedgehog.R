@@ -2,10 +2,14 @@ devtools::load_all()
 
 game <- PhaserGame$new(width = 1000, height = 600)
 
-ui <- game$ui()
+ui <- shiny::tagList(
+  shinyalert::useShinyalert(),
+  game$ui()
+)
 
 server <- function(input, output, session) {
   score <- 0
+  level_passed <- FALSE
 
   game$set_shiny_session()
 
@@ -58,9 +62,16 @@ server <- function(input, output, session) {
     url = "assets/hedgehog/perks/apple_20.png"
   )
 
-  apples$create(x = 250, y = 120)
-  apples$create(x = 820, y = 180)
-  apples$create(x = 700, y = 460)
+  apple_positions <- data.frame(
+    x = c(250, 820, 700, 140, 480, 900),
+    y = c(120, 180, 460, 520, 300, 80)
+  )
+
+  for (i in seq_len(nrow(apple_positions))) {
+    apples$create(x = apple_positions$x[i], y = apple_positions$y[i])
+  }
+
+  total_apples <- nrow(apple_positions)
 
   score_text <- game$add_text(
     text = "score: 0",
@@ -83,6 +94,20 @@ server <- function(input, output, session) {
       score <<- score + 1
       score_text$set(paste0("score: ", score))
       apples$disable(evt)
+
+      if (!level_passed && score >= total_apples) {
+        level_passed <<- TRUE
+        shinyalert::shinyalert(
+          title = "Level passed!",
+          text = "Congratulations! You collected all apples.",
+          type = "success",
+          closeOnClickOutside = FALSE,
+          showCancelButton = FALSE,
+          callbackR = function(value) {
+            shiny::stopApp()
+          }
+        )
+      }
     },
     input = input
   )
