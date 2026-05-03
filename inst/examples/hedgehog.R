@@ -70,9 +70,8 @@ server <- function(input, output, session) {
   for (i in seq_len(nrow(level_config[["1"]]$apples))) {
     apples_lvl1$create(x = level_config[["1"]]$apples$x[i], y = level_config[["1"]]$apples$y[i])
   }
-  for (i in seq_len(nrow(level_config[["2"]]$apples))) {
-    apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
-  }
+
+  level2_initialized <- FALSE
 
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
@@ -108,7 +107,7 @@ server <- function(input, output, session) {
   }
 
   attackers_lvl1 <- create_attackers("attacker_lvl1_", level_config[["1"]]$attackers)
-  attackers_lvl2 <- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
+  attackers_lvl2 <- list()
 
   level_completed <- c(`1` = FALSE, `2` = FALSE)
 
@@ -117,6 +116,7 @@ server <- function(input, output, session) {
     if (game_over) return(invisible(NULL))
 
     attackers <- if (current_level == 1) attackers_lvl1 else attackers_lvl2
+    if (length(attackers) == 0) return(invisible(NULL))
     cfg <- level_config[[as.character(current_level)]]
 
     for (enemy in attackers) {
@@ -139,17 +139,30 @@ server <- function(input, output, session) {
       if (current_level == 1) {
         shinyalert::shinyalert(
           title = "Level 1 passed!",
-          text = "Super! Kliknij OK, aby przejść do trudniejszego levelu 2.",
+          text = "Great! Click OK to move to the harder level 2.",
           type = "success",
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
           callbackR = function(value) {
+            if (!level2_initialized) {
+              for (i in seq_len(nrow(level_config[["2"]]$apples))) {
+                apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
+              }
+
+              attackers_lvl2 <<- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
+              for (i in seq_along(attackers_lvl2)) {
+                add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
+              }
+
+              level2_initialized <<- TRUE
+            }
+
             score <<- 0
             current_level <<- 2
             score_text$set("Level 2 score: 0")
             shinyalert::shinyalert(
               title = "Level 2",
-              text = "Poziom 2: więcej jabłek i więcej borsuków. Powodzenia!",
+              text = "Level 2 has more apples and more badgers. Good luck!",
               type = "info"
             )
           }
@@ -157,7 +170,7 @@ server <- function(input, output, session) {
       } else {
         shinyalert::shinyalert(
           title = "You won!",
-          text = "Brawo! Ukończyłeś oba levele i zebrałeś wszystkie jabłka.",
+          text = "Great job! You finished both levels and collected all apples.",
           type = "success",
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
@@ -191,7 +204,7 @@ server <- function(input, output, session) {
       game_over <<- TRUE
       shinyalert::shinyalert(
         title = "Game over",
-        text = "Borsuk dopadł jeża. Spróbuj ponownie!",
+        text = "A badger caught the hedgehog. Try again!",
         type = "error",
         closeOnClickOutside = FALSE,
         showCancelButton = FALSE,
@@ -203,11 +216,10 @@ server <- function(input, output, session) {
   }
 
   for (i in seq_along(attackers_lvl1)) add_enemy_overlap(paste0("attacker_lvl1_", i), 1)
-  for (i in seq_along(attackers_lvl2)) add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
 
   shinyalert::shinyalert(
-    title = "Witaj w grze!",
-    text = "Zbieraj jabłka i uważaj na borsuki. Ukończ oba levele, żeby wygrać!",
+    title = "Welcome to the game!",
+    text = "Collect apples and avoid badgers. Finish both levels to win!",
     type = "info",
     closeOnClickOutside = FALSE,
     showCancelButton = FALSE
