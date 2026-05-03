@@ -73,6 +73,29 @@ server <- function(input, output, session) {
 
   level2_initialized <- FALSE
 
+  start_level_two <- function() {
+    if (!level2_initialized) {
+      for (i in seq_len(nrow(level_config[["2"]]$apples))) {
+        apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
+      }
+
+      attackers_lvl2 <<- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
+      for (i in seq_along(attackers_lvl2)) {
+        add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
+      }
+
+      level2_initialized <<- TRUE
+    }
+
+    score <<- 0
+    current_level <<- 2
+    attackers_lvl1 <<- list()
+    score_text$set("Level 2 score: 0")
+
+    # Rebind controls after modal close to ensure keyboard input works on level 2.
+    hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
+  }
+
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
   create_attackers <- function(prefix, n) {
@@ -148,22 +171,7 @@ server <- function(input, output, session) {
               enemy$destroy()
             }
 
-            if (!level2_initialized) {
-              for (i in seq_len(nrow(level_config[["2"]]$apples))) {
-                apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
-              }
-
-              attackers_lvl2 <<- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
-              for (i in seq_along(attackers_lvl2)) {
-                add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
-              }
-
-              level2_initialized <<- TRUE
-            }
-
-            score <<- 0
-            current_level <<- 2
-            score_text$set("Level 2 score: 0")
+            start_level_two()
             shinyalert::shinyalert(
               title = "Level 2",
               text = "Level 2 has more apples and more badgers. Good luck!",
