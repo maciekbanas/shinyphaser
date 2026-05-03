@@ -144,6 +144,10 @@ server <- function(input, output, session) {
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
           callbackR = function(value) {
+            for (enemy in attackers_lvl1) {
+              enemy$destroy()
+            }
+
             if (!level2_initialized) {
               for (i in seq_len(nrow(level_config[["2"]]$apples))) {
                 apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
