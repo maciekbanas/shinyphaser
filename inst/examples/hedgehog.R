@@ -12,6 +12,9 @@ server <- function(input, output, session) {
   state$score <- 0
   state$current_level <- 1
   state$game_over <- FALSE
+  state$level2_initialized <- FALSE
+  state$attackers_lvl1 <- list()
+  state$attackers_lvl2 <- list()
 
   level_config <- list(
     `1` = list(
@@ -72,25 +75,24 @@ server <- function(input, output, session) {
     apples_lvl1$create(x = level_config[["1"]]$apples$x[i], y = level_config[["1"]]$apples$y[i])
   }
 
-  level2_initialized <- FALSE
 
   start_level_two <- function() {
-    if (!level2_initialized) {
+    if (!state$level2_initialized) {
       for (i in seq_len(nrow(level_config[["2"]]$apples))) {
         apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
       }
 
-      attackers_lvl2 <<- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
-      for (i in seq_along(attackers_lvl2)) {
+      state$attackers_lvl2 <- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
+      for (i in seq_along(state$attackers_lvl2)) {
         add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
       }
 
-      level2_initialized <<- TRUE
+      state$level2_initialized <- TRUE
     }
 
     state$score <- 0
     state$current_level <- 2
-    attackers_lvl1 <<- list()
+    state$attackers_lvl1 <- list()
     score_text$set("Level 2 score: 0")
 
     # Rebind controls after modal close to ensure keyboard input works on level 2.
@@ -130,8 +132,7 @@ server <- function(input, output, session) {
     })
   }
 
-  attackers_lvl1 <- create_attackers("attacker_lvl1_", level_config[["1"]]$attackers)
-  attackers_lvl2 <- list()
+  state$attackers_lvl1 <- create_attackers("attacker_lvl1_", level_config[["1"]]$attackers)
 
   level_completed <- c(`1` = FALSE, `2` = FALSE)
 
@@ -139,7 +140,7 @@ server <- function(input, output, session) {
     shiny::invalidateLater(700, session)
     if (state$game_over) return(invisible(NULL))
 
-    attackers <- if (state$current_level == 1) attackers_lvl1 else attackers_lvl2
+    attackers <- if (state$current_level == 1) state$attackers_lvl1 else state$attackers_lvl2
     if (length(attackers) == 0) return(invisible(NULL))
     cfg <- level_config[[as.character(state$current_level)]]
 
@@ -158,7 +159,7 @@ server <- function(input, output, session) {
   check_level_complete <- function() {
     total <- nrow(level_config[[as.character(state$current_level)]]$apples)
     if (!level_completed[[as.character(state$current_level)]] && state$score >= total) {
-      level_completed[[as.character(state$current_level)]] <<- TRUE
+      level_completed[[as.character(state$current_level)]] <- TRUE
 
       if (state$current_level == 1) {
         shinyalert::shinyalert(
@@ -168,7 +169,7 @@ server <- function(input, output, session) {
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
           callbackR = function(value) {
-            for (enemy in attackers_lvl1) {
+            for (enemy in state$attackers_lvl1) {
               enemy$destroy()
             }
 
@@ -224,7 +225,7 @@ server <- function(input, output, session) {
     }, input = input)
   }
 
-  for (i in seq_along(attackers_lvl1)) add_enemy_overlap(paste0("attacker_lvl1_", i), 1)
+  for (i in seq_along(state$attackers_lvl1)) add_enemy_overlap(paste0("attacker_lvl1_", i), 1)
 
   shinyalert::shinyalert(
     title = "Welcome to the game!",
