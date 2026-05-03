@@ -8,9 +8,10 @@ ui <- shiny::tagList(
 )
 
 server <- function(input, output, session) {
-  score <- 0
-  current_level <- 1
-  game_over <- FALSE
+  state <- new.env(parent = emptyenv())
+  state$score <- 0
+  state$current_level <- 1
+  state$game_over <- FALSE
 
   level_config <- list(
     `1` = list(
@@ -87,8 +88,8 @@ server <- function(input, output, session) {
       level2_initialized <<- TRUE
     }
 
-    score <<- 0
-    current_level <<- 2
+    state$score <- 0
+    state$current_level <- 2
     attackers_lvl1 <<- list()
     score_text$set("Level 2 score: 0")
 
@@ -136,11 +137,11 @@ server <- function(input, output, session) {
 
   shiny::observe({
     shiny::invalidateLater(700, session)
-    if (game_over) return(invisible(NULL))
+    if (state$game_over) return(invisible(NULL))
 
-    attackers <- if (current_level == 1) attackers_lvl1 else attackers_lvl2
+    attackers <- if (state$current_level == 1) attackers_lvl1 else attackers_lvl2
     if (length(attackers) == 0) return(invisible(NULL))
-    cfg <- level_config[[as.character(current_level)]]
+    cfg <- level_config[[as.character(state$current_level)]]
 
     for (enemy in attackers) {
       dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
@@ -155,14 +156,14 @@ server <- function(input, output, session) {
   })
 
   check_level_complete <- function() {
-    total <- nrow(level_config[[as.character(current_level)]]$apples)
-    if (!level_completed[[as.character(current_level)]] && score >= total) {
-      level_completed[[as.character(current_level)]] <<- TRUE
+    total <- nrow(level_config[[as.character(state$current_level)]]$apples)
+    if (!level_completed[[as.character(state$current_level)]] && state$score >= total) {
+      level_completed[[as.character(state$current_level)]] <<- TRUE
 
-      if (current_level == 1) {
+      if (state$current_level == 1) {
         shinyalert::shinyalert(
           title = "Level 1 passed!",
-          text = "Great! Click OK to move to the harder level 2.",
+          text = "Great! Click OK to start harder level 2 (more apples, more badgers).",
           type = "success",
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
@@ -172,11 +173,7 @@ server <- function(input, output, session) {
             }
 
             start_level_two()
-            shinyalert::shinyalert(
-              title = "Level 2",
-              text = "Level 2 has more apples and more badgers. Good luck!",
-              type = "info"
-            )
+
           }
         )
       } else {
@@ -195,25 +192,25 @@ server <- function(input, output, session) {
   }
 
   game$add_overlap("hedgehog", group_name = "apples_lvl1", callback_fun = function(evt) {
-    if (current_level != 1 || game_over) return(invisible(NULL))
-    score <<- score + 1
-    score_text$set(paste0("Level 1 score: ", score))
+    if (state$current_level != 1 || state$game_over) return(invisible(NULL))
+    state$score <- state$score + 1
+    score_text$set(paste0("Level 1 score: ", state$score))
     apples_lvl1$disable(evt)
     check_level_complete()
   }, input = input)
 
   game$add_overlap("hedgehog", group_name = "apples_lvl2", callback_fun = function(evt) {
-    if (current_level != 2 || game_over) return(invisible(NULL))
-    score <<- score + 1
-    score_text$set(paste0("Level 2 score: ", score))
+    if (state$current_level != 2 || state$game_over) return(invisible(NULL))
+    state$score <- state$score + 1
+    score_text$set(paste0("Level 2 score: ", state$score))
     apples_lvl2$disable(evt)
     check_level_complete()
   }, input = input)
 
   add_enemy_overlap <- function(name, level_id) {
     game$add_overlap("hedgehog", object_two_name = name, callback_fun = function(evt) {
-      if (game_over || current_level != level_id) return(invisible(NULL))
-      game_over <<- TRUE
+      if (state$game_over || state$current_level != level_id) return(invisible(NULL))
+      state$game_over <- TRUE
       shinyalert::shinyalert(
         title = "Game over",
         text = "A badger caught the hedgehog. Try again!",
