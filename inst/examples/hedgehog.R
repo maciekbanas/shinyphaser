@@ -12,6 +12,7 @@ server <- function(input, output, session) {
   state$score <- 0
   state$current_level <- 1
   state$game_over <- FALSE
+  state$started <- FALSE
   state$level2_initialized <- FALSE
   state$attackers_lvl1 <- list()
   state$attackers_lvl2 <- list()
@@ -66,7 +67,6 @@ server <- function(input, output, session) {
   hedgehog$add_animation(suffix = "move_up", url = "assets/hedgehog/sprites/hedgehog_move_up_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
   hedgehog$add_animation(suffix = "move_down", url = "assets/hedgehog/sprites/hedgehog_move_down_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
 
-  hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
 
   apples_lvl1 <- game$add_static_group(name = "apples_lvl1", url = "assets/hedgehog/perks/apple_20.png")
   apples_lvl2 <- game$add_static_group(name = "apples_lvl2", url = "assets/hedgehog/perks/apple_20.png")
@@ -138,7 +138,7 @@ server <- function(input, output, session) {
 
   shiny::observe({
     shiny::invalidateLater(700, session)
-    if (state$game_over) return(invisible(NULL))
+    if (state$game_over || !state$started) return(invisible(NULL))
 
     attackers <- if (state$current_level == 1) state$attackers_lvl1 else state$attackers_lvl2
     if (length(attackers) == 0) return(invisible(NULL))
@@ -169,6 +169,7 @@ server <- function(input, output, session) {
           closeOnClickOutside = FALSE,
           showCancelButton = FALSE,
           callbackR = function(value) {
+            if (!isTRUE(value)) return(invisible(NULL))
             for (enemy in state$attackers_lvl1) {
               enemy$destroy()
             }
@@ -193,7 +194,7 @@ server <- function(input, output, session) {
   }
 
   game$add_overlap("hedgehog", group_name = "apples_lvl1", callback_fun = function(evt) {
-    if (state$current_level != 1 || state$game_over) return(invisible(NULL))
+    if (!state$started || state$current_level != 1 || state$game_over) return(invisible(NULL))
     state$score <- state$score + 1
     score_text$set(paste0("Level 1 score: ", state$score))
     apples_lvl1$disable(evt)
@@ -201,7 +202,7 @@ server <- function(input, output, session) {
   }, input = input)
 
   game$add_overlap("hedgehog", group_name = "apples_lvl2", callback_fun = function(evt) {
-    if (state$current_level != 2 || state$game_over) return(invisible(NULL))
+    if (!state$started || state$current_level != 2 || state$game_over) return(invisible(NULL))
     state$score <- state$score + 1
     score_text$set(paste0("Level 2 score: ", state$score))
     apples_lvl2$disable(evt)
@@ -210,7 +211,7 @@ server <- function(input, output, session) {
 
   add_enemy_overlap <- function(name, level_id) {
     game$add_overlap("hedgehog", object_two_name = name, callback_fun = function(evt) {
-      if (state$game_over || state$current_level != level_id) return(invisible(NULL))
+      if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
       state$game_over <- TRUE
       shinyalert::shinyalert(
         title = "Game over",
@@ -229,10 +230,15 @@ server <- function(input, output, session) {
 
   shinyalert::shinyalert(
     title = "Welcome to the game!",
-    text = "Collect apples and avoid badgers. Finish both levels to win!",
+    text = "Collect apples and avoid badgers. Finish both levels to win! Click OK to start.",
     type = "info",
     closeOnClickOutside = FALSE,
-    showCancelButton = FALSE
+    showCancelButton = FALSE,
+    callbackR = function(value) {
+      if (!isTRUE(value)) return(invisible(NULL))
+      state$started <- TRUE
+      hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
+    }
   )
 }
 
