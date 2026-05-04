@@ -86,13 +86,25 @@ function addSpriteAnimation(name, suffix, url, frameWidth, frameHeight, frameCou
   scene.load.start();
 }
 
+
+function getSpriteByName(name, caller) {
+  const sprite = scene && scene[name];
+  if (!sprite) {
+    console.warn(`${caller}: sprite "${name}" not found`);
+    return null;
+  }
+  return sprite;
+}
+
 function playAnimation(name, animName) {
-  const sprite = scene[name];
+  const sprite = getSpriteByName(name, "playAnimation()");
+  if (!sprite) return;
   sprite.play(animName, true);
 }
 
 function playAnimationForDuration(name, animName, duration) {
-  const sprite = scene[name];
+  const sprite = getSpriteByName(name, "playAnimationForDuration()");
+  if (!sprite) return;
   sprite.play(animName, true);
   scene.time.delayedCall(duration, () => {
     if (scene.anims.exists(name + "_idle")) {
@@ -124,7 +136,8 @@ function setBounce(name, x) {
 }
 
 function destroySprite(name) {
-  const sprite = scene[name];
+  const sprite = getSpriteByName(name, "destroySprite()");
+  if (!sprite) return;
   sprite.destroy();
 }
 
@@ -176,6 +189,7 @@ function setSpriteInMotion(name, dirX, dirY, speed, distance) {
       duration: duration,
       ease: 'Linear',
       onStart: () => {
+        if (!sprite || !sprite.active || !sprite.play) return;
         if (dirX < 0 && scene.anims.exists(name + "_move_left")) {
           sprite.play(name + "_move_left", true);
         } else if (dirX > 0 && scene.anims.exists(name + "_move_right")) {
@@ -187,6 +201,7 @@ function setSpriteInMotion(name, dirX, dirY, speed, distance) {
         }
       },
       onComplete: () => {
+        if (!sprite || !sprite.active) return;
         playTypeAnim(sprite, name, "idle");
       }
     });
