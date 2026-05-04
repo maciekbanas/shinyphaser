@@ -103,13 +103,14 @@ server <- function(input, output, session) {
             type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
             callbackR = function(value) {
               for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
-              state$score <- 0
-              state$current_level <- level_id + 1
-              score_text$set(paste0("Level ", state$current_level, " score: 0"))
-
-              if (is.null(state$levels[[as.character(state$current_level)]])) {
-                state$levels[[as.character(state$current_level)]] <- init_level(state$current_level)
+              next_level <- level_id + 1
+              if (is.null(state$levels[[as.character(next_level)]])) {
+                state$levels[[as.character(next_level)]] <- init_level(next_level)
               }
+
+              state$score <- 0
+              state$current_level <- next_level
+              score_text$set(paste0("Level ", state$current_level, " score: 0"))
             }
           )
         } else {
@@ -131,7 +132,9 @@ server <- function(input, output, session) {
     shiny::invalidateLater(700, session)
     if (state$game_over || !state$started) return(invisible(NULL))
 
-    attackers <- state$levels[[as.character(state$current_level)]]$attackers
+    current <- state$levels[[as.character(state$current_level)]]
+    if (is.null(current) || length(current$attackers) == 0) return(invisible(NULL))
+    attackers <- current$attackers
     cfg <- level_config[[as.character(state$current_level)]]
     for (enemy in attackers) {
       dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
