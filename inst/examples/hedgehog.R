@@ -13,7 +13,6 @@ server <- function(input, output, session) {
   state$current_level <- 1
   state$game_over <- FALSE
   state$started <- FALSE
-  state$level2_initialized <- FALSE
   state$attackers_lvl1 <- list()
   state$attackers_lvl2 <- list()
 
@@ -75,30 +74,6 @@ server <- function(input, output, session) {
     apples_lvl1$create(x = level_config[["1"]]$apples$x[i], y = level_config[["1"]]$apples$y[i])
   }
 
-
-  start_level_two <- function() {
-    if (!state$level2_initialized) {
-      for (i in seq_len(nrow(level_config[["2"]]$apples))) {
-        apples_lvl2$create(x = level_config[["2"]]$apples$x[i], y = level_config[["2"]]$apples$y[i])
-      }
-
-      state$attackers_lvl2 <- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
-      for (i in seq_along(state$attackers_lvl2)) {
-        add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
-      }
-
-      state$level2_initialized <- TRUE
-    }
-
-    state$score <- 0
-    state$current_level <- 2
-    state$attackers_lvl1 <- list()
-    score_text$set("Level 2 score: 0")
-
-    # Rebind controls after modal close to ensure keyboard input works on level 2.
-    hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
-  }
-
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
   create_attackers <- function(prefix, n) {
@@ -133,6 +108,7 @@ server <- function(input, output, session) {
   }
 
   state$attackers_lvl1 <- create_attackers("attacker_lvl1_", level_config[["1"]]$attackers)
+  state$attackers_lvl2 <- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
 
   level_completed <- c(`1` = FALSE, `2` = FALSE)
 
@@ -174,7 +150,9 @@ server <- function(input, output, session) {
               enemy$destroy()
             }
 
-            start_level_two()
+            state$score <- 0
+            state$current_level <- 2
+            score_text$set("Level 2 score: 0")
 
           }
         )
@@ -227,6 +205,7 @@ server <- function(input, output, session) {
   }
 
   for (i in seq_along(state$attackers_lvl1)) add_enemy_overlap(paste0("attacker_lvl1_", i), 1)
+  for (i in seq_along(state$attackers_lvl2)) add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
 
   shinyalert::shinyalert(
     title = "Welcome to the game!",
