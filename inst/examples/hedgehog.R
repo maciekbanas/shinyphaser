@@ -2,6 +2,8 @@ devtools::load_all()
 
 game <- PhaserGame$new(width = 1000, height = 600)
 
+moves <- c("move_left", "move_right", "move_up", "move_down")
+
 ui <- shiny::tagList(
   shinyalert::useShinyalert(),
   game$ui()
@@ -39,11 +41,16 @@ server <- function(input, output, session) {
     name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",
     x = 120, y = 300, frameWidth = 32, frameHeight = 32, frameCount = 5, frameRate = 6
   )
-  hedgehog$add_animation(suffix = "move_left", url = "assets/hedgehog/sprites/hedgehog_move_left_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
-  hedgehog$add_animation(suffix = "move_right", url = "assets/hedgehog/sprites/hedgehog_move_right_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
-  hedgehog$add_animation(suffix = "move_up", url = "assets/hedgehog/sprites/hedgehog_move_up_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
-  hedgehog$add_animation(suffix = "move_down", url = "assets/hedgehog/sprites/hedgehog_move_down_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
-
+  purrr::walk(moves, function(move) {
+    hedgehog$add_animation(
+      suffix = move, 
+      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"), 
+      frameWidth = 32, 
+      frameHeight = 32, 
+      frameRate = 4
+    )
+  })  
+  
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
   create_attackers <- function(prefix, n) {
@@ -58,13 +65,24 @@ server <- function(input, output, session) {
       )
 
       enemy <- game$add_sprite(
-        name = paste0(prefix, i), url = "assets/hedgehog/sprites/badger_left_50.png",
-        x = spawn_point$x, y = spawn_point$y, frameWidth = 50, frameHeight = 50, frameCount = 1, frameRate = 1
+        name = paste0(prefix, i), 
+        url = "assets/hedgehog/sprites/badger_move_left_50.png",
+        x = spawn_point$x, 
+        y = spawn_point$y, 
+        frameWidth = 50, 
+        frameHeight = 50, 
+        frameCount = 1, 
+        frameRate = 1
       )
-      enemy$add_animation(suffix = "move_left", url = "assets/hedgehog/sprites/badger_left_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
-      enemy$add_animation(suffix = "move_right", url = "assets/hedgehog/sprites/badger_right_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
-      enemy$add_animation(suffix = "move_up", url = "assets/hedgehog/sprites/badger_right_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
-      enemy$add_animation(suffix = "move_down", url = "assets/hedgehog/sprites/badger_left_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
+      purrr::walk(moves, function(move) {
+        enemy$add_animation(
+          suffix = move, 
+          url = paste0("assets/hedgehog/sprites/badger_", move, "_50.png"), 
+          frameWidth = 50,
+          frameHeight = 50, 
+          frameRate = 4
+        )
+      })
       enemy
     })
   }
@@ -147,7 +165,13 @@ server <- function(input, output, session) {
     cfg <- level_config[[as.character(state$current_level)]]
     for (enemy in attackers) {
       dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
-      enemy$set_in_motion(dirX = dir[1], dirY = dir[2], speed = sample(cfg$speed, 1), distance = sample(cfg$distance, 1), lag = 0)
+      enemy$set_in_motion(
+        dirX = dir[1], 
+        dirY = dir[2], 
+        speed = sample(cfg$speed, 1), 
+        distance = sample(cfg$distance, 1), 
+        lag = 0
+      )
     }
   })  
 }
