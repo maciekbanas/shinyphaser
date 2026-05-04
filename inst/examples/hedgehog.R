@@ -82,6 +82,15 @@ server <- function(input, output, session) {
   }
 
   init_level <- function(level_id) {
+    shinyalert::shinyalert(
+      title = paste0("Welcome to level", level_id, "!"),
+      text = "Collect apples and avoid badgers. Finish all levels to win! Click OK to start.",
+      type = "info", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+      callbackR = function(value) {
+        state$started <- TRUE
+        hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
+      }
+    )
     cfg <- level_config[[as.character(level_id)]]
     apples_group <- game$add_static_group(name = paste0("apples_lvl", level_id), url = "assets/hedgehog/perks/apple_20.png")
     for (i in seq_len(nrow(cfg$apples))) apples_group$create(x = cfg$apples$x[i], y = cfg$apples$y[i])
@@ -107,7 +116,7 @@ server <- function(input, output, session) {
               if (is.null(state$levels[[as.character(next_level)]])) {
                 state$levels[[as.character(next_level)]] <- init_level(next_level)
               }
-
+              state$started <- FALSE
               state$score <- 0
               state$current_level <- next_level
               score_text$set(paste0("Level ", state$current_level, " score: 0"))
@@ -140,17 +149,7 @@ server <- function(input, output, session) {
       dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
       enemy$set_in_motion(dirX = dir[1], dirY = dir[2], speed = sample(cfg$speed, 1), distance = sample(cfg$distance, 1), lag = 0)
     }
-  })
-
-  shinyalert::shinyalert(
-    title = "Welcome to the game!",
-    text = "Collect apples and avoid badgers. Finish all levels to win! Click OK to start.",
-    type = "info", closeOnClickOutside = FALSE, showCancelButton = FALSE,
-    callbackR = function(value) {
-      state$started <- TRUE
-      hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
-    }
-  )
+  })  
 }
 
 shiny::shinyApp(ui, server)
