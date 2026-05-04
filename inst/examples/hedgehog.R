@@ -13,24 +13,17 @@ server <- function(input, output, session) {
   state$current_level <- 1
   state$game_over <- FALSE
   state$started <- FALSE
-  state$attackers_lvl1 <- list()
-  state$attackers_lvl2 <- list()
+  state$levels <- list()
 
   level_config <- list(
     `1` = list(
-      apples = data.frame(
-        x = c(250, 820, 700, 140, 480, 900),
-        y = c(120, 180, 460, 520, 300, 80)
-      ),
+      apples = data.frame(x = c(250, 820, 700, 140, 480, 900), y = c(120, 180, 460, 520, 300, 80)),
       attackers = 4,
       speed = c(30, 40, 50),
       distance = c(80, 110, 120, 150)
     ),
     `2` = list(
-      apples = data.frame(
-        x = c(120, 220, 340, 480, 620, 760, 860, 930, 520),
-        y = c(90, 520, 200, 430, 100, 510, 260, 430, 300)
-      ),
+      apples = data.frame(x = c(120, 220, 340, 480, 620, 760, 860, 930, 520), y = c(90, 520, 200, 430, 100, 510, 260, 430, 300)),
       attackers = 7,
       speed = c(45, 55, 65, 75),
       distance = c(100, 130, 150, 180)
@@ -39,40 +32,17 @@ server <- function(input, output, session) {
 
   game$set_shiny_session()
 
-  grass <- game$add_static_group(
-    name = "grass",
-    url = "assets/hedgehog/terrain/grass.png"
-  )
-
-  for (x in seq(100, 900, by = 200)) {
-    for (y in seq(80, 560, by = 160)) {
-      grass$create(x = x, y = y)
-    }
-  }
+  grass <- game$add_static_group(name = "grass", url = "assets/hedgehog/terrain/grass.png")
+  for (x in seq(100, 900, by = 200)) for (y in seq(80, 560, by = 160)) grass$create(x = x, y = y)
 
   hedgehog <- game$add_sprite(
-    name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
-    x = 120,
-    y = 300,
-    frameWidth = 32,
-    frameHeight = 32,
-    frameCount = 5,
-    frameRate = 6
+    name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",
+    x = 120, y = 300, frameWidth = 32, frameHeight = 32, frameCount = 5, frameRate = 6
   )
-
   hedgehog$add_animation(suffix = "move_left", url = "assets/hedgehog/sprites/hedgehog_move_left_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
   hedgehog$add_animation(suffix = "move_right", url = "assets/hedgehog/sprites/hedgehog_move_right_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
   hedgehog$add_animation(suffix = "move_up", url = "assets/hedgehog/sprites/hedgehog_move_up_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
   hedgehog$add_animation(suffix = "move_down", url = "assets/hedgehog/sprites/hedgehog_move_down_32.png", frameWidth = 32, frameHeight = 32, frameRate = 4)
-
-
-  apples_lvl1 <- game$add_static_group(name = "apples_lvl1", url = "assets/hedgehog/perks/apple_20.png")
-  apples_lvl2 <- game$add_static_group(name = "apples_lvl2", url = "assets/hedgehog/perks/apple_20.png")
-
-  for (i in seq_len(nrow(level_config[["1"]]$apples))) {
-    apples_lvl1$create(x = level_config[["1"]]$apples$x[i], y = level_config[["1"]]$apples$y[i])
-  }
 
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
@@ -88,133 +58,92 @@ server <- function(input, output, session) {
       )
 
       enemy <- game$add_sprite(
-        name = paste0(prefix, i),
-        url = "assets/hedgehog/sprites/badger_left_50.png",
-        x = spawn_point$x,
-        y = spawn_point$y,
-        frameWidth = 50,
-        frameHeight = 50,
-        frameCount = 1,
-        frameRate = 1
+        name = paste0(prefix, i), url = "assets/hedgehog/sprites/badger_left_50.png",
+        x = spawn_point$x, y = spawn_point$y, frameWidth = 50, frameHeight = 50, frameCount = 1, frameRate = 1
       )
-
       enemy$add_animation(suffix = "move_left", url = "assets/hedgehog/sprites/badger_left_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
       enemy$add_animation(suffix = "move_right", url = "assets/hedgehog/sprites/badger_right_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
       enemy$add_animation(suffix = "move_up", url = "assets/hedgehog/sprites/badger_right_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
       enemy$add_animation(suffix = "move_down", url = "assets/hedgehog/sprites/badger_left_50.png", frameWidth = 50, frameHeight = 50, frameRate = 4)
-
       enemy
     })
   }
-
-  state$attackers_lvl1 <- create_attackers("attacker_lvl1_", level_config[["1"]]$attackers)
-  state$attackers_lvl2 <- create_attackers("attacker_lvl2_", level_config[["2"]]$attackers)
-
-  level_completed <- c(`1` = FALSE, `2` = FALSE)
-
-  shiny::observe({
-    shiny::invalidateLater(700, session)
-    if (state$game_over || !state$started) return(invisible(NULL))
-
-    attackers <- if (state$current_level == 1) state$attackers_lvl1 else state$attackers_lvl2
-    if (length(attackers) == 0) return(invisible(NULL))
-    cfg <- level_config[[as.character(state$current_level)]]
-
-    for (enemy in attackers) {
-      dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
-      enemy$set_in_motion(
-        dirX = dir[1],
-        dirY = dir[2],
-        speed = sample(cfg$speed, 1),
-        distance = sample(cfg$distance, 1),
-        lag = 0
-      )
-    }
-  })
-
-  check_level_complete <- function() {
-    total <- nrow(level_config[[as.character(state$current_level)]]$apples)
-    if (!level_completed[[as.character(state$current_level)]] && state$score >= total) {
-      level_completed[[as.character(state$current_level)]] <- TRUE
-
-      if (state$current_level == 1) {
-        shinyalert::shinyalert(
-          title = "Level 1 passed!",
-          text = "Great! Click OK to start harder level 2 (more apples, more badgers).",
-          type = "success",
-          closeOnClickOutside = FALSE,
-          showCancelButton = FALSE,
-          callbackR = function(value) {
-            if (!isTRUE(value)) return(invisible(NULL))
-            for (enemy in state$attackers_lvl1) {
-              enemy$destroy()
-            }
-
-            state$score <- 0
-            state$current_level <- 2
-            score_text$set("Level 2 score: 0")
-
-          }
-        )
-      } else {
-        shinyalert::shinyalert(
-          title = "You won!",
-          text = "Great job! You finished both levels and collected all apples.",
-          type = "success",
-          closeOnClickOutside = FALSE,
-          showCancelButton = FALSE,
-          callbackR = function(value) {
-            shiny::stopApp()
-          }
-        )
-      }
-    }
-  }
-
-  game$add_overlap("hedgehog", group_name = "apples_lvl1", callback_fun = function(evt) {
-    if (!state$started || state$current_level != 1 || state$game_over) return(invisible(NULL))
-    state$score <- state$score + 1
-    score_text$set(paste0("Level 1 score: ", state$score))
-    apples_lvl1$disable(evt)
-    check_level_complete()
-  }, input = input)
-
-  game$add_overlap("hedgehog", group_name = "apples_lvl2", callback_fun = function(evt) {
-    if (!state$started || state$current_level != 2 || state$game_over) return(invisible(NULL))
-    state$score <- state$score + 1
-    score_text$set(paste0("Level 2 score: ", state$score))
-    apples_lvl2$disable(evt)
-    check_level_complete()
-  }, input = input)
 
   add_enemy_overlap <- function(name, level_id) {
     game$add_overlap("hedgehog", object_two_name = name, callback_fun = function(evt) {
       if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
       state$game_over <- TRUE
       shinyalert::shinyalert(
-        title = "Game over",
-        text = "A badger caught the hedgehog. Try again!",
-        type = "error",
-        closeOnClickOutside = FALSE,
-        showCancelButton = FALSE,
-        callbackR = function(value) {
-          shiny::stopApp()
-        }
+        title = "Game over", text = "A badger caught the hedgehog. Try again!", type = "error",
+        closeOnClickOutside = FALSE, showCancelButton = FALSE,
+        callbackR = function(value) shiny::stopApp()
       )
     }, input = input)
   }
 
-  for (i in seq_along(state$attackers_lvl1)) add_enemy_overlap(paste0("attacker_lvl1_", i), 1)
-  for (i in seq_along(state$attackers_lvl2)) add_enemy_overlap(paste0("attacker_lvl2_", i), 2)
+  init_level <- function(level_id) {
+    cfg <- level_config[[as.character(level_id)]]
+    apples_group <- game$add_static_group(name = paste0("apples_lvl", level_id), url = "assets/hedgehog/perks/apple_20.png")
+    for (i in seq_len(nrow(cfg$apples))) apples_group$create(x = cfg$apples$x[i], y = cfg$apples$y[i])
+
+    attackers <- create_attackers(paste0("attacker_lvl", level_id, "_"), cfg$attackers)
+    for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id)
+
+    game$add_overlap("hedgehog", group_name = paste0("apples_lvl", level_id), callback_fun = function(evt) {
+      if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
+      state$score <- state$score + 1
+      score_text$set(paste0("Level ", level_id, " score: ", state$score))
+      apples_group$disable(evt)
+
+      if (state$score >= nrow(cfg$apples)) {
+        if (level_id < length(level_config)) {
+          shinyalert::shinyalert(
+            title = paste("Level", level_id, "passed!"),
+            text = paste("Great! Click OK to move to level", level_id + 1, "."),
+            type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+            callbackR = function(value) {
+              for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
+              state$score <- 0
+              state$current_level <- level_id + 1
+              score_text$set(paste0("Level ", state$current_level, " score: 0"))
+
+              if (is.null(state$levels[[as.character(state$current_level)]])) {
+                state$levels[[as.character(state$current_level)]] <- init_level(state$current_level)
+              }
+            }
+          )
+        } else {
+          shinyalert::shinyalert(
+            title = "You won!", text = "Great job! You finished all levels and collected all apples.",
+            type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+            callbackR = function(value) shiny::stopApp()
+          )
+        }
+      }
+    }, input = input)
+
+    list(apples = apples_group, attackers = attackers)
+  }
+
+  state$levels[["1"]] <- init_level(1)
+
+  shiny::observe({
+    shiny::invalidateLater(700, session)
+    if (state$game_over || !state$started) return(invisible(NULL))
+
+    attackers <- state$levels[[as.character(state$current_level)]]$attackers
+    cfg <- level_config[[as.character(state$current_level)]]
+    for (enemy in attackers) {
+      dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
+      enemy$set_in_motion(dirX = dir[1], dirY = dir[2], speed = sample(cfg$speed, 1), distance = sample(cfg$distance, 1), lag = 0)
+    }
+  })
 
   shinyalert::shinyalert(
     title = "Welcome to the game!",
-    text = "Collect apples and avoid badgers. Finish both levels to win! Click OK to start.",
-    type = "info",
-    closeOnClickOutside = FALSE,
-    showCancelButton = FALSE,
+    text = "Collect apples and avoid badgers. Finish all levels to win! Click OK to start.",
+    type = "info", closeOnClickOutside = FALSE, showCancelButton = FALSE,
     callbackR = function(value) {
-      if (!isTRUE(value)) return(invisible(NULL))
       state$started <- TRUE
       hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
     }
