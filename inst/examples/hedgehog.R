@@ -21,14 +21,23 @@ server <- function(input, output, session) {
     `1` = list(
       apples = data.frame(x = c(250, 820, 700, 140, 480, 900), y = c(120, 180, 460, 520, 300, 80)),
       attackers = 4,
+      enemy_name = "badger",
       speed = c(30, 40, 50),
       distance = c(80, 110, 120, 150)
     ),
     `2` = list(
       apples = data.frame(x = c(120, 220, 340, 480, 620, 760, 860, 930, 520), y = c(90, 520, 200, 430, 100, 510, 260, 430, 300)),
       attackers = 7,
+      enemy_name = "badger",
       speed = c(45, 55, 65, 75),
       distance = c(100, 130, 150, 180)
+    ),
+    `3` = list(
+      apples = data.frame(x = c(80, 180, 300, 420, 560, 700, 820, 940, 260, 640, 520), y = c(80, 240, 120, 500, 280, 460, 160, 340, 540, 90, 380)),
+      attackers = 9,
+      enemy_name = "fox",
+      speed = c(80, 95, 110, 125),
+      distance = c(120, 150, 190, 220)
     )
   )
 
@@ -53,7 +62,7 @@ server <- function(input, output, session) {
   
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
-  create_attackers <- function(prefix, n) {
+  create_attackers <- function(prefix, n, enemy_name) {
     lapply(seq_len(n), function(i) {
       spawn_side <- sample(c("left", "right", "top", "bottom"), 1)
       spawn_point <- switch(
@@ -66,7 +75,7 @@ server <- function(input, output, session) {
 
       enemy <- game$add_sprite(
         name = paste0(prefix, i), 
-        url = "assets/hedgehog/sprites/badger_move_left_50.png",
+        url = paste0("assets/hedgehog/sprites/", enemy_name, "_move_left_50.png"),
         x = spawn_point$x, 
         y = spawn_point$y, 
         frameWidth = 50, 
@@ -77,7 +86,7 @@ server <- function(input, output, session) {
       purrr::walk(moves, function(move) {
         enemy$add_animation(
           suffix = move, 
-          url = paste0("assets/hedgehog/sprites/badger_", move, "_50.png"), 
+          url = paste0("assets/hedgehog/sprites/", enemy_name, "_", move, "_50.png"), 
           frameWidth = 50,
           frameHeight = 50, 
           frameRate = 4
@@ -87,12 +96,12 @@ server <- function(input, output, session) {
     })
   }
 
-  add_enemy_overlap <- function(name, level_id) {
+  add_enemy_overlap <- function(name, level_id, enemy_name) {
     game$add_overlap("hedgehog", object_two_name = name, callback_fun = function(evt) {
       if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
       state$game_over <- TRUE
       shinyalert::shinyalert(
-        title = "Game over", text = "A badger caught the hedgehog. Try again!", type = "error",
+        title = "Game over", text = paste0("A ", enemy_name, " caught the hedgehog. Try again!"), type = "error",
         closeOnClickOutside = FALSE, showCancelButton = FALSE,
         callbackR = function(value) shiny::stopApp()
       )
@@ -102,7 +111,7 @@ server <- function(input, output, session) {
   init_level <- function(level_id) {
     shinyalert::shinyalert(
       title = paste0("Welcome to level", level_id, "!"),
-      text = "Collect apples and avoid badgers. Finish all levels to win! Click OK to start.",
+      text = "Collect apples and avoid attackers. Finish all levels to win! Click OK to start.",
       type = "info", closeOnClickOutside = FALSE, showCancelButton = FALSE,
       callbackR = function(value) {
         state$started <- TRUE
@@ -113,8 +122,8 @@ server <- function(input, output, session) {
     apples_group <- game$add_static_group(name = paste0("apples_lvl", level_id), url = "assets/hedgehog/perks/apple_20.png")
     for (i in seq_len(nrow(cfg$apples))) apples_group$create(x = cfg$apples$x[i], y = cfg$apples$y[i])
 
-    attackers <- create_attackers(paste0("attacker_lvl", level_id, "_"), cfg$attackers)
-    for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id)
+    attackers <- create_attackers(paste0("attacker_lvl", level_id, "_"), cfg$attackers, cfg$enemy_name)
+    for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id, cfg$enemy_name)
 
     game$add_overlap("hedgehog", group_name = paste0("apples_lvl", level_id), callback_fun = function(evt) {
       if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
