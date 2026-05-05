@@ -16,6 +16,7 @@ server <- function(input, output, session) {
   state$game_over <- FALSE
   state$started <- FALSE
   state$levels <- list()
+  state$collected <- list()
 
   level_config <- list(
     `1` = list(
@@ -141,6 +142,11 @@ server <- function(input, output, session) {
 
     game$add_overlap("hedgehog", group_name = paste0("apples_lvl", level_id), callback_fun = function(evt) {
       if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
+
+      apple_key <- paste(evt$x2, evt$y2, sep = ":")
+      if (isTRUE(state$collected[[apple_key]])) return(invisible(NULL))
+      state$collected[[apple_key]] <- TRUE
+
       state$score <- state$score + 1
       score_text$set(paste0("Level ", level_id, " score: ", state$score))
       apples_group$disable(evt)
@@ -159,6 +165,7 @@ server <- function(input, output, session) {
                 state$levels[[as.character(next_level)]] <- init_level(next_level)
               }
               state$score <- 0
+              state$collected <- list()
               state$current_level <- next_level
               score_text$set(paste0("Level ", state$current_level, " score: 0"))
             }
