@@ -108,6 +108,20 @@ server <- function(input, output, session) {
     }, input = input)
   }
 
+  pause_gameplay <- function(level_id = state$current_level) {
+    state$started <- FALSE
+    hedgehog$set_velocity_x(0)
+    hedgehog$set_velocity_y(0)
+
+    current <- state$levels[[as.character(level_id)]]
+    if (!is.null(current) && length(current$attackers) > 0) {
+      for (enemy in current$attackers) {
+        enemy$set_velocity_x(0)
+        enemy$set_velocity_y(0)
+      }
+    }
+  }
+
   init_level <- function(level_id) {
     shinyalert::shinyalert(
       title = paste0("Welcome to level", level_id, "!"),
@@ -132,6 +146,7 @@ server <- function(input, output, session) {
       apples_group$disable(evt)
 
       if (state$score >= nrow(cfg$apples)) {
+        pause_gameplay(level_id)
         if (level_id < length(level_config)) {
           shinyalert::shinyalert(
             title = paste("Level", level_id, "passed!"),
@@ -143,7 +158,6 @@ server <- function(input, output, session) {
               if (is.null(state$levels[[as.character(next_level)]])) {
                 state$levels[[as.character(next_level)]] <- init_level(next_level)
               }
-              state$started <- FALSE
               state$score <- 0
               state$current_level <- next_level
               score_text$set(paste0("Level ", state$current_level, " score: 0"))
