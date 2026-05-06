@@ -16,6 +16,7 @@ server <- function(input, output, session) {
   state$game_over <- FALSE
   state$started <- FALSE
   state$levels <- list()
+  state$collected <- list()
 
   level_config <- list(
     `1` = list(
@@ -108,6 +109,20 @@ server <- function(input, output, session) {
     }, input = input)
   }
 
+  pause_gameplay <- function(level_id = state$current_level) {
+    state$started <- FALSE
+    hedgehog$set_velocity_x(0)
+    hedgehog$set_velocity_y(0)
+
+    current <- state$levels[[as.character(level_id)]]
+    if (!is.null(current) && length(current$attackers) > 0) {
+      for (enemy in current$attackers) {
+        enemy$set_velocity_x(0)
+        enemy$set_velocity_y(0)
+      }
+    }
+  }
+
   init_level <- function(level_id) {
     shinyalert::shinyalert(
       title = paste0("Welcome to level", level_id, "!"),
@@ -127,11 +142,17 @@ server <- function(input, output, session) {
 
     game$add_overlap("hedgehog", group_name = paste0("apples_lvl", level_id), callback_fun = function(evt) {
       if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
+
+      apple_key <- paste(evt$x2, evt$y2, sep = ":")
+      if (isTRUE(state$collected[[apple_key]])) return(invisible(NULL))
+      state$collected[[apple_key]] <- TRUE
+
       state$score <- state$score + 1
       score_text$set(paste0("Level ", level_id, " score: ", state$score))
       apples_group$disable(evt)
 
       if (state$score >= nrow(cfg$apples)) {
+        pause_gameplay(level_id)
         if (level_id < length(level_config)) {
           shinyalert::shinyalert(
             title = paste("Level", level_id, "passed!"),
@@ -143,8 +164,8 @@ server <- function(input, output, session) {
               if (is.null(state$levels[[as.character(next_level)]])) {
                 state$levels[[as.character(next_level)]] <- init_level(next_level)
               }
-              state$started <- FALSE
               state$score <- 0
+              state$collected <- list()
               state$current_level <- next_level
               score_text$set(paste0("Level ", state$current_level, " score: 0"))
             }
