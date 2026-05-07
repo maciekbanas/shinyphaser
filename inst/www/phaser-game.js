@@ -4,6 +4,7 @@ let controlledSprite = null;
 window.GameBridge = window.GameBridge || {};
 GameBridge.playerControls = {};
 GameBridge.overlapEndWatchers = {};
+GameBridge.forcedAnimations = GameBridge.forcedAnimations || {};
 
 function playIfChanged(sprite, animKey) {
   if (!sprite || !animKey) return;
@@ -57,6 +58,15 @@ function initPhaserGame(containerId, config) {
           sprite.body.setVelocity(0);
 
           const { speed, directionMap } = opts;
+
+          const forced = GameBridge.forcedAnimations[name];
+          if (forced) {
+            if (forced.until === null || time <= forced.until) {
+              playIfChanged(sprite, forced.key);
+              return;
+            }
+            delete GameBridge.forcedAnimations[name];
+          }
 
           if (cursors.left.isDown && directionMap.left) {
             sprite.body.setVelocityX(-speed);
