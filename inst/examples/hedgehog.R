@@ -17,6 +17,11 @@ server <- function(input, output, session) {
   state$started <- FALSE
   state$levels <- list()
   state$collected <- list()
+  state$is_boosting <- FALSE
+
+  base_speed <- 250
+  boost_speed <- 650
+  boost_duration <- 1
 
   level_config <- list(
     `1` = list(
@@ -130,7 +135,7 @@ server <- function(input, output, session) {
       type = "info", closeOnClickOutside = FALSE, showCancelButton = FALSE,
       callbackR = function(value) {
         state$started <- TRUE
-        hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = 250)
+        hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = base_speed)
       }
     )
     cfg <- level_config[[as.character(level_id)]]
@@ -182,6 +187,21 @@ server <- function(input, output, session) {
 
     list(apples = apples_group, attackers = attackers)
   }
+
+
+  game$add_control("Space", action = function() {
+    if (!state$started || state$game_over || state$is_boosting) return(invisible(NULL))
+
+    state$is_boosting <- TRUE
+    hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = boost_speed)
+
+    later::later(function() {
+      state$is_boosting <- FALSE
+      if (state$started && !state$game_over) {
+        hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = base_speed)
+      }
+    }, delay = boost_duration)
+  }, input = input)
 
   state$levels[["1"]] <- init_level(1)
 
