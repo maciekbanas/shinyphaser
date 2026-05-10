@@ -65,13 +65,15 @@ server <- function(input, output, session) {
       frameRate = 4
     )
   })
-  hedgehog$add_animation(
-    suffix = "run",
-    url = "assets/hedgehog/sprites/hedgehog_run_32.png",
-    frameWidth = 32,
-    frameHeight = 32,
-    frameRate = 10
-  )
+  purrr::walk(moves, function(move) {
+    hedgehog$add_animation(
+      suffix = "run", 
+      url = paste0("assets/hedgehog/sprites/hedgehog_run_", move, "_32.png"),
+      frameWidth = 32,
+      frameHeight = 32,
+      frameRate = 8
+    )
+  })
   
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
