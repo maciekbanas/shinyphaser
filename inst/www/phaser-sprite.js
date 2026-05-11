@@ -1,5 +1,6 @@
 window.GameBridge = window.GameBridge || {};
 GameBridge.keyControlHandlers = GameBridge.keyControlHandlers || {};
+GameBridge.forcedAnimations = GameBridge.forcedAnimations || {};
 
 
 function resolveFrameCount(textureKey, frameWidth, frameHeight, frameCount) {
@@ -99,14 +100,18 @@ function getSpriteByName(name, caller) {
 function playAnimation(name, animName) {
   const sprite = getSpriteByName(name, "playAnimation()");
   if (!sprite) return;
+  GameBridge.forcedAnimations[name] = { key: animName, until: null };
   sprite.play(animName, true);
 }
 
 function playAnimationForDuration(name, animName, duration) {
   const sprite = getSpriteByName(name, "playAnimationForDuration()");
   if (!sprite) return;
+  const until = scene && scene.time ? scene.time.now + duration : null;
+  GameBridge.forcedAnimations[name] = { key: animName, until };
   sprite.play(animName, true);
   scene.time.delayedCall(duration, () => {
+    delete GameBridge.forcedAnimations[name];
     if (scene.anims.exists(name + "_idle")) {
       sprite.play(name + "_idle", true);
     } else {

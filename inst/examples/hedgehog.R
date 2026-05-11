@@ -64,7 +64,16 @@ server <- function(input, output, session) {
       frameHeight = 32, 
       frameRate = 4
     )
-  })  
+  })
+  purrr::walk(moves, function(move) {
+    hedgehog$add_animation(
+      suffix = "run", 
+      url = paste0("assets/hedgehog/sprites/hedgehog_run_", move, "_32.png"),
+      frameWidth = 32,
+      frameHeight = 32,
+      frameRate = 8
+    )
+  })
   
   score_text <- game$add_text(text = "Level 1 score: 0", id = "score_text", x = 30, y = 30)
 
@@ -193,6 +202,7 @@ server <- function(input, output, session) {
     if (!state$started || state$game_over || state$is_boosting) return(invisible(NULL))
 
     state$is_boosting <- TRUE
+    hedgehog$play_animation("hedgehog_run", duration = boost_duration * 1000)
     hedgehog$add_player_controls(directions = c("left", "right", "up", "down"), speed = boost_speed)
 
     later::later(function() {

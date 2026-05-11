@@ -4,6 +4,7 @@ let controlledSprite = null;
 window.GameBridge = window.GameBridge || {};
 GameBridge.playerControls = {};
 GameBridge.overlapEndWatchers = {};
+GameBridge.forcedAnimations = GameBridge.forcedAnimations || {};
 
 function playIfChanged(sprite, animKey) {
   if (!sprite || !animKey) return;
@@ -58,21 +59,32 @@ function initPhaserGame(containerId, config) {
 
           const { speed, directionMap } = opts;
 
+          let targetAnim = name + '_idle';
+
           if (cursors.left.isDown && directionMap.left) {
             sprite.body.setVelocityX(-speed);
-            playIfChanged(sprite, name + '_move_left');
+            targetAnim = name + '_move_left';
           } else if (cursors.right.isDown && directionMap.right) {
             sprite.body.setVelocityX(speed);
-            playIfChanged(sprite, name + '_move_right');
+            targetAnim = name + '_move_right';
           } else if (cursors.up.isDown && directionMap.up) {
             sprite.body.setVelocityY(-speed);
-            playIfChanged(sprite, name + '_move_up');
+            targetAnim = name + '_move_up';
           } else if (cursors.down.isDown && directionMap.down) {
             sprite.body.setVelocityY(speed);
-            playIfChanged(sprite, name + '_move_down');
-          } else {
-            playIfChanged(sprite, name + '_idle');
+            targetAnim = name + '_move_down';
           }
+
+          const forced = GameBridge.forcedAnimations[name];
+          if (forced) {
+            if (forced.until === null || time <= forced.until) {
+              playIfChanged(sprite, forced.key);
+              return;
+            }
+            delete GameBridge.forcedAnimations[name];
+          }
+
+          playIfChanged(sprite, targetAnim);
         });
   }
 }
