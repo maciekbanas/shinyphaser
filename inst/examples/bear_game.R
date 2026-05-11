@@ -53,6 +53,7 @@ server <- function(input, output, session) {
     "ArrowUp",
     action = function() {
       bear$set_in_motion(
+        dirX = 0,
         dirY = -1,
         speed = 300,
         distance = 100
