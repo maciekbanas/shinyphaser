@@ -78,7 +78,16 @@ function initPhaserGame(containerId, config) {
           const forced = GameBridge.forcedAnimations[name];
           if (forced) {
             if (forced.until === null || time <= forced.until) {
-              playIfChanged(sprite, forced.key);
+              const directionSuffix = targetAnim.startsWith(name + '_')
+                ? targetAnim.slice((name + '_').length)
+                : 'idle';
+
+              const directionalForcedKey = forced.key + '_' + directionSuffix;
+              const forcedAnimKey = scene.anims.exists(directionalForcedKey)
+                ? directionalForcedKey
+                : forced.key;
+
+              playIfChanged(sprite, forcedAnimKey);
               return;
             }
             delete GameBridge.forcedAnimations[name];

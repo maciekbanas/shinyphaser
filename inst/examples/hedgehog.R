@@ -67,7 +67,7 @@ server <- function(input, output, session) {
   })
   purrr::walk(moves, function(move) {
     hedgehog$add_animation(
-      suffix = "run", 
+      suffix = paste0("run_", move), 
       url = paste0("assets/hedgehog/sprites/hedgehog_run_", move, "_32.png"),
       frameWidth = 32,
       frameHeight = 32,
