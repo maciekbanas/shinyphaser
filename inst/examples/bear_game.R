@@ -44,12 +44,6 @@ server <- function(input, output, session) {
     frameWidth = 100, frameHeight = 100,
     frameCount = 2, frameRate = 6
   )
-  bear$add_animation(
-    suffix = "attack_1",
-    url = "assets/bear_game/player_sprites/bear_attack_1.png",
-    frameWidth = 100, frameHeight = 100,
-    frameCount = 1, frameRate = 2
-  )
   bear$add_player_controls(
     directions = c("left", "right"),
     speed = 300
@@ -58,7 +52,7 @@ server <- function(input, output, session) {
   game$add_control(
     "ArrowUp",
     action = function() {
-      bear$move(
+      bear$set_in_motion(
         dirY = -1,
         speed = 300,
         distance = 100
@@ -70,7 +64,7 @@ server <- function(input, output, session) {
     "Space",
     action = function() {
       bear$play_animation(
-        anim_name = "bear_attack_1"
+        anim_name = "bear_jump"
       )
     },
     input
@@ -133,7 +127,7 @@ server <- function(input, output, session) {
     object_one_name = "bear",
     object_two_name = "wooden_box",
     callback_fun = function(evt) {
-      wooden_box$move(
+      wooden_box$set_in_motion(
         dirX = 1,
         dirY = 0,
         speed = 350,
