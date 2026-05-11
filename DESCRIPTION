@@ -1,6 +1,6 @@
 Package: phaserR
 Title: An R Interface to the Phaser.js Game Framework
-Version: 0.0.0.9026
+Version: 0.0.0.9027
 Authors@R: 
     person(
       given = "Maciej", 
