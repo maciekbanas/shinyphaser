@@ -50,7 +50,7 @@ server <- function(input, output, session) {
   )
   Sys.sleep(0.1)
   game$add_control(
-    "ArrowUp",
+    "Space",
     action = function() {
       bear$set_in_motion(
         dirX = 0,
@@ -58,14 +58,9 @@ server <- function(input, output, session) {
         speed = 300,
         distance = 100
       )
-    },
-    input
-  )
-  game$add_control(
-    "Space",
-    action = function() {
       bear$play_animation(
-        anim_name = "bear_jump"
+        anim_name = "bear_jump",
+        duration = 250
       )
     },
     input
