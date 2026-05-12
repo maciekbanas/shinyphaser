@@ -24,5 +24,6 @@ Imports:
 Suggests: 
   shinyalert,
   testthat (>= 3.0.0),
-  shinytest2
+  shinytest2,
+  devtools
 Config/testthat/edition: 3
