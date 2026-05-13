@@ -1,0 +1,8 @@
+template:
+  bootstrap: 5
+
+articles:
+  - title: Getting started
+    navbar: ~
+    contents:
+      - first-game-hedgehog
