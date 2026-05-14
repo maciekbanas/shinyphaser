@@ -77,11 +77,16 @@ Shiny</strong> game where a hedgehog:</p>
 <h2 id="basic-app-structure-ui-and-server">1) Basic app structure: <code>ui</code> and <code>server</code><a class="anchor" aria-label="anchor" href="#basic-app-structure-ui-and-server"></a>
 </h2>
 <p>A phaserR game lives inside a regular Shiny app.</p>
+<p>In <code>UI</code> we need to load <code>Phaser.js</code>
+dependencies and we do it with calling <code>ui()</code> method.</p>
+<p><code>set_shiny_session()</code> method is a helper to set Shiny
+session inside R6 object private environment as it will be reused by
+<code>shinyphaser</code> methods many times.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">phaserR</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">900</span>, height <span class="op">=</span> <span class="fl">550</span><span class="op">)</span></span>
+<span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
 <span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
@@ -94,33 +99,34 @@ Shiny</strong> game where a hedgehog:</p>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="add-static-groups-background-tiles-and-walls">2) Add static groups (background tiles and walls)<a class="anchor" aria-label="anchor" href="#add-static-groups-background-tiles-and-walls"></a>
+<h2 id="add-first-image-background">2) Add first image (background)<a class="anchor" aria-label="anchor" href="#add-first-image-background"></a>
 </h2>
-<p>Static groups are perfect for scenery and obstacles that should not
-move.</p>
+<p>First we add simply image which will serve as a background to our
+game.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># grass floor tiles</span></span>
-<span><span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span></span>
-<span>  name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">phaserR</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="kw">for</span> <span class="op">(</span><span class="va">x</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">800</span>, by <span class="op">=</span> <span class="fl">200</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">y</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">500</span>, by <span class="op">=</span> <span class="fl">150</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="va">floor</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span><span class="op">)</span></span>
-<span>  <span class="op">}</span></span>
+<span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">set_shiny_session</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span>  <span class="co"># grass floor tiles</span></span>
+<span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
+<span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
+<span>    y <span class="op">=</span> <span class="fl">300</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
-<span><span class="co"># walls that player cannot pass through</span></span>
-<span><span class="va">walls</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span></span>
-<span>  name <span class="op">=</span> <span class="st">"walls"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/wall.png"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">walls</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">450</span>, <span class="fl">80</span><span class="op">)</span></span>
-<span><span class="va">walls</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">450</span>, <span class="fl">470</span><span class="op">)</span></span>
-<span><span class="va">walls</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">80</span>, <span class="fl">280</span><span class="op">)</span></span>
-<span><span class="va">walls</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">820</span>, <span class="fl">280</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
+<p><img src="assets/first_game_1.png"><!-- --></p>
 </div>
 <div class="section level2">
 <h2 id="add-sprite-the-player-hedgehog">3) Add sprite (the player hedgehog)<a class="anchor" aria-label="anchor" href="#add-sprite-the-player-hedgehog"></a>

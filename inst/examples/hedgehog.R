@@ -1,6 +1,6 @@
 devtools::load_all()
 
-game <- PhaserGame$new(width = 1000, height = 600)
+game <- PhaserGame$new(width = 1500, height = 800)
 
 moves <- c("move_left", "move_right", "move_up", "move_down")
 
@@ -49,8 +49,12 @@ server <- function(input, output, session) {
 
   game$set_shiny_session()
 
-  grass <- game$add_static_group(name = "grass", url = "assets/hedgehog/terrain/grass.png")
-  for (x in seq(100, 900, by = 200)) for (y in seq(80, 560, by = 160)) grass$create(x = x, y = y)
+  grass <- game$add_image(
+    name = "grass", 
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300   
+  )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",

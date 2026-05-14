@@ -13,11 +13,18 @@ hedgehog:
 
 A phaserR game lives inside a regular Shiny app.
 
+In `UI` we need to load `Phaser.js` dependencies and we do it with
+calling `ui()` method.
+
+`set_shiny_session()` method is a helper to set Shiny session inside R6
+object private environment as it will be reused by `shinyphaser` methods
+many times.
+
 ``` r
 library(shiny)
 library(phaserR)
 
-game <- PhaserGame$new(width = 900, height = 550)
+game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
   game$ui()
@@ -30,35 +37,36 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-## 2) Add static groups (background tiles and walls)
+## 2) Add first image (background)
 
-Static groups are perfect for scenery and obstacles that should not
-move.
+First we add simply image which will serve as a background to our game.
 
 ``` r
-# grass floor tiles
-floor <- game$add_static_group(
-  name = "floor",
-  url = "assets/hedgehog/terrain/grass.png"
+library(shiny)
+library(phaserR)
+
+game <- PhaserGame$new(width = 1500, height = 800)
+
+ui <- tagList(
+  game$ui()
 )
 
-for (x in seq(100, 800, by = 200)) {
-  for (y in seq(100, 500, by = 150)) {
-    floor$create(x = x, y = y)
-  }
+server <- function(input, output, session) {
+  game$set_shiny_session()
+
+  # grass floor tiles
+  floor <- game$add_image(
+    name = "floor",
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300
+  )
 }
 
-# walls that player cannot pass through
-walls <- game$add_static_group(
-  name = "walls",
-  url = "assets/hedgehog/terrain/wall.png"
-)
-
-walls$create(450, 80)
-walls$create(450, 470)
-walls$create(80, 280)
-walls$create(820, 280)
+shinyApp(ui, server)
 ```
+
+![](assets/first_game_1.png)
 
 ## 3) Add sprite (the player hedgehog)
 

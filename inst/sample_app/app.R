@@ -3,7 +3,7 @@ library(phaserR)
 
 game <- PhaserGame$new(id = "sample_game", width = 320, height = 240)
 
-ui <- fluidPage(
+ui <- shiny::tagList(
   game$ui()
 )
 
@@ -13,8 +13,8 @@ server <- function(input, output, session) {
   game$add_image(
     name = "grass",
     url = "assets/hedgehog/terrain/grass.png",
-    x = 160,
-    y = 120
+    x = 800,
+    y = 300
   )
 }
 
