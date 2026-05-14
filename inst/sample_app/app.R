@@ -11,8 +11,8 @@ server <- function(input, output, session) {
   game$set_shiny_session(session)
 
   game$add_image(
-    name = "ground",
-    url = "assets/hero_game/terrain/ground.png",
+    name = "grass",
+    url = "assets/hedgehog/terrain/grass.png",
     x = 160,
     y = 120
   )
