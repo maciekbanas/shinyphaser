@@ -1,0 +1,18 @@
+# phaserR ![phaserR Logo](reference/figures/phaserR.png)
+
+This package provides a R Shiny interface to Phaser 3 game framework.
+
+# Package index
+
+## All functions
+
+- [`PhaserGame`](PhaserGame.md) : PhaserGame
+- [`phaser_create_assets()`](phaser_create_assets.md) : Create assets
+  folder in your project
+
+# Articles
+
+### Getting started
+
+- [Build your first phaserR game (hedgehog
+  vignette)](first-game-hedgehog.md):
