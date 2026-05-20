@@ -42,6 +42,15 @@ shinyApp(ui, server)
 First we add simply image which will serve as a background to our game.
 
 ``` r
+floor <- game$add_image(
+  name = "floor",
+  url = "assets/hedgehog/terrain/grass.png",
+  x = 800,
+  y = 300
+)
+```
+
+``` r
 library(shiny)
 library(phaserR)
 
@@ -54,7 +63,6 @@ ui <- tagList(
 server <- function(input, output, session) {
   game$set_shiny_session()
 
-  # grass floor tiles
   floor <- game$add_image(
     name = "floor",
     url = "assets/hedgehog/terrain/grass.png",
@@ -66,7 +74,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-![](assets/first_game_1.png)
+![](assets/first_game_2_add_background.png)
 
 ## 3) Add sprite (the player hedgehog)
 
@@ -84,6 +92,45 @@ hedgehog <- game$add_sprite(
   frameRate = 6
 )
 ```
+
+![](assets/hedgehog_32.png)
+
+``` r
+library(shiny)
+library(phaserR)
+
+game <- PhaserGame$new(width = 1500, height = 800)
+
+ui <- tagList(
+  game$ui()
+)
+
+server <- function(input, output, session) {
+  game$set_shiny_session()
+
+  floor <- game$add_image(
+    name = "floor",
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300
+  )
+
+  hedgehog <- game$add_sprite(
+    name = "hedgehog",
+    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    x = 140,
+    y = 260,
+    frameWidth = 32,
+    frameHeight = 32,
+    frameCount = 5,
+    frameRate = 6
+  )
+}
+
+shinyApp(ui, server)
+```
+
+![](assets/first_game_3_add_sprite.gif)
 
 ## 4) Add player controls
 
