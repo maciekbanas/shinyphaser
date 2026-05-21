@@ -297,6 +297,7 @@ knitr::include_graphics("assets/first_game_5_move_animation.gif")
 ## 6) Add overlap with other objects (collect apples)
 
 Use overlap when two objects can share space and trigger events.
+In this step, apples act like collectibles: the hedgehog can move through them, and each touch fires a callback instead of blocking movement. We first create an `apples` static group and place a few apples on the map, then register `add_overlap()` between `"hedgehog"` and `"apples"`. Inside `callback_fun`, we hide the collected apple (`apples$disable(evt)`), increment score, and refresh on-screen text. In short: hedgehog meets apple, apple disappears, score goes up — because every hedgehog knows apples are the true quest objective.
 
 ```{r eval=FALSE}
 score <- reactiveVal(0)
