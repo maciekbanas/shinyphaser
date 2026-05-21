@@ -55,4 +55,4 @@ file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
 
 For a full walkthrough (from static background to movement, animation, overlap, and collision), see the vignette:
 
-- **Build your first shinyphaser game**: [https://maciekbanas.github.io/shinyphaser/articles/first-game-hedgehog.html](https://maciekbanas.github.io/shinyphaser/articles/first-game-hedgehog.html)
+- [**Build your first shinyphaser game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
