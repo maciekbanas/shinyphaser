@@ -8,4 +8,6 @@
 [![R-CMD-check](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This package provides a R Shiny interface to Phaser 3 game framework.
+This package provides an **R Shiny interface to selected features of the Phaser 3 game framework**.
+
+It is designed to expose a practical subset of Phaser 3 capabilities inside Shiny apps, so you can build interactive game-like experiences from R without needing to use the full JavaScript API directly.
