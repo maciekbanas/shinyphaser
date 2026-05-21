@@ -1,6 +1,6 @@
-# Build your first phaserR game (hedgehog vignette)
+# Build your first shinyphaser game (hedgehog vignette)
 
-This vignette walks through a minimal **phaserR + Shiny** game where a
+This vignette walks through a minimal **shinyphaser + Shiny** game where a
 hedgehog:
 
 - moves with arrow keys,
@@ -11,7 +11,7 @@ hedgehog:
 
 ## 1) Basic app structure: `ui` and `server`
 
-A phaserR game lives inside a regular Shiny app.
+A shinyphaser game lives inside a regular Shiny app.
 
 In `UI` we need to load `Phaser.js` dependencies and we do it with
 calling `ui()` method.
@@ -22,7 +22,7 @@ many times.
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -54,7 +54,7 @@ Show full code
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -101,7 +101,7 @@ Show full code
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -151,7 +151,7 @@ Show full code
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -217,7 +217,7 @@ Show full code
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -299,7 +299,7 @@ Show full code
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -420,7 +420,7 @@ Put all pieces together:
 
 ``` r
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 900, height = 550)
 

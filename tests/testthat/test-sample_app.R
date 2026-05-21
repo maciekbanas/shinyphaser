@@ -2,7 +2,7 @@ test_that("sample app loads", {
   skip_if_not_installed("shinytest2")
 
   app <- shinytest2::AppDriver$new(
-    app_dir = system.file("sample_app", package = "phaserR"),
+    app_dir = system.file("sample_app", package = "shinyphaser"),
     name = "sample_app"
   )
 

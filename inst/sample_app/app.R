@@ -1,5 +1,5 @@
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(id = "sample_game", width = 320, height = 240)
 

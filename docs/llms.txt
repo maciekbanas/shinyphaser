@@ -1,4 +1,4 @@
-# phaserR ![phaserR Logo](reference/figures/phaserR.png)
+# shinyphaser ![shinyphaser Logo](reference/figures/shinyphaser.png)
 
 This package provides a R Shiny interface to Phaser 3 game framework.
 
@@ -14,5 +14,5 @@ This package provides a R Shiny interface to Phaser 3 game framework.
 
 ### Getting started
 
-- [Build your first phaserR game (hedgehog
+- [Build your first shinyphaser game (hedgehog
   vignette)](first-game-hedgehog.md):

@@ -141,6 +141,26 @@ server <- function(input, output, session) {
     }
   }
 
+
+  passed_level_alert <- function(level_id) {
+    shinyalert::shinyalert(
+      title = paste("Level", level_id, "passed!"),
+      text = paste("Great! Click OK to move to level", level_id + 1, "."),
+      type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+      callbackR = function(value) {
+        for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
+        next_level <- level_id + 1
+        if (is.null(state$levels[[as.character(next_level)]])) {
+          state$levels[[as.character(next_level)]] <- init_level(next_level)
+        }
+        state$score <- 0
+        state$collected <- list()
+        state$current_level <- next_level
+        score_text$set(paste0("Level ", state$current_level, " score: 0"))
+      }
+    )
+  }
+
   init_level <- function(level_id) {
     shinyalert::shinyalert(
       title = paste0("Welcome to level", level_id, "!"),
@@ -229,20 +249,3 @@ server <- function(input, output, session) {
 }
 
 shiny::shinyApp(ui, server)
-
-passed_level_alert <- shinyalert::shinyalert(
-  title = paste("Level", level_id, "passed!"),
-  text = paste("Great! Click OK to move to level", level_id + 1, "."),
-  type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
-  callbackR = function(value) {
-    for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
-    next_level <- level_id + 1
-    if (is.null(state$levels[[as.character(next_level)]])) {
-      state$levels[[as.character(next_level)]] <- init_level(next_level)
-    }
-    state$score <- 0
-    state$collected <- list()
-    state$current_level <- next_level
-    score_text$set(paste0("Level ", state$current_level, " score: 0"))
-  }
-)
