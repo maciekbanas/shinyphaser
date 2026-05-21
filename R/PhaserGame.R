@@ -58,7 +58,7 @@ PhaserGame <- R6::R6Class(
       )
     },
 
-    add_text = function(text, id, x, y, style = list(fontSize = '22px')) {
+    add_text = function(text, id, x, y, style = list(font_size = '22px')) {
       return(TextObject$new(text, id, x, y, style))
     },
 
@@ -77,24 +77,24 @@ PhaserGame <- R6::R6Class(
     },
 
     #' @description Add a background (tilemap) layer from Tiled JSON + tileset image(s).
-    #' @param mapKey Character. Key for the tilemap JSON.
-    #' @param mapUrl Character. URL of the Tiled JSON file (relative to www/assets/).
-    #' @param tilesetUrls Character vector. URLs of tileset image files.
-    #' @param tilesetNames Character vector. Names of tilesets as defined in Tiled.
-    #' @param layerName Character. Name of the layer to render from Tiled.
+    #' @param map_key Character. Key for the tilemap JSON.
+    #' @param map_url Character. URL of the Tiled JSON file (relative to www/assets/).
+    #' @param tileset_urls Character vector. URLs of tileset image files.
+    #' @param tileset_names Character vector. Names of tilesets as defined in Tiled.
+    #' @param layer_name Character. Name of the layer to render from Tiled.
     #' @return Invisible; sends a custom message to the client.
-    add_map = function(mapKey,
-                       mapUrl,
-                       tilesetUrls,
-                       tilesetNames,
-                       layerName) {
+    add_map = function(map_key,
+                       map_url,
+                       tileset_urls,
+                       tileset_names,
+                       layer_name) {
       js <- sprintf(
         "addMap(%s, %s, %s, %s, %s);",
-        jsonlite::toJSON(mapKey, auto_unbox = TRUE),
-        jsonlite::toJSON(mapUrl, auto_unbox = TRUE),
-        jsonlite::toJSON(tilesetUrls, auto_unbox = TRUE),
-        jsonlite::toJSON(tilesetNames, auto_unbox = TRUE),
-        jsonlite::toJSON(layerName, auto_unbox = TRUE)
+        jsonlite::toJSON(map_key, auto_unbox = TRUE),
+        jsonlite::toJSON(map_url, auto_unbox = TRUE),
+        jsonlite::toJSON(tileset_urls, auto_unbox = TRUE),
+        jsonlite::toJSON(tileset_names, auto_unbox = TRUE),
+        jsonlite::toJSON(layer_name, auto_unbox = TRUE)
       )
       send_js(private, js)
     },
@@ -111,15 +111,15 @@ PhaserGame <- R6::R6Class(
     #' @param url Character. URL or path to the spritesheet image.
     #' @param x Numeric. X-coordinate in pixels.
     #' @param y Numeric. Y-coordinate in pixels.
-    #' @param frameWidth Numeric. Width of each frame.
-    #' @param frameHeight Numeric. Height of each frame.
-    #' @param frameCount Numeric. Number of frames in the spritesheet.
-    #' @param frameRate Numeric. Frames per second for the idle animation.
+    #' @param frame_width Numeric. Width of each frame.
+    #' @param frame_height Numeric. Height of each frame.
+    #' @param frame_count Numeric. Number of frames in the spritesheet.
+    #' @param frame_rate Numeric. Frames per second for the idle animation.
     add_sprite = function(name, url,
                           x, y,
-                          frameWidth, frameHeight,
-                          frameCount = 1, frameRate = 1) {
-      return(Sprite$new(name, url, x, y, frameWidth, frameHeight, frameCount, frameRate))
+                          frame_width, frame_height,
+                          frame_count = 1, frame_rate = 1) {
+      return(Sprite$new(name, url, x, y, frame_width, frame_height, frame_count, frame_rate))
     },
 
     #' @description Adds a dynamic group from a spritesheet.
@@ -148,25 +148,25 @@ PhaserGame <- R6::R6Class(
     },
 
     #' @description Adds a collider between two game objects.
-    #' @param object_one_name Character. Name of the first object.
-    #' @param object_two_name Character. Name of the second object.
-    add_collider = function(object_one_name,
-                            object_two_name = NULL,
+    #' @param object_name Character. Name of the first object.
+    #' @param object_two Character. Name of the second object.
+    add_collider = function(object_name,
+                            object_two = NULL,
                             group_name      = NULL,
                             callback_fun    = NULL,
                             input) {
       input_id <- paste(
-        c("collide", object_one_name,
-          object_two_name %||% group_name),
+        c("collide", object_name,
+          object_two %||% group_name),
         collapse = "_"
       )
 
-      js <- if (!is.null(object_two_name)) {
+      js <- if (!is.null(object_two)) {
         sprintf("addCollider('%s','%s','%s')",
-                object_one_name, object_two_name, input_id)
+                object_name, object_two, input_id)
       } else {
         sprintf("addGroupCollider('%s','%s','%s')",
-                object_one_name, group_name, input_id)
+                object_name, group_name, input_id)
       }
       send_js(private, js)
       if (!is.null(callback_fun)) {
@@ -178,28 +178,28 @@ PhaserGame <- R6::R6Class(
     },
 
     #' @description Adds a collider between two game objects.
-    #' @param object_one_name Character. Name of the first object.
-    #' @param object_two_name Character. Name of the second object.
+    #' @param object_name Character. Name of the first object.
+    #' @param object_two Character. Name of the second object.
     #' @param group_name Character. Name of the group.
     #' @param callback_fun A function to be run when overlap occurs.
-    add_overlap = function(object_one_name,
-                           object_two_name = NULL,
+    add_overlap = function(object_name,
+                           object_two = NULL,
                            group_name      = NULL,
                            callback_fun,
                            input) {
       Sys.sleep(0.1)
       input_id <- paste(
-        c("overlap", object_one_name,
-          object_two_name %||% group_name),
+        c("overlap", object_name,
+          object_two %||% group_name),
         collapse = "_"
       )
 
-      js <- if (!is.null(object_two_name)) {
+      js <- if (!is.null(object_two)) {
         sprintf("addOverlap('%s','%s','%s')",
-                object_one_name, object_two_name, input_id)
+                object_name, object_two, input_id)
       } else {
         sprintf("addGroupOverlap('%s','%s','%s')",
-                object_one_name, group_name, input_id)
+                object_name, group_name, input_id)
       }
       send_js(private, js)
 

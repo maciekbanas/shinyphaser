@@ -12,12 +12,12 @@ Group <- R6::R6Class(
       Sys.sleep(0.1)
     },
     add_animation = function(suffix, url,
-                             frameWidth, frameHeight,
-                             frameCount, frameRate) {
+                             frame_width, frame_height,
+                             frame_count, frame_rate) {
       js <- sprintf(
         "addGroupAnimation('%s','%s','%s',%d,%d,%d,%d);",
         private$name, suffix, url,
-        frameWidth, frameHeight, frameCount, frameRate
+        frame_width, frame_height, frame_count, frame_rate
       )
       send_js(private, js)
       Sys.sleep(0.1)

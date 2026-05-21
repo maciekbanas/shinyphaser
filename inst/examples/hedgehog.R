@@ -58,24 +58,24 @@ server <- function(input, output, session) {
 
   hedgehog <- game$add_sprite(
     name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",
-    x = 120, y = 300, frameWidth = 32, frameHeight = 32, frameCount = 5, frameRate = 6
+    x = 120, y = 300, frame_width = 32, frame_height = 32, frame_count = 5, frame_rate = 6
   )
   purrr::walk(moves, function(move) {
     hedgehog$add_animation(
       suffix = move, 
       url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"), 
-      frameWidth = 32, 
-      frameHeight = 32, 
-      frameRate = 4
+      frame_width = 32, 
+      frame_height = 32, 
+      frame_rate = 4
     )
   })
   purrr::walk(moves, function(move) {
     hedgehog$add_animation(
       suffix = paste0("run_", move), 
       url = paste0("assets/hedgehog/sprites/hedgehog_run_", move, "_32.png"),
-      frameWidth = 32,
-      frameHeight = 32,
-      frameRate = 8
+      frame_width = 32,
+      frame_height = 32,
+      frame_rate = 8
     )
   })
   
@@ -97,18 +97,18 @@ server <- function(input, output, session) {
         url = paste0("assets/hedgehog/sprites/", enemy_name, "_move_left_50.png"),
         x = spawn_point$x, 
         y = spawn_point$y, 
-        frameWidth = 50, 
-        frameHeight = 50, 
-        frameCount = 1, 
-        frameRate = 1
+        frame_width = 50, 
+        frame_height = 50, 
+        frame_count = 1, 
+        frame_rate = 1
       )
       purrr::walk(moves, function(move) {
         enemy$add_animation(
           suffix = move, 
           url = paste0("assets/hedgehog/sprites/", enemy_name, "_", move, "_50.png"), 
-          frameWidth = 50,
-          frameHeight = 50, 
-          frameRate = 4
+          frame_width = 50,
+          frame_height = 50, 
+          frame_rate = 4
         )
       })
       enemy
@@ -116,7 +116,7 @@ server <- function(input, output, session) {
   }
 
   add_enemy_overlap <- function(name, level_id, enemy_name) {
-    game$add_overlap("hedgehog", object_two_name = name, callback_fun = function(evt) {
+    game$add_overlap("hedgehog", object_two = name, callback_fun = function(evt) {
       if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
       state$game_over <- TRUE
       shinyalert::shinyalert(
@@ -159,7 +159,7 @@ server <- function(input, output, session) {
     for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id, cfg$enemy_name)
 
     game$add_overlap(
-      object_one_name = "hedgehog", 
+      object_name = "hedgehog", 
       group_name = paste0("apples_lvl", level_id), 
       callback_fun = function(evt) {
         if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
@@ -218,8 +218,8 @@ server <- function(input, output, session) {
     for (enemy in attackers) {
       dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
       enemy$set_in_motion(
-        dirX = dir[1], 
-        dirY = dir[2], 
+        dir_x = dir[1], 
+        dir_y = dir[2], 
         speed = sample(cfg$speed, 1), 
         distance = sample(cfg$distance, 1), 
         lag = 0

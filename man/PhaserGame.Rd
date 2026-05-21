@@ -124,7 +124,7 @@ HTML tag list containing dependencies and initialization script.
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_text}{}}}
 \subsection{Method \code{add_text()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_text(text, id, x, y, style = list(fontSize = "22px"))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_text(text, id, x, y, style = list(font_size = "22px"))}\if{html}{\out{</div>}}
 }
 
 }
@@ -139,10 +139,10 @@ Add a player sprite to the scene as an animated spritesheet.
   url,
   x,
   y,
-  frameWidth,
-  frameHeight,
-  frameCount,
-  frameRate
+  frame_width,
+  frame_height,
+  frame_count,
+  frame_rate
 )}\if{html}{\out{</div>}}
 }
 
@@ -157,13 +157,13 @@ Add a player sprite to the scene as an animated spritesheet.
 
 \item{\code{y}}{Numeric. Y-coordinate in pixels.}
 
-\item{\code{frameWidth}}{Numeric. Width of each frame in the spritesheet.}
+\item{\code{frame_width}}{Numeric. Width of each frame in the spritesheet.}
 
-\item{\code{frameHeight}}{Numeric. Height of each frame in the spritesheet.}
+\item{\code{frame_height}}{Numeric. Height of each frame in the spritesheet.}
 
-\item{\code{frameCount}}{Numeric. Total number of frames.}
+\item{\code{frame_count}}{Numeric. Total number of frames.}
 
-\item{\code{frameRate}}{Numeric. Frames per second for the animation.}
+\item{\code{frame_rate}}{Numeric. Frames per second for the animation.}
 }
 \if{html}{\out{</div>}}
 }
@@ -181,10 +181,10 @@ Load a custom animation for any sprite previously added.
   name,
   suffix,
   url,
-  frameWidth,
-  frameHeight,
-  frameCount,
-  frameRate
+  frame_width,
+  frame_height,
+  frame_count,
+  frame_rate
 )}\if{html}{\out{</div>}}
 }
 
@@ -197,13 +197,13 @@ Load a custom animation for any sprite previously added.
 
 \item{\code{url}}{Character. URL or path to the spritesheet.}
 
-\item{\code{frameWidth}}{Numeric. Width of each frame.}
+\item{\code{frame_width}}{Numeric. Width of each frame.}
 
-\item{\code{frameHeight}}{Numeric. Height of each frame.}
+\item{\code{frame_height}}{Numeric. Height of each frame.}
 
-\item{\code{frameCount}}{Numeric. Number of frames in the spritesheet.}
+\item{\code{frame_count}}{Numeric. Number of frames in the spritesheet.}
 
-\item{\code{frameRate}}{Numeric. Frames per second for playback.}
+\item{\code{frame_rate}}{Numeric. Frames per second for playback.}
 }
 \if{html}{\out{</div>}}
 }
@@ -243,21 +243,21 @@ Invisible; sends a custom message to the client.
 \subsection{Method \code{add_map()}}{
 Add a background (tilemap) layer from Tiled JSON + tileset image(s).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_map(mapKey, mapUrl, tilesetUrls, tilesetNames, layerName)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_map(map_key, map_url, tileset_urls, tileset_names, layer_name)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{mapKey}}{Character. Key for the tilemap JSON.}
+\item{\code{map_key}}{Character. Key for the tilemap JSON.}
 
-\item{\code{mapUrl}}{Character. URL of the Tiled JSON file (relative to www/assets/).}
+\item{\code{map_url}}{Character. URL of the Tiled JSON file (relative to www/assets/).}
 
-\item{\code{tilesetUrls}}{Character vector. URLs of tileset image files.}
+\item{\code{tileset_urls}}{Character vector. URLs of tileset image files.}
 
-\item{\code{tilesetNames}}{Character vector. Names of tilesets as defined in Tiled.}
+\item{\code{tileset_names}}{Character vector. Names of tilesets as defined in Tiled.}
 
-\item{\code{layerName}}{Character. Name of the layer to render from Tiled.}
+\item{\code{layer_name}}{Character. Name of the layer to render from Tiled.}
 }
 \if{html}{\out{</div>}}
 }
@@ -355,15 +355,15 @@ Adds a static group to the scene (non-animated).
 \subsection{Method \code{add_collider()}}{
 Adds a collider between two game objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_collider(object_one_name, object_two_name)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_collider(object_name, object_two)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_one_name}}{Character. Name of the first object.}
+\item{\code{object_name}}{Character. Name of the first object.}
 
-\item{\code{object_two_name}}{Character. Name of the second object.}
+\item{\code{object_two}}{Character. Name of the second object.}
 }
 \if{html}{\out{</div>}}
 }
@@ -375,8 +375,8 @@ Adds a collider between two game objects.
 Adds a collider between two game objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_overlap(
-  object_one_name,
-  object_two_name = NULL,
+  object_name,
+  object_two = NULL,
   group_name = NULL,
   callback_fun,
   input
@@ -386,9 +386,9 @@ Adds a collider between two game objects.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_one_name}}{Character. Name of the first object.}
+\item{\code{object_name}}{Character. Name of the first object.}
 
-\item{\code{object_two_name}}{Character. Name of the second object.}
+\item{\code{object_two}}{Character. Name of the second object.}
 
 \item{\code{group_name}}{Character. Name of the group.}
 }
@@ -406,10 +406,10 @@ Load a base spritesheet and create an "idle" animation.
   url,
   x,
   y,
-  frameWidth,
-  frameHeight,
-  frameCount,
-  frameRate
+  frame_width,
+  frame_height,
+  frame_count,
+  frame_rate
 )}\if{html}{\out{</div>}}
 }
 
@@ -424,13 +424,13 @@ Load a base spritesheet and create an "idle" animation.
 
 \item{\code{y}}{Numeric. Y-coordinate in pixels.}
 
-\item{\code{frameWidth}}{Numeric. Width of each frame.}
+\item{\code{frame_width}}{Numeric. Width of each frame.}
 
-\item{\code{frameHeight}}{Numeric. Height of each frame.}
+\item{\code{frame_height}}{Numeric. Height of each frame.}
 
-\item{\code{frameCount}}{Numeric. Number of frames in the spritesheet.}
+\item{\code{frame_count}}{Numeric. Number of frames in the spritesheet.}
 
-\item{\code{frameRate}}{Numeric. Frames per second for the idle animation.}
+\item{\code{frame_rate}}{Numeric. Frames per second for the idle animation.}
 }
 \if{html}{\out{</div>}}
 }
@@ -443,8 +443,8 @@ Move all sprites of a given type along a vector for a set distance.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$set_sprite_in_motion(
   type,
-  dirX,
-  dirY,
+  dir_x,
+  dir_y,
   speed,
   distance,
   lag = distance/speed
@@ -456,9 +456,9 @@ Move all sprites of a given type along a vector for a set distance.
 \describe{
 \item{\code{type}}{Character. Key used in add_sprite().}
 
-\item{\code{dirX}}{Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).}
+\item{\code{dir_x}}{Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).}
 
-\item{\code{dirY}}{Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).}
+\item{\code{dir_y}}{Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).}
 
 \item{\code{speed}}{Numeric. Speed in pixels/second.}
 
