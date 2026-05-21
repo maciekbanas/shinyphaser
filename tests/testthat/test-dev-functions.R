@@ -27,3 +27,9 @@ test_that("phaser_create_assets is idempotent", {
   )
   expect_true(dir.exists(file.path("inst", "examples", "assets")))
 })
+
+
+
+test_that("run_sample_app is available", {
+  expect_true(is.function(run_sample_app))
+})
