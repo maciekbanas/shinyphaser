@@ -1,20 +1,7 @@
----
-title: "Build your first shinyphaser game"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Build your first shinyphaser game}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
+# Build your first shinyphaser game
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-This vignette walks through a minimal **shinyphaser** game where a hedgehog:
+This vignette walks through a minimal **shinyphaser** game where a
+hedgehog:
 
 - moves with arrow keys,
 - plays animations,
@@ -22,15 +9,18 @@ This vignette walks through a minimal **shinyphaser** game where a hedgehog:
 - collides with rocks,
 - avoids enemy sprites.
 
-## 1) Basic app structure: `ui` and `server` (why `width`/`height` set the play area and `set_shiny_session()` enables server-side events)
+## 1) Basic app structure
 
 A shinyphaser game lives inside a regular Shiny app.
 
-In `UI` we need to load `Phaser.js` dependencies and we do it with calling `ui()` method.
+In `UI` we need to load `Phaser.js` dependencies and we do it with
+calling `ui()` method.
 
-`set_shiny_session()` method is a helper to set Shiny session inside R6 object private environment as it will be reused by `shinyphaser` methods many times.
+`set_shiny_session()` method is a helper to set Shiny session inside R6
+object private environment as it will be reused by `shinyphaser` methods
+many times.
 
-```{r eval=FALSE}
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -47,11 +37,16 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-## 2) Add first image (background) (why `name` is a stable object key and `x`/`y` position the terrain center)
+## 2) Add first image (background)
 
 First we add simply image which will serve as a background to our game.
+We define `x` and `y` to place the image at a specific point on the
+canvas (in pixels): `x` is horizontal position and `y` is vertical
+position. For `add_image()`, this point is the image center, so
+`x = 800, y = 300` places the terrain around the middle area of the
+scene.
 
-```{r eval=FALSE}
+``` r
 floor <- game$add_image(
   name = "floor",
   url = "assets/hedgehog/terrain/grass.png",
@@ -59,9 +54,10 @@ floor <- game$add_image(
   y = 300
 )
 ```
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -83,17 +79,20 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
-
-```
-</details>
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_2_add_background.png")
 ```
 
-## 3) Add sprite (the player hedgehog) (why frame parameters describe spritesheet geometry and animation timing)
+![](assets/first_game_2_add_background.png)
 
-Create a player sprite from a sprite sheet.
-```{r eval=FALSE}
+## 3) Add sprite (the player hedgehog)
+
+Create a player sprite from a sprite sheet. The frame parameters
+describe how to cut and play that spritesheet: `frame_width` and
+`frame_height` are the size of a single frame (32x32 px),
+`frame_count = 5` tells shinyphaser how many frames to use from the
+sheet, and `frame_rate = 6` sets animation playback speed to 6 frames
+per second.
+
+``` r
 hedgehog <- game$add_sprite(
   name = "hedgehog",
   url = "assets/hedgehog/sprites/hedgehog_32.png",
@@ -106,12 +105,11 @@ hedgehog <- game$add_sprite(
 )
 ```
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/hedgehog_32.png")
-```
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+![](assets/hedgehog_32.png)
+
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -145,24 +143,29 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-</details>
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_3_add_sprite.gif")
-```
 
-## 4) Add player controls (why `directions` limits movement axes and `speed` sets motion responsiveness)
+![](assets/first_game_3_add_sprite.gif)
 
-Attach keyboard movement to the sprite.
+## 4) Add player controls
 
-```{r eval=FALSE}
+Attach keyboard movement to the sprite. `add_player_controls()` binds
+keyboard input to sprite velocity. Here,
+`directions = c("left", "right", "up", "down")` enables full 4-direction
+movement with arrow/WASD-style input, while `speed = 220` sets how fast
+the hedgehog travels (pixels per second). In practice, increase `speed`
+for a more arcade-like feel, or decrease it for more precise movement
+when navigating around obstacles.
+
+``` r
 hedgehog$add_player_controls(
   directions = c("left", "right", "up", "down"),
   speed = 220
 )
 ```
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -201,23 +204,26 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-</details>
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_4_player_controls.gif")
-```
 
-## 5) Add move animations (why we map per-direction animation suffixes to directional spritesheets)
+![](assets/first_game_4_player_controls.gif)
+
+## 5) Add move animations
 
 We would like now to apply animation to our hedgehog when he moves.
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/hedgehog_move_right_32.png")
-knitr::include_graphics("assets/hedgehog_move_left_32.png")
-```
+![](assets/hedgehog_move_right_32.png)![](assets/hedgehog_move_left_32.png)
 
-Add directional animations and play one as default.
+Add directional animations and play one as default. The idea is to
+register one animation per movement direction, then let the
+player-controls system switch between them automatically while the
+sprite is moving. We create a vector of direction names (`move_left`,
+`move_right`, `move_up`, `move_down`) and loop over it, calling
+`add_animation()` each time. The `suffix` links animation names to
+direction-specific files, `url` points to the correct spritesheet, and
+`frame_width`/`frame_height`/`frame_rate` describe how to read and play
+each animation strip.
 
-```{r eval=FALSE}
+``` r
 moves <- c("move_left", "move_right", "move_up", "move_down")
 
 for (move in moves) {
@@ -231,9 +237,9 @@ for (move in moves) {
 }
 ```
 
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -284,17 +290,22 @@ server <- function(input, output, session) {
 
 shinyApp(ui, server)
 ```
-</details>
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_5_move_animation.gif")
-```
+![](assets/first_game_5_move_animation.gif)
 
-## 6) Add overlap with other objects (collect apples) (why overlap is non-blocking and ideal for pickups + score callbacks)
+## 6) Add overlap with other objects (collect apples)
 
-Use overlap when two objects can share space and trigger events.
+Use overlap when two objects can share space and trigger events. In this
+step, apples act like collectibles: the hedgehog can move through them,
+and each touch fires a callback instead of blocking movement. We first
+create an `apples` static group and place a few apples on the map, then
+register `add_overlap()` between `"hedgehog"` and `"apples"`. Inside
+`callback_fun`, we hide the collected apple (`apples$disable(evt)`),
+increment score, and refresh on-screen text. In short: hedgehog meets
+apple, apple disappears, score goes up — because every hedgehog knows
+apples are the true quest objective.
 
-```{r eval=FALSE}
+``` r
 score <- reactiveVal(0)
 apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
 
@@ -316,9 +327,9 @@ game$add_overlap(
 )
 ```
 
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -388,17 +399,19 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
-</details>
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_6_overlap.gif")
-```
+![](assets/first_game_6_overlap.gif)
 
-## 7) Add collision with other objects (rocks) (why collision creates blocking physics and uses static groups for obstacles)
+## 7) Add collision with other objects (rocks)
 
-Use collision when objects should block each other.
+Use collision when objects should block each other. Unlike overlap
+(collect-and-pass-through), collision adds physical blocking. We enable
+terrain collision for the hedgehog, create a `rocks` static group, and
+then attach `add_collider()` so the player cannot walk through rocks.
+This gives the level real navigation constraints: apples are pickups,
+rocks are barriers.
 
-```{r eval=FALSE}
+``` r
 game$enable_terrain_collision("hedgehog")
 
 rocks <- game$add_static_group(
@@ -416,16 +429,16 @@ rocks$create(
 )
 ```
 
-```{r eval=FALSE}
+``` r
 game$add_collider(
   object_name = "hedgehog",
   group_name = "rocks"
 )
 ```
 
-<details>
-<summary>Show full code</summary>
-```{r eval=FALSE}
+Show full code
+
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -510,17 +523,20 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
-</details>
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_7_collide.gif")
-```
+![](assets/first_game_7_collide.gif)
 
-## 8) Add enemy sprites (why periodic `set_in_motion()` with `dir_x`/`dir_y` creates simple patrol behavior)
+## 8) Add enemy sprites
 
-Create one or more enemies and move them. If enemy overlaps the player, end game.
+Create one or more enemies and move them. If enemy overlaps the player,
+end game. Here we add a simple enemy loop: create a badger sprite,
+define hedgehog-badger overlap as a “game over” event, and periodically
+change enemy direction with `set_in_motion()`. The
+`invalidateLater(700, session)` timer makes the badger pick a new
+direction about every 0.7 seconds, which creates a lightweight
+patrol/chase feeling without writing a full AI system.
 
-```{r eval=FALSE}
+``` r
 enemy <- game$add_sprite(
   name = "badger",
   url = "assets/hedgehog/sprites/badger_move_left_50.png",
@@ -558,15 +574,13 @@ shiny::observe({
 })
 ```
 
-```{r, echo=FALSE}
-knitr::include_graphics("assets/first_game_8_full_example.gif")
-```
+![](assets/first_game_8_full_example.gif)
 
-## 9) Full minimal app (why combining overlap, collision, and animation produces complete game loop behavior)
+## 9) Full minimal app
 
 Put all pieces together:
 
-```{r eval=FALSE}
+``` r
 library(shiny)
 library(shinyphaser)
 
@@ -687,3 +701,13 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
+
+## 10) Deployment
+
+For now, you can deploy `shinyphaser` apps the same way as standard
+Shiny apps. For example, you can publish on **shinyapps.io** using
+[`rsconnect::deployApp()`](https://rstudio.github.io/rsconnect/reference/deployApp.html)
+from your app directory (or the **Publish** button in RStudio).
+
+See the official shinyapps.io deployment guide:
+<https://docs.posit.co/shinyapps.io/guide/getting_started/>
