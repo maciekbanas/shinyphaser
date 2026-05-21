@@ -11,3 +11,33 @@
 This package provides an **R Shiny interface to selected features of the Phaser 3 game framework**.
 
 It is designed to expose a practical subset of Phaser 3 capabilities inside Shiny apps, so you can build interactive game-like experiences from R without needing to use the full JavaScript API directly.
+
+## What you can do with shinyphaser
+
+With the current API, you can build small-to-medium 2D game-like interactions in Shiny, including:
+
+- creating a game canvas in your Shiny UI,
+- adding images and animated sprites,
+- attaching keyboard-based player controls,
+- defining overlap and collision rules between objects,
+- reacting to game events from R server logic.
+
+## Quick start
+
+You can run the built-in sample app:
+
+```r
+shinyphaser::run_sample_app()
+```
+
+Or start from the example script:
+
+```r
+file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
+```
+
+## Learn by example
+
+For a full walkthrough (from static background to movement, animation, overlap, and collision), see the vignette:
+
+- **Build your first shinyphaser game**: `vignettes/first-game-hedgehog.Rmd`
