@@ -402,6 +402,7 @@ knitr::include_graphics("assets/first_game_6_overlap.gif")
 ## 7) Add collision with other objects (rocks)
 
 Use collision when objects should block each other.
+Unlike overlap (collect-and-pass-through), collision adds physical blocking. We enable terrain collision for the hedgehog, create a `rocks` static group, and then attach `add_collider()` so the player cannot walk through rocks. This gives the level real navigation constraints: apples are pickups, rocks are barriers.
 
 ```{r eval=FALSE}
 game$enable_terrain_collision("hedgehog")
@@ -524,6 +525,7 @@ knitr::include_graphics("assets/first_game_7_collide.gif")
 ## 8) Add enemy sprites
 
 Create one or more enemies and move them. If enemy overlaps the player, end game.
+Here we add a simple enemy loop: create a badger sprite, define hedgehog-badger overlap as a "game over" event, and periodically change enemy direction with `set_in_motion()`. The `invalidateLater(700, session)` timer makes the badger pick a new direction about every 0.7 seconds, which creates a lightweight patrol/chase feeling without writing a full AI system.
 
 ```{r eval=FALSE}
 enemy <- game$add_sprite(
@@ -692,3 +694,11 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 ```
+
+## 10) Deployment
+
+For now, you can deploy `shinyphaser` apps the same way as standard Shiny apps.
+For example, you can publish on **shinyapps.io** using `rsconnect::deployApp()` from your app directory (or the **Publish** button in RStudio).
+
+See the official shinyapps.io deployment guide:
+<https://docs.posit.co/shinyapps.io/guide/getting_started/>
