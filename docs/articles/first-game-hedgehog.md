@@ -50,6 +50,8 @@ floor <- game$add_image(
 )
 ```
 
+Show full code
+
 ``` r
 library(shiny)
 library(phaserR)
@@ -94,6 +96,8 @@ hedgehog <- game$add_sprite(
 ```
 
 ![](assets/hedgehog_32.png)
+
+Show full code
 
 ``` r
 library(shiny)
@@ -143,7 +147,55 @@ hedgehog$add_player_controls(
 )
 ```
 
-## 5) Add animations
+Show full code
+
+``` r
+library(shiny)
+library(phaserR)
+
+game <- PhaserGame$new(width = 1500, height = 800)
+
+ui <- tagList(
+  game$ui()
+)
+
+server <- function(input, output, session) {
+  game$set_shiny_session()
+
+  floor <- game$add_image(
+    name = "floor",
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300
+  )
+
+  hedgehog <- game$add_sprite(
+    name = "hedgehog",
+    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    x = 140,
+    y = 260,
+    frameWidth = 32,
+    frameHeight = 32,
+    frameCount = 5,
+    frameRate = 6
+  )
+
+  hedgehog$add_player_controls(
+    directions = c("left", "right", "up", "down"),
+    speed = 220
+  )
+}
+
+shinyApp(ui, server)
+```
+
+![](assets/first_game_4_player_controls.gif)
+
+## 5) Add move animations
+
+We would like now to apply animation to our hedgehog when he moves.
+
+![](assets/hedgehog_move_right_32.png)![](assets/hedgehog_move_left_32.png)
 
 Add directional animations and play one as default.
 
@@ -159,9 +211,63 @@ for (move in moves) {
     frameRate = 5
   )
 }
-
-hedgehog$play_animation("hedgehog_move_right")
 ```
+
+Show full code
+
+``` r
+library(shiny)
+library(phaserR)
+
+game <- PhaserGame$new(width = 1500, height = 800)
+
+ui <- tagList(
+  game$ui()
+)
+
+server <- function(input, output, session) {
+  game$set_shiny_session()
+
+  floor <- game$add_image(
+    name = "floor",
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300
+  )
+
+  hedgehog <- game$add_sprite(
+    name = "hedgehog",
+    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    x = 140,
+    y = 260,
+    frameWidth = 32,
+    frameHeight = 32,
+    frameCount = 5,
+    frameRate = 6
+  )
+
+  hedgehog$add_player_controls(
+    directions = c("left", "right", "up", "down"),
+    speed = 220
+  )
+
+  moves <- c("move_left", "move_right", "move_up", "move_down")
+
+  for (move in moves) {
+    hedgehog$add_animation(
+      suffix = move,
+      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      frameWidth = 32,
+      frameHeight = 32,
+      frameRate = 5
+    )
+  }
+}
+
+shinyApp(ui, server)
+```
+
+![](assets/first_game_5_move_animation.gif)
 
 ## 6) Add overlap with other objects (collect apples)
 
@@ -178,7 +284,7 @@ apples$create(730, 390)
 score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
 game$add_overlap(
-  sprite_name = "hedgehog",
+  object_one_name = "hedgehog",
   group_name = "apples",
   callback_fun = function(evt) {
     apples$disable(evt)        # hide collected apple
@@ -187,6 +293,79 @@ game$add_overlap(
   },
   input = input
 )
+```
+
+Show full code
+
+``` r
+library(shiny)
+library(phaserR)
+
+game <- PhaserGame$new(width = 1500, height = 800)
+
+ui <- tagList(
+  game$ui()
+)
+
+server <- function(input, output, session) {
+  game$set_shiny_session()
+
+  floor <- game$add_image(
+    name = "floor",
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300
+  )
+
+  hedgehog <- game$add_sprite(
+    name = "hedgehog",
+    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    x = 140,
+    y = 260,
+    frameWidth = 32,
+    frameHeight = 32,
+    frameCount = 5,
+    frameRate = 6
+  )
+
+  hedgehog$add_player_controls(
+    directions = c("left", "right", "up", "down"),
+    speed = 220
+  )
+
+  moves <- c("move_left", "move_right", "move_up", "move_down")
+
+  for (move in moves) {
+    hedgehog$add_animation(
+      suffix = move,
+      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      frameWidth = 32,
+      frameHeight = 32,
+      frameRate = 5
+    )
+  }
+
+  score <- reactiveVal(0)
+  apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+
+  apples$create(260, 140)
+  apples$create(640, 180)
+  apples$create(730, 390)
+
+  score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
+
+  game$add_overlap(
+    object_one_name = "hedgehog",
+    group_name = "apples",
+    callback_fun = function(evt) {
+      apples$disable(evt)        # hide collected apple
+      score(score() + 1)
+      score_text$set(paste("Score:", score()))
+    },
+    input = input
+  )
+}
+shinyApp(ui, server)
 ```
 
 ## 7) Add collision with other objects (walls)
