@@ -1,5 +1,5 @@
 # Changelog
 
-## phaserR (development version)
+## shinyphaser (development version)
 
 First release.

@@ -2,5 +2,5 @@
 
 ### Getting started
 
-- [Build your first phaserR game (hedgehog
+- [Build your first shinyphaser game (hedgehog
   vignette)](first-game-hedgehog.md):

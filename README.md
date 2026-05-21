@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# shinyphaser <img src="man/figures/phaserR.png" align="right" height="138" style="float:right; height:138px;" alt = "shinyphaser Logo"/>
+# shinyphaser <img src="man/figures/shinyphaser.png" align="right" height="138" style="float:right; height:138px;" alt = "shinyphaser Logo"/>
 
 <!-- badges: start -->
 

@@ -1,4 +1,4 @@
 # License
 
     YEAR: 2025
-    COPYRIGHT HOLDER: phaserR authors
+    COPYRIGHT HOLDER: shinyphaser authors
