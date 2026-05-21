@@ -47,7 +47,7 @@ test_that("Group and StaticGroup methods send expected JS", {
 
 test_that("Sprite utility methods send expected JS", {
   session <- make_mock_session()
-  s <- Sprite$new("hero", "hero.png", 0, 0, 32, 32, frameCount = 4, frameRate = 12, session = session)
+  s <- Sprite$new("hero", "hero.png", 0, 0, 32, 32, frame_count = 4, frame_rate = 12, session = session)
   s$play_animation("idle")
   s$play_animation("run", duration = 300)
   s$add_player_controls(c("left", "right"), speed = 180)

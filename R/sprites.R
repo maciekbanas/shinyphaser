@@ -5,12 +5,12 @@ Sprite <- R6::R6Class(
     #' @param url Character. URL or path to the spritesheet image.
     #' @param x Numeric. X-coordinate in pixels.
     #' @param y Numeric. Y-coordinate in pixels.
-    #' @param frameWidth Numeric. Width of each frame.
-    #' @param frameHeight Numeric. Height of each frame.
-    #' @param frameCount Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
-    #' @param frameRate Numeric. Frames per second for the idle animation.
+    #' @param frame_width Numeric. Width of each frame.
+    #' @param frame_height Numeric. Height of each frame.
+    #' @param frame_count Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
+    #' @param frame_rate Numeric. Frames per second for the idle animation.
     initialize = function(name, url, x, y,
-                          frameWidth, frameHeight, frameCount = NULL, frameRate,
+                          frame_width, frame_height, frame_count = NULL, frame_rate,
                           session = getDefaultReactiveDomain()) {
       private$session <- session
       private$name <- name
@@ -18,31 +18,31 @@ Sprite <- R6::R6Class(
         "addSprite(%s, %s, %d, %d, %d, %d, %s, %d);",
         jsonlite::toJSON(name, auto_unbox = TRUE),
         jsonlite::toJSON(url, auto_unbox = TRUE),
-        x, y, frameWidth, frameHeight,
-        if (is.null(frameCount)) "null" else as.character(as.integer(frameCount)),
-        frameRate
+        x, y, frame_width, frame_height,
+        if (is.null(frame_count)) "null" else as.character(as.integer(frame_count)),
+        frame_rate
       )
       send_js(private, js)
     },
     #' @description Load a custom animation for any sprite previously added.
     #' @param suffix Character. Identifier for this animation (e.g. "move_left").
     #' @param url Character. URL or path to the spritesheet.
-    #' @param frameWidth Numeric. Width of each frame.
-    #' @param frameHeight Numeric. Height of each frame.
-    #' @param frameCount Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
-    #' @param frameRate Numeric. Frames per second for playback.
+    #' @param frame_width Numeric. Width of each frame.
+    #' @param frame_height Numeric. Height of each frame.
+    #' @param frame_count Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
+    #' @param frame_rate Numeric. Frames per second for playback.
     #' @return Invisible; sends a custom message to the client.
     add_animation = function(suffix, url,
-                             frameWidth, frameHeight,
-                             frameCount = NULL, frameRate) {
+                             frame_width, frame_height,
+                             frame_count = NULL, frame_rate) {
       js <- sprintf(
         "addSpriteAnimation(%s,%s,%s,%d,%d,%s,%d);",
         jsonlite::toJSON(private$name, auto_unbox = TRUE),
         jsonlite::toJSON(suffix, auto_unbox = TRUE),
         jsonlite::toJSON(url, auto_unbox = TRUE),
-        frameWidth, frameHeight,
-        if (is.null(frameCount)) "null" else as.character(as.integer(frameCount)),
-        frameRate
+        frame_width, frame_height,
+        if (is.null(frame_count)) "null" else as.character(as.integer(frame_count)),
+        frame_rate
       )
       send_js(private, js)
     },
@@ -106,20 +106,20 @@ Sprite <- R6::R6Class(
     },
 
     #' @description Move sprite along a vector for a set distance.
-    #' @param dirX Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).
-    #' @param dirY Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).
+    #' @param dir_x Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).
+    #' @param dir_y Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).
     #' @param speed Numeric. Speed in pixels/second.
     #' @param distance Numeric. Distance in pixels to travel before stopping.
     #' @param lag Numeric. Optional delay before sending the command (defaults to distance/speed).
-    set_in_motion = function(dirX,
-                             dirY,
+    set_in_motion = function(dir_x,
+                             dir_y,
                              speed,
                              distance,
                              lag = distance/speed) {
       Sys.sleep(lag)
       js <- sprintf(
         "setSpriteInMotion('%s', %d, %d, %d, %d);",
-        private$name, dirX, dirY, speed, distance
+        private$name, dir_x, dir_y, speed, distance
       )
       send_js(private, js)
     }

@@ -22,10 +22,10 @@ server <- function(input, output, session) {
     url = "assets/hedgehog/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
-    frameWidth = 32,
-    frameHeight = 32,
-    frameCount = 5,
-    frameRate = 6
+    frame_width = 32,
+    frame_height = 32,
+    frame_count = 5,
+    frame_rate = 6
   )
 
   hedgehog$add_player_controls(
@@ -41,9 +41,9 @@ server <- function(input, output, session) {
     hedgehog$add_animation(
       suffix = move,
       url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
-      frameWidth = 32,
-      frameHeight = 32,
-      frameRate = 5
+      frame_width = 32,
+      frame_height = 32,
+      frame_rate = 5
     )
   }
 
@@ -65,7 +65,7 @@ server <- function(input, output, session) {
   score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
   game$add_overlap(
-    object_one_name = "hedgehog",
+    object_name = "hedgehog",
     group_name = "apples",
     callback_fun = function(evt) {
       apples$disable(evt)
@@ -76,7 +76,7 @@ server <- function(input, output, session) {
   )
 
   game$add_collider(
-    object_one = "hedgehog",
+    object_name = "hedgehog",
     group_name = "rocks"
   )
 
@@ -85,15 +85,15 @@ server <- function(input, output, session) {
     url = "assets/hedgehog/sprites/badger_move_left_50.png",
     x = 700,
     y = 300,
-    frameWidth = 50,
-    frameHeight = 50,
-    frameCount = 1,
-    frameRate = 1
+    frame_width = 50,
+    frame_height = 50,
+    frame_count = 1,
+    frame_rate = 1
   )
 
   game$add_overlap(
-    object_one_name = "hedgehog",
-    object_two_name = "badger",
+    object_name = "hedgehog",
+    object_two = "badger",
     callback_fun = function(evt) {
       shinyalert::shinyalert(
         title = "Game over", type = "error",
@@ -108,8 +108,8 @@ server <- function(input, output, session) {
     shiny::invalidateLater(700, session)
     dir <- sample(list(c(-1, 0), c(1, 0), c(0, -1), c(0, 1)), 1)[[1]]
     enemy$set_in_motion(
-      dirX = dir[1],
-      dirY = dir[2],
+      dir_x = dir[1],
+      dir_y = dir[2],
       speed = 70,
       distance = 150,
       lag = 0
