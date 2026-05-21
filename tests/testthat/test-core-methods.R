@@ -71,7 +71,7 @@ test_that("Sprite utility methods send expected JS", {
 })
 
 test_that("sample app and hedgehog assets are available", {
-  sample_app <- system.file("sample_app", "app.R", package = "phaserR")
+  sample_app <- system.file("sample_app", "app.R", package = "shinyphaser")
   expect_true(file.exists(sample_app))
-  expect_true(file.exists(system.file("assets", "hedgehog", "terrain", "grass.png", package = "phaserR")))
+  expect_true(file.exists(system.file("assets", "hedgehog", "terrain", "grass.png", package = "shinyphaser")))
 })

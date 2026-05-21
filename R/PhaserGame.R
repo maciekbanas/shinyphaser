@@ -39,14 +39,14 @@ PhaserGame <- R6::R6Class(
     #' @examples
     #'  game$ui()
     ui = function() {
-      shiny::addResourcePath("assets", system.file("assets", package = "phaserR"))
+      shiny::addResourcePath("assets", system.file("assets", package = "shinyphaser"))
       htmltools::tagList(
         phaser_dependency(),
         htmltools::tags$div(id = self$id, style = "width:100vw; height:100vh;"),
         htmltools::htmlDependency(
-          name = "phaserR-assets",
+          name = "shinyphaser-assets",
           version = "0.1",
-          package = "phaserR",
+          package = "shinyphaser",
           src = "www",
           script = c("phaser-game.js", "phaser-groups.js",
                      "phaser-sprite.js", "phaser-image.js")

@@ -1,4 +1,4 @@
 library(testthat)
-library(phaserR)
+library(shinyphaser)
 
-test_check("phaserR")
+test_check("shinyphaser")

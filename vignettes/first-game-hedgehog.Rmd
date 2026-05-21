@@ -24,7 +24,7 @@ This vignette walks through a minimal **shinyphaser** game where a hedgehog:
 
 ## 1) Basic app structure: `ui` and `server` (why `width`/`height` set the play area and `set_shiny_session()` enables server-side events)
 
-A phaserR game lives inside a regular Shiny app.
+A shinyphaser game lives inside a regular Shiny app.
 
 In `UI` we need to load `Phaser.js` dependencies and we do it with calling `ui()` method.
 
@@ -32,7 +32,7 @@ In `UI` we need to load `Phaser.js` dependencies and we do it with calling `ui()
 
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -63,7 +63,7 @@ floor <- game$add_image(
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -113,7 +113,7 @@ knitr::include_graphics("assets/hedgehog_32.png")
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -164,7 +164,7 @@ hedgehog$add_player_controls(
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -235,7 +235,7 @@ for (move in moves) {
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -320,7 +320,7 @@ game$add_overlap(
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -427,7 +427,7 @@ game$add_collider(
 <summary>Show full code</summary>
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -568,7 +568,7 @@ Put all pieces together:
 
 ```{r eval=FALSE}
 library(shiny)
-library(phaserR)
+library(shinyphaser)
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
