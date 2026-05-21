@@ -23,17 +23,17 @@ controls, and collision handling.
 
 - [`PhaserGame$add_text()`](#method-PhaserGame-add_text)
 
-- [`PhaserGame$add_player_sprite()`](#method-PhaserGame-add_player_sprite)
-
-- [`PhaserGame$add_sprite_animation()`](#method-PhaserGame-add_sprite_animation)
+- [`PhaserGame$add_rectangle()`](#method-PhaserGame-add_rectangle)
 
 - [`PhaserGame$add_image()`](#method-PhaserGame-add_image)
 
 - [`PhaserGame$add_map()`](#method-PhaserGame-add_map)
 
-- [`PhaserGame$add_player_controls()`](#method-PhaserGame-add_player_controls)
-
 - [`PhaserGame$enable_terrain_collision()`](#method-PhaserGame-enable_terrain_collision)
+
+- [`PhaserGame$add_sprite()`](#method-PhaserGame-add_sprite)
+
+- [`PhaserGame$add_group()`](#method-PhaserGame-add_group)
 
 - [`PhaserGame$add_static_sprite()`](#method-PhaserGame-add_static_sprite)
 
@@ -43,9 +43,11 @@ controls, and collision handling.
 
 - [`PhaserGame$add_overlap()`](#method-PhaserGame-add_overlap)
 
-- [`PhaserGame$add_sprite()`](#method-PhaserGame-add_sprite)
+- [`PhaserGame$are_overlap()`](#method-PhaserGame-are_overlap)
 
-- [`PhaserGame$set_sprite_in_motion()`](#method-PhaserGame-set_sprite_in_motion)
+- [`PhaserGame$add_overlap_end()`](#method-PhaserGame-add_overlap_end)
+
+- [`PhaserGame$add_control()`](#method-PhaserGame-add_control)
 
 - [`PhaserGame$clone()`](#method-PhaserGame-clone)
 
@@ -119,116 +121,24 @@ HTML tag list containing dependencies and initialization script.
 
 #### Usage
 
-    PhaserGame$add_text(text, id, x, y, style = list(fontSize = "22px"))
+    PhaserGame$add_text(text, id, x, y, style = list(font_size = "22px"))
 
 ------------------------------------------------------------------------
 
-### Method `add_player_sprite()`
-
-Add a player sprite to the scene as an animated spritesheet.
+### Method `add_rectangle()`
 
 #### Usage
 
-    PhaserGame$add_player_sprite(
+    PhaserGame$add_rectangle(
       name,
-      url,
       x,
       y,
-      frameWidth,
-      frameHeight,
-      frameCount,
-      frameRate
+      width,
+      height,
+      color,
+      visible = TRUE,
+      clickable = FALSE
     )
-
-#### Arguments
-
-- `name`:
-
-  Character. Unique key for the sprite.
-
-- `url`:
-
-  Character. URL or relative path to the spritesheet image.
-
-- `x`:
-
-  Numeric. X-coordinate in pixels.
-
-- `y`:
-
-  Numeric. Y-coordinate in pixels.
-
-- `frameWidth`:
-
-  Numeric. Width of each frame in the spritesheet.
-
-- `frameHeight`:
-
-  Numeric. Height of each frame in the spritesheet.
-
-- `frameCount`:
-
-  Numeric. Total number of frames.
-
-- `frameRate`:
-
-  Numeric. Frames per second for the animation.
-
-#### Returns
-
-Invisible; sends a custom message to the client.
-
-------------------------------------------------------------------------
-
-### Method `add_sprite_animation()`
-
-Load a custom animation for any sprite previously added.
-
-#### Usage
-
-    PhaserGame$add_sprite_animation(
-      name,
-      suffix,
-      url,
-      frameWidth,
-      frameHeight,
-      frameCount,
-      frameRate
-    )
-
-#### Arguments
-
-- `name`:
-
-  Character. Base key used in add_player_sprite or add_enemy_sprite.
-
-- `suffix`:
-
-  Character. Identifier for this animation (e.g. "move_left").
-
-- `url`:
-
-  Character. URL or path to the spritesheet.
-
-- `frameWidth`:
-
-  Numeric. Width of each frame.
-
-- `frameHeight`:
-
-  Numeric. Height of each frame.
-
-- `frameCount`:
-
-  Numeric. Number of frames in the spritesheet.
-
-- `frameRate`:
-
-  Numeric. Frames per second for playback.
-
-#### Returns
-
-Invisible; sends a custom message to the client.
 
 ------------------------------------------------------------------------
 
@@ -238,15 +148,15 @@ Adds a static image to the Phaser scene.
 
 #### Usage
 
-    PhaserGame$add_image(imageName, imageUrl, x, y)
+    PhaserGame$add_image(name, url, x, y, visible = TRUE, clickable = FALSE)
 
 #### Arguments
 
-- `imageName`:
+- `name`:
 
   Character. Unique key to reference this image.
 
-- `imageUrl`:
+- `url`:
 
   Character. URL or path to the image file.
 
@@ -270,62 +180,33 @@ Add a background (tilemap) layer from Tiled JSON + tileset image(s).
 
 #### Usage
 
-    PhaserGame$add_map(mapKey, mapUrl, tilesetUrls, tilesetNames, layerName)
+    PhaserGame$add_map(map_key, map_url, tileset_urls, tileset_names, layer_name)
 
 #### Arguments
 
-- `mapKey`:
+- `map_key`:
 
   Character. Key for the tilemap JSON.
 
-- `mapUrl`:
+- `map_url`:
 
   Character. URL of the Tiled JSON file (relative to www/assets/).
 
-- `tilesetUrls`:
+- `tileset_urls`:
 
   Character vector. URLs of tileset image files.
 
-- `tilesetNames`:
+- `tileset_names`:
 
   Character vector. Names of tilesets as defined in Tiled.
 
-- `layerName`:
+- `layer_name`:
 
   Character. Name of the layer to render from Tiled.
 
 #### Returns
 
 Invisible; sends a custom message to the client.
-
-------------------------------------------------------------------------
-
-### Method `add_player_controls()`
-
-Enable movement controls (arrow keys) for a player sprite.
-
-#### Usage
-
-    PhaserGame$add_player_controls(
-      name,
-      directions = c("left", "right", "down", "up"),
-      speed = 200
-    )
-
-#### Arguments
-
-- `name`:
-
-  Character. Name of the player sprite (as added via add_player_sprite).
-
-- `directions`:
-
-  Character vector. Directions to enable (defaults to
-  c("left","right","down","up")).
-
-- `speed`:
-
-  Numeric. Movement speed in pixels/second (default: 200).
 
 ------------------------------------------------------------------------
 
@@ -342,6 +223,75 @@ Enable terrain collision for a player sprite.
 - `name`:
 
   Character. Name of the player sprite (as added via add_player_sprite).
+
+------------------------------------------------------------------------
+
+### Method `add_sprite()`
+
+Load a base spritesheet and create an "idle" animation.
+
+#### Usage
+
+    PhaserGame$add_sprite(
+      name,
+      url,
+      x,
+      y,
+      frame_width,
+      frame_height,
+      frame_count = 1,
+      frame_rate = 1
+    )
+
+#### Arguments
+
+- `name`:
+
+  Character. Unique key for the sprite and its idle animation.
+
+- `url`:
+
+  Character. URL or path to the spritesheet image.
+
+- `x`:
+
+  Numeric. X-coordinate in pixels.
+
+- `y`:
+
+  Numeric. Y-coordinate in pixels.
+
+- `frame_width`:
+
+  Numeric. Width of each frame.
+
+- `frame_height`:
+
+  Numeric. Height of each frame.
+
+- `frame_count`:
+
+  Numeric. Number of frames in the spritesheet.
+
+- `frame_rate`:
+
+  Numeric. Frames per second for the idle animation.
+
+------------------------------------------------------------------------
+
+### Method `add_group()`
+
+Adds a dynamic group from a spritesheet.
+
+#### Usage
+
+    PhaserGame$add_group(name)
+
+#### Arguments
+
+- `name`:
+
+  Character. Unique name of the group.
 
 ------------------------------------------------------------------------
 
@@ -379,7 +329,7 @@ Adds a static group to the scene (non-animated).
 
 #### Usage
 
-    PhaserGame$add_static_group(input, name, url)
+    PhaserGame$add_static_group(name, url)
 
 #### Arguments
 
@@ -399,15 +349,21 @@ Adds a collider between two game objects.
 
 #### Usage
 
-    PhaserGame$add_collider(object_one_name, object_two_name)
+    PhaserGame$add_collider(
+      object_name,
+      object_two = NULL,
+      group_name = NULL,
+      callback_fun = NULL,
+      input
+    )
 
 #### Arguments
 
-- `object_one_name`:
+- `object_name`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
@@ -420,8 +376,8 @@ Adds a collider between two game objects.
 #### Usage
 
     PhaserGame$add_overlap(
-      object_one_name,
-      object_two_name = NULL,
+      object_name,
+      object_two = NULL,
       group_name = NULL,
       callback_fun,
       input
@@ -429,11 +385,11 @@ Adds a collider between two game objects.
 
 #### Arguments
 
-- `object_one_name`:
+- `object_name`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
@@ -441,102 +397,40 @@ Adds a collider between two game objects.
 
   Character. Name of the group.
 
-------------------------------------------------------------------------
+- `callback_fun`:
 
-### Method `add_sprite()`
-
-Load a base spritesheet and create an "idle" animation.
-
-#### Usage
-
-    PhaserGame$add_sprite(
-      name,
-      url,
-      x,
-      y,
-      frameWidth,
-      frameHeight,
-      frameCount,
-      frameRate
-    )
-
-#### Arguments
-
-- `name`:
-
-  Character. Unique key for the sprite and its idle animation.
-
-- `url`:
-
-  Character. URL or path to the spritesheet image.
-
-- `x`:
-
-  Numeric. X-coordinate in pixels.
-
-- `y`:
-
-  Numeric. Y-coordinate in pixels.
-
-- `frameWidth`:
-
-  Numeric. Width of each frame.
-
-- `frameHeight`:
-
-  Numeric. Height of each frame.
-
-- `frameCount`:
-
-  Numeric. Number of frames in the spritesheet.
-
-- `frameRate`:
-
-  Numeric. Frames per second for the idle animation.
+  A function to be run when overlap occurs.
 
 ------------------------------------------------------------------------
 
-### Method `set_sprite_in_motion()`
-
-Move all sprites of a given type along a vector for a set distance.
+### Method `are_overlap()`
 
 #### Usage
 
-    PhaserGame$set_sprite_in_motion(
-      type,
-      dirX,
-      dirY,
-      speed,
-      distance,
-      lag = distance/speed
+    PhaserGame$are_overlap(object_one_name, object_two_name, input)
+
+------------------------------------------------------------------------
+
+### Method `add_overlap_end()`
+
+#### Usage
+
+    PhaserGame$add_overlap_end(
+      object_one_name,
+      object_two_name = NULL,
+      group_name = NULL,
+      callback_fun,
+      input,
+      session = shiny::getDefaultReactiveDomain()
     )
 
-#### Arguments
+------------------------------------------------------------------------
 
-- `type`:
+### Method `add_control()`
 
-  Character. Key used in add_sprite().
+#### Usage
 
-- `dirX`:
-
-  Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).
-
-- `dirY`:
-
-  Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).
-
-- `speed`:
-
-  Numeric. Speed in pixels/second.
-
-- `distance`:
-
-  Numeric. Distance in pixels to travel before stopping.
-
-- `lag`:
-
-  Numeric. Optional delay before sending the command (defaults to
-  distance/speed).
+    PhaserGame$add_control(key, action, input)
 
 ------------------------------------------------------------------------
 

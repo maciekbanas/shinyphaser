@@ -9,7 +9,7 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 
     <a class="navbar-brand me-2" href="../index.html">shinyphaser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9030</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9033</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/first-game-hedgehog.html">Build your first shinyphaser game (hedgehog vignette)</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/first-game-hedgehog.html">Build your first shinyphaser game</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -62,18 +62,19 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 <li><p><a href="#method-PhaserGame-set_shiny_session"><code>PhaserGame$set_shiny_session()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-ui"><code>PhaserGame$ui()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_text"><code>PhaserGame$add_text()</code></a></p></li>
-<li><p><a href="#method-PhaserGame-add_player_sprite"><code>PhaserGame$add_player_sprite()</code></a></p></li>
-<li><p><a href="#method-PhaserGame-add_sprite_animation"><code>PhaserGame$add_sprite_animation()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-add_rectangle"><code>PhaserGame$add_rectangle()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_image"><code>PhaserGame$add_image()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_map"><code>PhaserGame$add_map()</code></a></p></li>
-<li><p><a href="#method-PhaserGame-add_player_controls"><code>PhaserGame$add_player_controls()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-enable_terrain_collision"><code>PhaserGame$enable_terrain_collision()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-add_sprite"><code>PhaserGame$add_sprite()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-add_group"><code>PhaserGame$add_group()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_static_sprite"><code>PhaserGame$add_static_sprite()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_static_group"><code>PhaserGame$add_static_group()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_collider"><code>PhaserGame$add_collider()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-add_overlap"><code>PhaserGame$add_overlap()</code></a></p></li>
-<li><p><a href="#method-PhaserGame-add_sprite"><code>PhaserGame$add_sprite()</code></a></p></li>
-<li><p><a href="#method-PhaserGame-set_sprite_in_motion"><code>PhaserGame$set_sprite_in_motion()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-are_overlap"><code>PhaserGame$are_overlap()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-add_overlap_end"><code>PhaserGame$add_overlap_end()</code></a></p></li>
+<li><p><a href="#method-PhaserGame-add_control"><code>PhaserGame$add_control()</code></a></p></li>
 <li><p><a href="#method-PhaserGame-clone"><code>PhaserGame$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-PhaserGame-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -147,133 +148,42 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 
 <div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_text</span><span class="op">(</span><span class="va">text</span>, <span class="va">id</span>, <span class="va">x</span>, <span class="va">y</span>, style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fontSize <span class="op">=</span> <span class="st">"22px"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_text</span><span class="op">(</span><span class="va">text</span>, <span class="va">id</span>, <span class="va">x</span>, <span class="va">y</span>, style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>font_size <span class="op">=</span> <span class="st">"22px"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 
-</div><p></p><hr><a id="method-PhaserGame-add_player_sprite"></a><div class="section">
-<h3 id="method-add-player-sprite-">Method <code>add_player_sprite()</code><a class="anchor" aria-label="anchor" href="#method-add-player-sprite-"></a></h3>
-<p>Add a player sprite to the scene as an animated spritesheet.</p><div class="section">
+</div><p></p><hr><a id="method-PhaserGame-add_rectangle"></a><div class="section">
+<h3 id="method-add-rectangle-">Method <code>add_rectangle()</code><a class="anchor" aria-label="anchor" href="#method-add-rectangle-"></a></h3>
+
+<div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_player_sprite</span><span class="op">(</span></span>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_rectangle</span><span class="op">(</span></span>
 <span>  <span class="va">name</span>,</span>
-<span>  <span class="va">url</span>,</span>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">y</span>,</span>
-<span>  <span class="va">frameWidth</span>,</span>
-<span>  <span class="va">frameHeight</span>,</span>
-<span>  <span class="va">frameCount</span>,</span>
-<span>  <span class="va">frameRate</span></span>
+<span>  <span class="va">width</span>,</span>
+<span>  <span class="va">height</span>,</span>
+<span>  <span class="va">color</span>,</span>
+<span>  visible <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  clickable <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-PhaserGame-add_image"></a><div class="section">
+<h3 id="method-add-image-">Method <code>add_image()</code><a class="anchor" aria-label="anchor" href="#method-add-image-"></a></h3>
+<p>Adds a static image to the Phaser scene.</p><div class="section">
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span><span class="va">name</span>, <span class="va">url</span>, <span class="va">x</span>, <span class="va">y</span>, visible <span class="op">=</span> <span class="cn">TRUE</span>, clickable <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
-<dd><p>Character. Unique key for the sprite.</p></dd>
-
-
-<dt><code>url</code></dt>
-<dd><p>Character. URL or relative path to the spritesheet image.</p></dd>
-
-
-<dt><code>x</code></dt>
-<dd><p>Numeric. X-coordinate in pixels.</p></dd>
-
-
-<dt><code>y</code></dt>
-<dd><p>Numeric. Y-coordinate in pixels.</p></dd>
-
-
-<dt><code>frameWidth</code></dt>
-<dd><p>Numeric. Width of each frame in the spritesheet.</p></dd>
-
-
-<dt><code>frameHeight</code></dt>
-<dd><p>Numeric. Height of each frame in the spritesheet.</p></dd>
-
-
-<dt><code>frameCount</code></dt>
-<dd><p>Numeric. Total number of frames.</p></dd>
-
-
-<dt><code>frameRate</code></dt>
-<dd><p>Numeric. Frames per second for the animation.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p>Invisible; sends a custom message to the client.</p>
-</div>
-
-</div><p></p><hr><a id="method-PhaserGame-add_sprite_animation"></a><div class="section">
-<h3 id="method-add-sprite-animation-">Method <code>add_sprite_animation()</code><a class="anchor" aria-label="anchor" href="#method-add-sprite-animation-"></a></h3>
-<p>Load a custom animation for any sprite previously added.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_sprite_animation</span><span class="op">(</span></span>
-<span>  <span class="va">name</span>,</span>
-<span>  <span class="va">suffix</span>,</span>
-<span>  <span class="va">url</span>,</span>
-<span>  <span class="va">frameWidth</span>,</span>
-<span>  <span class="va">frameHeight</span>,</span>
-<span>  <span class="va">frameCount</span>,</span>
-<span>  <span class="va">frameRate</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>name</code></dt>
-<dd><p>Character. Base key used in add_player_sprite or add_enemy_sprite.</p></dd>
-
-
-<dt><code>suffix</code></dt>
-<dd><p>Character. Identifier for this animation (e.g. "move_left").</p></dd>
-
-
-<dt><code>url</code></dt>
-<dd><p>Character. URL or path to the spritesheet.</p></dd>
-
-
-<dt><code>frameWidth</code></dt>
-<dd><p>Numeric. Width of each frame.</p></dd>
-
-
-<dt><code>frameHeight</code></dt>
-<dd><p>Numeric. Height of each frame.</p></dd>
-
-
-<dt><code>frameCount</code></dt>
-<dd><p>Numeric. Number of frames in the spritesheet.</p></dd>
-
-
-<dt><code>frameRate</code></dt>
-<dd><p>Numeric. Frames per second for playback.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p>Invisible; sends a custom message to the client.</p>
-</div>
-
-</div><p></p><hr><a id="method-PhaserGame-add_image"></a><div class="section">
-<h3 id="method-add-image-">Method <code>add_image()</code><a class="anchor" aria-label="anchor" href="#method-add-image-"></a></h3>
-<p>Adds a static image to the Phaser scene.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span><span class="va">imageName</span>, <span class="va">imageUrl</span>, <span class="va">x</span>, <span class="va">y</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>imageName</code></dt>
 <dd><p>Character. Unique key to reference this image.</p></dd>
 
 
-<dt><code>imageUrl</code></dt>
+<dt><code>url</code></dt>
 <dd><p>Character. URL or path to the image file.</p></dd>
 
 
@@ -288,85 +198,126 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>Invisible; sends a custom message to the client.</p>
 </div>
 
 </div><p></p><hr><a id="method-PhaserGame-add_map"></a><div class="section">
 <h3 id="method-add-map-">Method <code>add_map()</code><a class="anchor" aria-label="anchor" href="#method-add-map-"></a></h3>
 <p>Add a background (tilemap) layer from Tiled JSON + tileset image(s).</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_map</span><span class="op">(</span><span class="va">mapKey</span>, <span class="va">mapUrl</span>, <span class="va">tilesetUrls</span>, <span class="va">tilesetNames</span>, <span class="va">layerName</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_map</span><span class="op">(</span><span class="va">map_key</span>, <span class="va">map_url</span>, <span class="va">tileset_urls</span>, <span class="va">tileset_names</span>, <span class="va">layer_name</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>mapKey</code></dt>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>map_key</code></dt>
 <dd><p>Character. Key for the tilemap JSON.</p></dd>
 
 
-<dt><code>mapUrl</code></dt>
+<dt><code>map_url</code></dt>
 <dd><p>Character. URL of the Tiled JSON file (relative to www/assets/).</p></dd>
 
 
-<dt><code>tilesetUrls</code></dt>
+<dt><code>tileset_urls</code></dt>
 <dd><p>Character vector. URLs of tileset image files.</p></dd>
 
 
-<dt><code>tilesetNames</code></dt>
+<dt><code>tileset_names</code></dt>
 <dd><p>Character vector. Names of tilesets as defined in Tiled.</p></dd>
 
 
-<dt><code>layerName</code></dt>
+<dt><code>layer_name</code></dt>
 <dd><p>Character. Name of the layer to render from Tiled.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>Invisible; sends a custom message to the client.</p>
-</div>
-
-</div><p></p><hr><a id="method-PhaserGame-add_player_controls"></a><div class="section">
-<h3 id="method-add-player-controls-">Method <code>add_player_controls()</code><a class="anchor" aria-label="anchor" href="#method-add-player-controls-"></a></h3>
-<p>Enable movement controls (arrow keys) for a player sprite.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_player_controls</span><span class="op">(</span></span>
-<span>  <span class="va">name</span>,</span>
-<span>  directions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"right"</span>, <span class="st">"down"</span>, <span class="st">"up"</span><span class="op">)</span>,</span>
-<span>  speed <span class="op">=</span> <span class="fl">200</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>name</code></dt>
-<dd><p>Character. Name of the player sprite (as added via add_player_sprite).</p></dd>
-
-
-<dt><code>directions</code></dt>
-<dd><p>Character vector. Directions to enable (defaults to c("left","right","down","up")).</p></dd>
-
-
-<dt><code>speed</code></dt>
-<dd><p>Numeric. Movement speed in pixels/second (default: 200).</p></dd>
-
-
-</dl><p></p></div>
 </div>
 
 </div><p></p><hr><a id="method-PhaserGame-enable_terrain_collision"></a><div class="section">
 <h3 id="method-enable-terrain-collision-">Method <code>enable_terrain_collision()</code><a class="anchor" aria-label="anchor" href="#method-enable-terrain-collision-"></a></h3>
 <p>Enable terrain collision for a player sprite.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">enable_terrain_collision</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
 <dd><p>Character. Name of the player sprite (as added via add_player_sprite).</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
+</div><p></p><hr><a id="method-PhaserGame-add_sprite"></a><div class="section">
+<h3 id="method-add-sprite-">Method <code>add_sprite()</code><a class="anchor" aria-label="anchor" href="#method-add-sprite-"></a></h3>
+<p>Load a base spritesheet and create an "idle" animation.</p><div class="section">
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">url</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">y</span>,</span>
+<span>  <span class="va">frame_width</span>,</span>
+<span>  <span class="va">frame_height</span>,</span>
+<span>  frame_count <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  frame_rate <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>name</code></dt>
+<dd><p>Character. Unique key for the sprite and its idle animation.</p></dd>
+
+
+<dt><code>url</code></dt>
+<dd><p>Character. URL or path to the spritesheet image.</p></dd>
+
+
+<dt><code>x</code></dt>
+<dd><p>Numeric. X-coordinate in pixels.</p></dd>
+
+
+<dt><code>y</code></dt>
+<dd><p>Numeric. Y-coordinate in pixels.</p></dd>
+
+
+<dt><code>frame_width</code></dt>
+<dd><p>Numeric. Width of each frame.</p></dd>
+
+
+<dt><code>frame_height</code></dt>
+<dd><p>Numeric. Height of each frame.</p></dd>
+
+
+<dt><code>frame_count</code></dt>
+<dd><p>Numeric. Number of frames in the spritesheet.</p></dd>
+
+
+<dt><code>frame_rate</code></dt>
+<dd><p>Numeric. Frames per second for the idle animation.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
+</div><p></p><hr><a id="method-PhaserGame-add_group"></a><div class="section">
+<h3 id="method-add-group-">Method <code>add_group()</code><a class="anchor" aria-label="anchor" href="#method-add-group-"></a></h3>
+<p>Adds a dynamic group from a spritesheet.</p><div class="section">
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_group</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>name</code></dt>
+<dd><p>Character. Unique name of the group.</p></dd>
 
 
 </dl><p></p></div>
@@ -380,7 +331,7 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
 <dd><p>Character. Unique name of the sprite.</p></dd>
 
@@ -404,11 +355,11 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 <h3 id="method-add-static-group-">Method <code>add_static_group()</code><a class="anchor" aria-label="anchor" href="#method-add-static-group-"></a></h3>
 <p>Adds a static group to the scene (non-animated).</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="va">input</span>, <span class="va">name</span>, <span class="va">url</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="va">name</span>, <span class="va">url</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>name</code></dt>
 <dd><p>Character. Unique name of the group.</p></dd>
 
@@ -424,16 +375,22 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 <h3 id="method-add-collider-">Method <code>add_collider()</code><a class="anchor" aria-label="anchor" href="#method-add-collider-"></a></h3>
 <p>Adds a collider between two game objects.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_collider</span><span class="op">(</span><span class="va">object_one_name</span>, <span class="va">object_two_name</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_collider</span><span class="op">(</span></span>
+<span>  <span class="va">object_name</span>,</span>
+<span>  object_two <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  callback_fun <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">input</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>object_one_name</code></dt>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>object_name</code></dt>
 <dd><p>Character. Name of the first object.</p></dd>
 
 
-<dt><code>object_two_name</code></dt>
+<dt><code>object_two</code></dt>
 <dd><p>Character. Name of the second object.</p></dd>
 
 
@@ -445,8 +402,8 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 <p>Adds a collider between two game objects.</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_overlap</span><span class="op">(</span></span>
-<span>  <span class="va">object_one_name</span>,</span>
-<span>  object_two_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">object_name</span>,</span>
+<span>  object_two <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  group_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">callback_fun</span>,</span>
 <span>  <span class="va">input</span></span>
@@ -454,12 +411,12 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>object_one_name</code></dt>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>object_name</code></dt>
 <dd><p>Character. Name of the first object.</p></dd>
 
 
-<dt><code>object_two_name</code></dt>
+<dt><code>object_two</code></dt>
 <dd><p>Character. Name of the second object.</p></dd>
 
 
@@ -467,114 +424,56 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 <dd><p>Character. Name of the group.</p></dd>
 
 
+<dt><code>callback_fun</code></dt>
+<dd><p>A function to be run when overlap occurs.</p></dd>
+
+
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-PhaserGame-add_sprite"></a><div class="section">
-<h3 id="method-add-sprite-">Method <code>add_sprite()</code><a class="anchor" aria-label="anchor" href="#method-add-sprite-"></a></h3>
-<p>Load a base spritesheet and create an "idle" animation.</p><div class="section">
+</div><p></p><hr><a id="method-PhaserGame-are_overlap"></a><div class="section">
+<h3 id="method-are-overlap-">Method <code>are_overlap()</code><a class="anchor" aria-label="anchor" href="#method-are-overlap-"></a></h3>
+
+<div class="section">
 <h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
-<span>  <span class="va">name</span>,</span>
-<span>  <span class="va">url</span>,</span>
-<span>  <span class="va">x</span>,</span>
-<span>  <span class="va">y</span>,</span>
-<span>  <span class="va">frameWidth</span>,</span>
-<span>  <span class="va">frameHeight</span>,</span>
-<span>  <span class="va">frameCount</span>,</span>
-<span>  <span class="va">frameRate</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">are_overlap</span><span class="op">(</span><span class="va">object_one_name</span>, <span class="va">object_two_name</span>, <span class="va">input</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
+
+
+</div><p></p><hr><a id="method-PhaserGame-add_overlap_end"></a><div class="section">
+<h3 id="method-add-overlap-end-">Method <code>add_overlap_end()</code><a class="anchor" aria-label="anchor" href="#method-add-overlap-end-"></a></h3>
 
 <div class="section">
-<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>name</code></dt>
-<dd><p>Character. Unique key for the sprite and its idle animation.</p></dd>
-
-
-<dt><code>url</code></dt>
-<dd><p>Character. URL or path to the spritesheet image.</p></dd>
-
-
-<dt><code>x</code></dt>
-<dd><p>Numeric. X-coordinate in pixels.</p></dd>
-
-
-<dt><code>y</code></dt>
-<dd><p>Numeric. Y-coordinate in pixels.</p></dd>
-
-
-<dt><code>frameWidth</code></dt>
-<dd><p>Numeric. Width of each frame.</p></dd>
-
-
-<dt><code>frameHeight</code></dt>
-<dd><p>Numeric. Height of each frame.</p></dd>
-
-
-<dt><code>frameCount</code></dt>
-<dd><p>Numeric. Number of frames in the spritesheet.</p></dd>
-
-
-<dt><code>frameRate</code></dt>
-<dd><p>Numeric. Frames per second for the idle animation.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-PhaserGame-set_sprite_in_motion"></a><div class="section">
-<h3 id="method-set-sprite-in-motion-">Method <code>set_sprite_in_motion()</code><a class="anchor" aria-label="anchor" href="#method-set-sprite-in-motion-"></a></h3>
-<p>Move all sprites of a given type along a vector for a set distance.</p><div class="section">
 <h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">set_sprite_in_motion</span><span class="op">(</span></span>
-<span>  <span class="va">type</span>,</span>
-<span>  <span class="va">dirX</span>,</span>
-<span>  <span class="va">dirY</span>,</span>
-<span>  <span class="va">speed</span>,</span>
-<span>  <span class="va">distance</span>,</span>
-<span>  lag <span class="op">=</span> <span class="va">distance</span><span class="op">/</span><span class="va">speed</span></span>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_overlap_end</span><span class="op">(</span></span>
+<span>  <span class="va">object_one_name</span>,</span>
+<span>  object_two_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">callback_fun</span>,</span>
+<span>  <span class="va">input</span>,</span>
+<span>  session <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/domains.html" class="external-link">getDefaultReactiveDomain</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
+
+</div><p></p><hr><a id="method-PhaserGame-add_control"></a><div class="section">
+<h3 id="method-add-control-">Method <code>add_control()</code><a class="anchor" aria-label="anchor" href="#method-add-control-"></a></h3>
+
 <div class="section">
-<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>type</code></dt>
-<dd><p>Character. Key used in add_sprite().</p></dd>
-
-
-<dt><code>dirX</code></dt>
-<dd><p>Numeric. Horizontal direction (-1 = left, +1 = right, 0 = none).</p></dd>
-
-
-<dt><code>dirY</code></dt>
-<dd><p>Numeric. Vertical direction (-1 = up, +1 = down, 0 = none).</p></dd>
-
-
-<dt><code>speed</code></dt>
-<dd><p>Numeric. Speed in pixels/second.</p></dd>
-
-
-<dt><code>distance</code></dt>
-<dd><p>Numeric. Distance in pixels to travel before stopping.</p></dd>
-
-
-<dt><code>lag</code></dt>
-<dd><p>Numeric. Optional delay before sending the command (defaults to distance/speed).</p></dd>
-
-
-</dl><p></p></div>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">add_control</span><span class="op">(</span><span class="va">key</span>, <span class="va">action</span>, <span class="va">input</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
+
 
 </div><p></p><hr><a id="method-PhaserGame-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">PhaserGame</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 

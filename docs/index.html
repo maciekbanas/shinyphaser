@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">shinyphaser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9030</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9033</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,7 +35,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/first-game-hedgehog.html">Build your first shinyphaser game (hedgehog vignette)</a></li>
+<li><a class="dropdown-item" href="articles/first-game-hedgehog.html">Build your first shinyphaser game</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -52,11 +52,55 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="phaserr-">shinyphaser <img src="reference/figures/shinyphaser.png" align="right" height="138" style="float:right; height:138px;" alt="shinyphaser Logo"><a class="anchor" aria-label="anchor" href="#phaserr-"></a>
+<div class="page-header"><h1 id="shinyphaser-">shinyphaser <img src="reference/figures/shinyphaser.png" align="right" height="138" style="float:right; height:138px;" alt="shinyphaser Logo"><a class="anchor" aria-label="anchor" href="#shinyphaser-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p>This package provides a R Shiny interface to Phaser 3 game framework.</p>
+<p>This package provides an <strong>R Shiny interface to selected features of the <a href="https://phaser.io/" class="external-link">Phaser 3</a> game framework</strong>.</p>
+<p>It is designed to expose a practical subset of Phaser 3 capabilities inside Shiny apps, so you can build interactive game-like experiences from R without needing to use the full JavaScript API directly.</p>
+<div class="section level2">
+<h2 id="what-you-can-do-with-shinyphaser">What you can do with shinyphaser<a class="anchor" aria-label="anchor" href="#what-you-can-do-with-shinyphaser"></a>
+</h2>
+<p>With the current API, you can build small-to-medium 2D game-like interactions in Shiny, including:</p>
+<ul>
+<li>🎮 creating a game canvas in your Shiny UI,</li>
+<li>🧩 adding images and animated sprites,</li>
+<li>⌨️ attaching keyboard-based player controls,</li>
+<li>💥 defining overlap and collision rules between objects,</li>
+<li>🔔 reacting to game events from R server logic.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
+<p>Install the stable release from CRAN:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"shinyphaser"</span><span class="op">)</span></span></code></pre></div>
+<p>Install the development version from GitHub:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"maciekbanas/shinyphaser"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
+</h2>
+<p>You can run the built-in sample app:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">shinyphaser</span><span class="fu">::</span><span class="fu"><a href="reference/run_sample_app.html">run_sample_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Or start from the example script:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog_simple.R"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="learn-by-example">Learn by example<a class="anchor" aria-label="anchor" href="#learn-by-example"></a>
+</h2>
+<p>For a full walkthrough (from static background to movement, animation, overlap, and collision), see the vignette:</p>
+<ul>
+<li>
+<strong>Build your first shinyphaser game</strong>: <a href="vignettes/first-game-hedgehog.Rmd">vignettes/first-game-hedgehog.Rmd</a>
+</li>
+</ul>
+</div>
 </div>
   </main><aside class="col-md-3"><div class="license">
 <h2 data-toc-skip>License</h2>

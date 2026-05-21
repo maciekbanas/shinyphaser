@@ -2,5 +2,4 @@
 
 ### Getting started
 
-- [Build your first shinyphaser game (hedgehog
-  vignette)](first-game-hedgehog.md):
+- [Build your first shinyphaser game](first-game-hedgehog.md):
