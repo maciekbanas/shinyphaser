@@ -50,6 +50,7 @@ shinyApp(ui, server)
 ## 2) Add first image (background)
 
 First we add simply image which will serve as a background to our game.
+We define `x` and `y` to place the image at a specific point on the canvas (in pixels): `x` is horizontal position and `y` is vertical position. For `add_image()`, this point is the image center, so `x = 800, y = 300` places the terrain around the middle area of the scene.
 
 ```{r eval=FALSE}
 floor <- game$add_image(
