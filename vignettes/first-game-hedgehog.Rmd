@@ -155,6 +155,7 @@ knitr::include_graphics("assets/first_game_3_add_sprite.gif")
 ## 4) Add player controls
 
 Attach keyboard movement to the sprite.
+`add_player_controls()` binds keyboard input to sprite velocity. Here, `directions = c("left", "right", "up", "down")` enables full 4-direction movement with arrow/WASD-style input, while `speed = 220` sets how fast the hedgehog travels (pixels per second). In practice, increase `speed` for a more arcade-like feel, or decrease it for more precise movement when navigating around obstacles.
 
 ```{r eval=FALSE}
 hedgehog$add_player_controls(
