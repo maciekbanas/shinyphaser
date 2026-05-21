@@ -219,6 +219,7 @@ knitr::include_graphics("assets/hedgehog_move_left_32.png")
 ```
 
 Add directional animations and play one as default.
+The idea is to register one animation per movement direction, then let the player-controls system switch between them automatically while the sprite is moving. We create a vector of direction names (`move_left`, `move_right`, `move_up`, `move_down`) and loop over it, calling `add_animation()` each time. The `suffix` links animation names to direction-specific files, `url` points to the correct spritesheet, and `frame_width`/`frame_height`/`frame_rate` describe how to read and play each animation strip.
 
 ```{r eval=FALSE}
 moves <- c("move_left", "move_right", "move_up", "move_down")
