@@ -1,6 +1,6 @@
 devtools::load_all()
 
-game <- PhaserGame$new(width = 1000, height = 600)
+game <- PhaserGame$new(width = 1500, height = 800)
 
 moves <- c("move_left", "move_right", "move_up", "move_down")
 
@@ -49,8 +49,12 @@ server <- function(input, output, session) {
 
   game$set_shiny_session()
 
-  grass <- game$add_static_group(name = "grass", url = "assets/hedgehog/terrain/grass.png")
-  for (x in seq(100, 900, by = 200)) for (y in seq(80, 560, by = 160)) grass$create(x = x, y = y)
+  grass <- game$add_image(
+    name = "grass", 
+    url = "assets/hedgehog/terrain/grass.png",
+    x = 800,
+    y = 300   
+  )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",
@@ -154,44 +158,32 @@ server <- function(input, output, session) {
     attackers <- create_attackers(paste0("attacker_lvl", level_id, "_"), cfg$attackers, cfg$enemy_name)
     for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id, cfg$enemy_name)
 
-    game$add_overlap("hedgehog", group_name = paste0("apples_lvl", level_id), callback_fun = function(evt) {
-      if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
+    game$add_overlap(
+      object_one_name = "hedgehog", 
+      group_name = paste0("apples_lvl", level_id), 
+      callback_fun = function(evt) {
+        if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
 
-      apple_key <- paste(evt$x2, evt$y2, sep = ":")
-      if (isTRUE(state$collected[[apple_key]])) return(invisible(NULL))
-      state$collected[[apple_key]] <- TRUE
+        apple_key <- paste(evt$x2, evt$y2, sep = ":")
+        if (isTRUE(state$collected[[apple_key]])) return(invisible(NULL))
+        state$collected[[apple_key]] <- TRUE
 
-      state$score <- state$score + 1
-      score_text$set(paste0("Level ", level_id, " score: ", state$score))
-      apples_group$disable(evt)
+        state$score <- state$score + 1
+        score_text$set(paste0("Level ", level_id, " score: ", state$score))
+        apples_group$disable(evt)
 
-      if (state$score >= nrow(cfg$apples)) {
-        pause_gameplay(level_id)
-        if (level_id < length(level_config)) {
-          shinyalert::shinyalert(
-            title = paste("Level", level_id, "passed!"),
-            text = paste("Great! Click OK to move to level", level_id + 1, "."),
-            type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
-            callbackR = function(value) {
-              for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
-              next_level <- level_id + 1
-              if (is.null(state$levels[[as.character(next_level)]])) {
-                state$levels[[as.character(next_level)]] <- init_level(next_level)
-              }
-              state$score <- 0
-              state$collected <- list()
-              state$current_level <- next_level
-              score_text$set(paste0("Level ", state$current_level, " score: 0"))
-            }
-          )
-        } else {
-          shinyalert::shinyalert(
-            title = "You won!", text = "Great job! You finished all levels and collected all apples.",
-            type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
-            callbackR = function(value) shiny::stopApp()
-          )
+        if (state$score >= nrow(cfg$apples)) {
+          pause_gameplay(level_id)
+          if (level_id < length(level_config)) {
+            passed_level_alert(level_id)
+          } else {
+            shinyalert::shinyalert(
+              title = "You won!", text = "Great job! You finished all levels and collected all apples.",
+              type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+              callbackR = function(value) shiny::stopApp()
+            )
+          }
         }
-      }
     }, input = input)
 
     list(apples = apples_group, attackers = attackers)
@@ -237,3 +229,20 @@ server <- function(input, output, session) {
 }
 
 shiny::shinyApp(ui, server)
+
+passed_level_alert <- shinyalert::shinyalert(
+  title = paste("Level", level_id, "passed!"),
+  text = paste("Great! Click OK to move to level", level_id + 1, "."),
+  type = "success", closeOnClickOutside = FALSE, showCancelButton = FALSE,
+  callbackR = function(value) {
+    for (enemy in state$levels[[as.character(level_id)]]$attackers) enemy$destroy()
+    next_level <- level_id + 1
+    if (is.null(state$levels[[as.character(next_level)]])) {
+      state$levels[[as.character(next_level)]] <- init_level(next_level)
+    }
+    state$score <- 0
+    state$collected <- list()
+    state$current_level <- next_level
+    score_text$set(paste0("Level ", state$current_level, " score: 0"))
+  }
+)
