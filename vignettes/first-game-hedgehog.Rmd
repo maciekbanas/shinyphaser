@@ -94,6 +94,7 @@ knitr::include_graphics("assets/first_game_2_add_background.png")
 ## 3) Add sprite (the player hedgehog)
 
 Create a player sprite from a sprite sheet.
+The frame parameters describe how to cut and play that spritesheet: `frame_width` and `frame_height` are the size of a single frame (32x32 px), `frame_count = 5` tells shinyphaser how many frames to use from the sheet, and `frame_rate = 6` sets animation playback speed to 6 frames per second.
 ```{r eval=FALSE}
 hedgehog <- game$add_sprite(
   name = "hedgehog",
