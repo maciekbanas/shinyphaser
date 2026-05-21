@@ -7,5 +7,5 @@ test_that("sample app loads", {
   )
 
   app$wait_for_idle(timeout = 10000)
-  app$expect_js("document.getElementById('sample_game') !== null")
+  app$expect_js("document.getElementById('phaser_game') !== null")
 })
