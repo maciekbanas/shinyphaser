@@ -8,9 +8,16 @@
 <url><loc>/LICENSE-text.html</loc></url>
 <url><loc>/LICENSE.html</loc></url>
 <url><loc>/news/index.html</loc></url>
+<url><loc>/reference/Group.html</loc></url>
+<url><loc>/reference/Image.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
 <url><loc>/reference/PhaserGame.html</loc></url>
 <url><loc>/reference/phaser_create_assets.html</loc></url>
+<url><loc>/reference/Rectangle.html</loc></url>
 <url><loc>/reference/run_sample_app.html</loc></url>
+<url><loc>/reference/Sprite.html</loc></url>
+<url><loc>/reference/StaticGroup.html</loc></url>
+<url><loc>/reference/StaticSprite.html</loc></url>
+<url><loc>/reference/TextObject.html</loc></url>
 </urlset>
 
