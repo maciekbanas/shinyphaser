@@ -1,6 +1,16 @@
 Rectangle <- R6::R6Class(
   classname = "Rectangle",
   public = list(
+    #' @description Add a rectangle object to the Phaser scene.
+    #' @param name Character. Unique name of the rectangle.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param width Numeric. Rectangle width in pixels.
+    #' @param height Numeric. Rectangle height in pixels.
+    #' @param color Character. Fill color in Phaser-compatible format.
+    #' @param visible Logical. Whether rectangle is initially visible.
+    #' @param clickable Logical. Whether rectangle emits click events.
+    #' @param session Shiny session object.
     initialize = function(name, x, y, width, height, color, visible, clickable,
                           session = getDefaultReactiveDomain()) {
       private$session <- session
@@ -9,10 +19,12 @@ Rectangle <- R6::R6Class(
                     name, x, y, width, height, color, tolower(visible), tolower(clickable))
       send_js(private, js)
     },
+    #' @description Show a previously added rectangle.
     show = function() {
       js <- sprintf("showImage('%s');", private$name)
       send_js(private, js)
     },
+    #' @description Hide a previously added rectangle.
     hide = function() {
       js <- sprintf("hideImage('%s');", private$name)
       send_js(private, js)
