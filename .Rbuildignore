@@ -6,3 +6,5 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 _\.new\.png$
+^_pkgdown\.yml$
+^docs$
