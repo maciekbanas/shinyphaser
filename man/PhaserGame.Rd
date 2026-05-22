@@ -87,6 +87,7 @@ A new PhaserGame object.
 \if{html}{\out{<a id="method-PhaserGame-set_shiny_session"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-set_shiny_session}{}}}
 \subsection{Method \code{set_shiny_session()}}{
+Set the Shiny session used to send Phaser custom messages.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$set_shiny_session(session = shiny::getDefaultReactiveDomain())}\if{html}{\out{</div>}}
 }
@@ -124,15 +125,32 @@ HTML tag list containing dependencies and initialization script.
 \if{html}{\out{<a id="method-PhaserGame-add_text"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_text}{}}}
 \subsection{Method \code{add_text()}}{
+Add a text object to the Phaser scene.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_text(text, id, x, y, style = list(font_size = "22px"))}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{text}}{Character. Text value to display.}
+
+\item{\code{id}}{Character. Unique ID for the text object.}
+
+\item{\code{x}}{Numeric. X-coordinate in pixels.}
+
+\item{\code{y}}{Numeric. Y-coordinate in pixels.}
+
+\item{\code{style}}{Named list. Styling options passed to Phaser text rendering.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PhaserGame-add_rectangle"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_rectangle}{}}}
 \subsection{Method \code{add_rectangle()}}{
+Add a rectangle object to the Phaser scene.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_rectangle(
   name,
@@ -146,6 +164,27 @@ HTML tag list containing dependencies and initialization script.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{name}}{Character. Unique name for the rectangle.}
+
+\item{\code{x}}{Numeric. X-coordinate in pixels.}
+
+\item{\code{y}}{Numeric. Y-coordinate in pixels.}
+
+\item{\code{width}}{Numeric. Rectangle width in pixels.}
+
+\item{\code{height}}{Numeric. Rectangle height in pixels.}
+
+\item{\code{color}}{Character. Fill color in Phaser-compatible format.}
+
+\item{\code{visible}}{Logical. Whether rectangle is initially visible.}
+
+\item{\code{clickable}}{Logical. Whether rectangle emits click events.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PhaserGame-add_image"></a>}}
@@ -375,15 +414,28 @@ Adds a collider between two game objects.
 \if{html}{\out{<a id="method-PhaserGame-are_overlap"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-are_overlap}{}}}
 \subsection{Method \code{are_overlap()}}{
+Create a reactive expression for overlap state between two objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$are_overlap(object_one_name, object_two_name, input)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{object_one_name}}{Character. Name of the first object.}
+
+\item{\code{object_two_name}}{Character. Name of the second object.}
+
+\item{\code{input}}{Shiny input list.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PhaserGame-add_overlap_end"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_overlap_end}{}}}
 \subsection{Method \code{add_overlap_end()}}{
+Register a callback fired when overlap between objects ends.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_overlap_end(
   object_one_name,
@@ -395,6 +447,23 @@ Adds a collider between two game objects.
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{object_one_name}}{Character. Name of the first object.}
+
+\item{\code{object_two_name}}{Character. Name of the second object.}
+
+\item{\code{group_name}}{Character. Name of the group to compare against.}
+
+\item{\code{callback_fun}}{Function. Callback executed when overlap ends.}
+
+\item{\code{input}}{Shiny input list.}
+
+\item{\code{session}}{Shiny session object.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PhaserGame-add_control"></a>}}
