@@ -2,9 +2,10 @@
 % Please edit documentation in R/groups.R
 \name{Group}
 \alias{Group}
-\title{Phaser Groups}
+\title{Group}
 \description{
-Create and manage groups of sprites in the Phaser scene.
+Create and manage groups of sprites in the Phaser scene. Created
+with PhaserGame$add_group() method.
 }
 \section{Methods}{
 \subsection{Public methods}{

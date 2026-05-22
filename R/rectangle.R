@@ -1,5 +1,6 @@
 #' @title Rectangle
-#' @description Create and manage rectangles in the Phaser scene.
+#' @description Create and manage rectangles in the Phaser scene. Created with
+#'   PhaserGame$add_rectangle() method.
 #' @export
 Rectangle <- R6::R6Class(
   classname = "Rectangle",

@@ -1,5 +1,6 @@
 #' @title Sprite
-#' @description Create and manage animated sprites in the Phaser scene.
+#' @description Create and manage animated sprites in the Phaser scene. Created
+#'   with PhaserGame$add_sprite() method.
 #' @export
 Sprite <- R6::R6Class(
   classname = "Sprite",
@@ -154,7 +155,8 @@ Sprite <- R6::R6Class(
 )
 
 #' @title Static Sprite
-#' @description Create and manage non-animated sprites in the Phaser scene.
+#' @description Create and manage non-animated sprites in the Phaser scene. Created
+#'   with PhaserGame$add_static_sprite() method.
 #' @export
 StaticSprite <- R6::R6Class(
   classname = "StaticSprite",

@@ -2,9 +2,10 @@
 % Please edit documentation in R/groups.R
 \name{StaticGroup}
 \alias{StaticGroup}
-\title{Static Groups}
+\title{Static Group}
 \description{
 Create and manage groups of static sprites in the Phaser scene.
+Created with PhaserGame$add_static_group() method.
 }
 \section{Methods}{
 \subsection{Public methods}{

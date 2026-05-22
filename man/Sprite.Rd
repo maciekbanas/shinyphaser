@@ -4,7 +4,8 @@
 \alias{Sprite}
 \title{Sprite}
 \description{
-Create and manage animated sprites in the Phaser scene.
+Create and manage animated sprites in the Phaser scene. Created
+with PhaserGame$add_sprite() method.
 }
 \section{Methods}{
 \subsection{Public methods}{

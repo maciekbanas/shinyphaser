@@ -1,7 +1,8 @@
-# TextObject
+# Text
 
 R6 class to represent a text object in the Phaser scene, allowing
-dynamic updates to its content.
+dynamic updates to its content. Created with PhaserGame\$add_text()
+method.
 
 ## Methods
 

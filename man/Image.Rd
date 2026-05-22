@@ -2,9 +2,10 @@
 % Please edit documentation in R/images.R
 \name{Image}
 \alias{Image}
-\title{Phaser Images}
+\title{Image}
 \description{
-Create and manage images in the Phaser scene.
+Create and manage images in the Phaser scene. Created with
+PhaserGame$add_image() method.
 }
 \section{Methods}{
 \subsection{Public methods}{

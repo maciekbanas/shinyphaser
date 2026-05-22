@@ -1,6 +1,7 @@
-# Phaser Groups
+# Group
 
-Create and manage groups of sprites in the Phaser scene.
+Create and manage groups of sprites in the Phaser scene. Created with
+PhaserGame\$add_group() method.
 
 ## Methods
 

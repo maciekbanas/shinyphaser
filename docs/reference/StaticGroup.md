@@ -1,6 +1,7 @@
-# Static Groups
+# Static Group
 
-Create and manage groups of static sprites in the Phaser scene.
+Create and manage groups of static sprites in the Phaser scene. Created
+with PhaserGame\$add_static_group() method.
 
 ## Methods
 

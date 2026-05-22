@@ -1,6 +1,7 @@
 # Static Sprite
 
-Create and manage non-animated sprites in the Phaser scene.
+Create and manage non-animated sprites in the Phaser scene. Created with
+PhaserGame\$add_static_sprite() method.
 
 ## Methods
 

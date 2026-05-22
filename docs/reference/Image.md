@@ -1,6 +1,7 @@
-# Phaser Images
+# Image
 
-Create and manage images in the Phaser scene.
+Create and manage images in the Phaser scene. Created with
+PhaserGame\$add_image() method.
 
 ## Methods
 

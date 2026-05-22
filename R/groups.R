@@ -1,5 +1,6 @@
-#' @title Phaser Groups
-#' @description Create and manage groups of sprites in the Phaser scene.
+#' @title Group
+#' @description Create and manage groups of sprites in the Phaser scene. Created
+#'  with PhaserGame$add_group() method.
 #' @export
 Group <- R6::R6Class(
   classname = "Group",
@@ -52,8 +53,9 @@ Group <- R6::R6Class(
   )
 )
 
-#' @title Static Groups
+#' @title Static Group
 #' @description Create and manage groups of static sprites in the Phaser scene.
+#'   Created with PhaserGame$add_static_group() method.
 #' @export
 StaticGroup <- R6::R6Class(
   classname = "StaticGroup",

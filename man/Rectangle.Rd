@@ -4,7 +4,8 @@
 \alias{Rectangle}
 \title{Rectangle}
 \description{
-Create and manage rectangles in the Phaser scene.
+Create and manage rectangles in the Phaser scene. Created with
+PhaserGame$add_rectangle() method.
 }
 \section{Methods}{
 \subsection{Public methods}{

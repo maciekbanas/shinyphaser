@@ -1,5 +1,6 @@
-#' @title Phaser Images
-#' @description Create and manage images in the Phaser scene.
+#' @title Image
+#' @description Create and manage images in the Phaser scene. Created with
+#'   PhaserGame$add_image() method.
 #' @export
 Image <- R6::R6Class(
   classname = "Image",
