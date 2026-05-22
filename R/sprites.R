@@ -133,6 +133,12 @@ Sprite <- R6::R6Class(
 StaticSprite <- R6::R6Class(
   classname = "StaticSprite",
   public = list(
+    #' @description Add a non-animated static sprite to the scene.
+    #' @param name Character. Unique name of the sprite.
+    #' @param url Character. URL or path to image file.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param session Shiny session object.
     initialize = function(name, url, x, y, session = getDefaultReactiveDomain()) {
       private$session <- session
       private$name <- name

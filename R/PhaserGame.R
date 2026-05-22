@@ -29,6 +29,7 @@ PhaserGame <- R6::R6Class(
       )
     },
 
+    #' @description Set the Shiny session used to send Phaser custom messages.
     #' @param session Shiny session object (default: shiny::getDefaultReactiveDomain()).
     set_shiny_session = function(session = shiny::getDefaultReactiveDomain()) {
       private$session <- session
@@ -58,10 +59,25 @@ PhaserGame <- R6::R6Class(
       )
     },
 
+    #' @description Add a text object to the Phaser scene.
+    #' @param text Character. Text value to display.
+    #' @param id Character. Unique ID for the text object.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param style Named list. Styling options passed to Phaser text rendering.
     add_text = function(text, id, x, y, style = list(font_size = '22px')) {
       return(TextObject$new(text, id, x, y, style))
     },
 
+    #' @description Add a rectangle object to the Phaser scene.
+    #' @param name Character. Unique name for the rectangle.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param width Numeric. Rectangle width in pixels.
+    #' @param height Numeric. Rectangle height in pixels.
+    #' @param color Character. Fill color in Phaser-compatible format.
+    #' @param visible Logical. Whether rectangle is initially visible.
+    #' @param clickable Logical. Whether rectangle emits click events.
     add_rectangle = function(name, x, y, width, height, color, visible = TRUE, clickable = FALSE) {
       return(Rectangle$new(name, x, y, width, height, color, visible, clickable))
     },
@@ -209,6 +225,10 @@ PhaserGame <- R6::R6Class(
       }, ignoreNULL = TRUE)
     },
 
+   #' @description Create a reactive expression for overlap state between two objects.
+   #' @param object_one_name Character. Name of the first object.
+   #' @param object_two_name Character. Name of the second object.
+   #' @param input Shiny input list.
    are_overlap = function(object_one_name,
                           object_two_name,
                           input) {
@@ -225,6 +245,13 @@ PhaserGame <- R6::R6Class(
      })
     },
 
+   #' @description Register a callback fired when overlap between objects ends.
+   #' @param object_one_name Character. Name of the first object.
+   #' @param object_two_name Character. Name of the second object.
+   #' @param group_name Character. Name of the group to compare against.
+   #' @param callback_fun Function. Callback executed when overlap ends.
+   #' @param input Shiny input list.
+   #' @param session Shiny session object.
    add_overlap_end = function(object_one_name,
                               object_two_name = NULL,
                               group_name = NULL,
