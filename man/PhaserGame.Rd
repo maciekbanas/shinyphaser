@@ -205,11 +205,12 @@ Adds a static image to the Phaser scene.
 \item{\code{x}}{Numeric. X-coordinate in pixels.}
 
 \item{\code{y}}{Numeric. Y-coordinate in pixels.}
+
+\item{\code{visible}}{Logical. Whether the image is initially visible (default: TRUE).}
+
+\item{\code{clickable}}{Logical. Whether the image should emit click events (default: FALSE).}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Invisible; sends a custom message to the client.
 }
 }
 \if{html}{\out{<hr>}}
@@ -377,6 +378,12 @@ Adds a collider between two game objects.
 \item{\code{object_name}}{Character. Name of the first object.}
 
 \item{\code{object_two}}{Character. Name of the second object.}
+
+\item{\code{group_name}}{Character. Name of the group to compare against.}
+
+\item{\code{callback_fun}}{A function to be run when collision occurs.}
+
+\item{\code{input}}{Shiny input list.}
 }
 \if{html}{\out{</div>}}
 }
@@ -406,6 +413,8 @@ Adds a collider between two game objects.
 \item{\code{group_name}}{Character. Name of the group.}
 
 \item{\code{callback_fun}}{A function to be run when overlap occurs.}
+
+\item{\code{input}}{Shiny input list.}
 }
 \if{html}{\out{</div>}}
 }
@@ -469,10 +478,23 @@ Register a callback fired when overlap between objects ends.
 \if{html}{\out{<a id="method-PhaserGame-add_control"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_control}{}}}
 \subsection{Method \code{add_control()}}{
+Register a callback fired when a specific key is pressed.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_control(key, action, input)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{key}}{A character, accepts Javascript key events (they need to align with
+event.code).}
+
+\item{\code{action}}{A function to be run after key is pressed.}
+
+\item{\code{input}}{Shiny input list.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-PhaserGame-clone"></a>}}

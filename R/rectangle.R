@@ -1,3 +1,6 @@
+#' @title Rectangle
+#' @description Create and manage rectangles in the Phaser scene.
+#' @export
 Rectangle <- R6::R6Class(
   classname = "Rectangle",
   public = list(
@@ -29,7 +32,10 @@ Rectangle <- R6::R6Class(
       js <- sprintf("hideImage('%s');", private$name)
       send_js(private, js)
     },
+    #' @description Add a click event listener to the rectangle that triggers an R
+    #'  function when clicked.
     #' @param event_fun A function.
+    #' @param input Shiny input object.
     click = function(event_fun, input) {
       js <- sprintf("clickImage('%s');", private$name)
       send_js(private, js)

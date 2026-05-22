@@ -1,3 +1,6 @@
+#' @title Phaser Images
+#' @description Create and manage images in the Phaser scene.
+#' @export
 Image <- R6::R6Class(
   classname = "Image",
   public = list(
@@ -27,7 +30,10 @@ Image <- R6::R6Class(
       js <- sprintf("hideImage('%s');", private$name)
       send_js(private, js)
     },
+    #' @description Add a click event listener to the image that triggers an R
+    #'   function when clicked.
     #' @param event_fun A function.
+    #' @param input Shiny input object.
     click = function(event_fun, input) {
       js <- sprintf("clickImage('%s');", private$name)
       send_js(private, js)
