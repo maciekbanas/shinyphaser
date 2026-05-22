@@ -1,3 +1,7 @@
+#' @title Sprite
+#' @description Create and manage animated sprites in the Phaser scene. Created
+#'   with PhaserGame$add_sprite() method.
+#' @export
 Sprite <- R6::R6Class(
   classname = "Sprite",
   public = list(
@@ -9,6 +13,7 @@ Sprite <- R6::R6Class(
     #' @param frame_height Numeric. Height of each frame.
     #' @param frame_count Numeric. Number of frames in the spritesheet. If NULL, auto-detect from spritesheet dimensions.
     #' @param frame_rate Numeric. Frames per second for the idle animation.
+    #' @param session Shiny session object.
     initialize = function(name, url, x, y,
                           frame_width, frame_height, frame_count = NULL, frame_rate,
                           session = getDefaultReactiveDomain()) {
@@ -47,6 +52,11 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
+    #' @description Play a loaded animation for the sprite.
+    #' @param anim_name Character. Identifier for the animation to play (e.g. "
+    #'   move_left").
+    #' @param duration Numeric. Optional duration in milliseconds to play the animation
+    #'  before reverting to idle (defaults to Inf, which loops indefinitely until another animation is played).
     play_animation = function(anim_name, duration = Inf) {
       Sys.sleep(0.1)
       js <- if (is.infinite(duration)) {
@@ -73,18 +83,29 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
+    #' @description Set the sprite's velocity in the x direction.
+    #' @param x Numeric. Velocity in pixels/second (positive = right, negative =
+    #' left).
     set_velocity_x = function(x = 100) {
       js <- sprintf("setVelocityX('%s', %d);",
                     private$name, x)
       send_js(private, js)
     },
 
+    #' @description Set the sprite's velocity in the y direction.
+    #' @param x Numeric. Velocity in pixels/second (positive = down, negative =
+    #' up).
     set_velocity_y = function(x = 100) {
       js <- sprintf("setVelocityY('%s', %d);",
                     private$name, x)
       send_js(private, js)
     },
 
+    #' @description Set the sprite's velocity in both x and y directions.
+    #' @param x Numeric. Velocity in pixels/second (positive = right, negative =
+    #'  left).
+    #' @param y Numeric. Velocity in pixels/second (positive = down, negative =
+    #'  up).
     set_gravity = function(x = 100, y = 100) {
       Sys.sleep(0.1)
       js <- sprintf("setGravity('%s', %d, %d);",
@@ -92,6 +113,8 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
+    #' @description Set the sprite's bounce factor.
+    #' @param x Numeric. Bounce factor.
     set_bounce = function(x) {
       Sys.sleep(0.1)
       js <- sprintf("setBounce('%s', %f);",
@@ -99,6 +122,7 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
+    #' @description Remove sprite from the scene.
     destroy = function() {
       js <- sprintf("destroySprite('%s');",
                     private$name)
@@ -130,9 +154,19 @@ Sprite <- R6::R6Class(
   )
 )
 
+#' @title Static Sprite
+#' @description Create and manage non-animated sprites in the Phaser scene. Created
+#'   with PhaserGame$add_static_sprite() method.
+#' @export
 StaticSprite <- R6::R6Class(
   classname = "StaticSprite",
   public = list(
+    #' @description Add a non-animated static sprite to the scene.
+    #' @param name Character. Unique name of the sprite.
+    #' @param url Character. URL or path to image file.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param session Shiny session object.
     initialize = function(name, url, x, y, session = getDefaultReactiveDomain()) {
       private$session <- session
       private$name <- name

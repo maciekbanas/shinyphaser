@@ -54,3 +54,7 @@ overlap, and collision), see the vignette:
 
 - [**Build your first shinyphaser
   game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
+
+## Example games created with `shinyphaser`
+
+- [hedgehog](https://maciekbanas.shinyapps.io/hedgehog)

@@ -29,6 +29,7 @@ PhaserGame <- R6::R6Class(
       )
     },
 
+    #' @description Set the Shiny session used to send Phaser custom messages.
     #' @param session Shiny session object (default: shiny::getDefaultReactiveDomain()).
     set_shiny_session = function(session = shiny::getDefaultReactiveDomain()) {
       private$session <- session
@@ -58,10 +59,25 @@ PhaserGame <- R6::R6Class(
       )
     },
 
+    #' @description Add a text object to the Phaser scene.
+    #' @param text Character. Text value to display.
+    #' @param id Character. Unique ID for the text object.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param style Named list. Styling options passed to Phaser text rendering.
     add_text = function(text, id, x, y, style = list(font_size = '22px')) {
       return(TextObject$new(text, id, x, y, style))
     },
 
+    #' @description Add a rectangle object to the Phaser scene.
+    #' @param name Character. Unique name for the rectangle.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param width Numeric. Rectangle width in pixels.
+    #' @param height Numeric. Rectangle height in pixels.
+    #' @param color Character. Fill color in Phaser-compatible format.
+    #' @param visible Logical. Whether rectangle is initially visible.
+    #' @param clickable Logical. Whether rectangle emits click events.
     add_rectangle = function(name, x, y, width, height, color, visible = TRUE, clickable = FALSE) {
       return(Rectangle$new(name, x, y, width, height, color, visible, clickable))
     },
@@ -71,7 +87,8 @@ PhaserGame <- R6::R6Class(
     #' @param url Character. URL or path to the image file.
     #' @param x Numeric. X-coordinate in pixels.
     #' @param y Numeric. Y-coordinate in pixels.
-    #' @return Invisible; sends a custom message to the client.
+    #' @param visible Logical. Whether the image is initially visible (default: TRUE).
+    #' @param clickable Logical. Whether the image should emit click events (default: FALSE).
     add_image = function(name, url, x, y, visible = TRUE, clickable = FALSE) {
       return(Image$new(name, url, x, y, visible, clickable))
     },
@@ -150,10 +167,13 @@ PhaserGame <- R6::R6Class(
     #' @description Adds a collider between two game objects.
     #' @param object_name Character. Name of the first object.
     #' @param object_two Character. Name of the second object.
+    #' @param group_name Character. Name of the group to compare against.
+    #' @param callback_fun A function to be run when collision occurs.
+    #' @param input Shiny input list.
     add_collider = function(object_name,
                             object_two = NULL,
-                            group_name      = NULL,
-                            callback_fun    = NULL,
+                            group_name = NULL,
+                            callback_fun = NULL,
                             input) {
       input_id <- paste(
         c("collide", object_name,
@@ -182,9 +202,10 @@ PhaserGame <- R6::R6Class(
     #' @param object_two Character. Name of the second object.
     #' @param group_name Character. Name of the group.
     #' @param callback_fun A function to be run when overlap occurs.
+    #' @param input Shiny input list.
     add_overlap = function(object_name,
                            object_two = NULL,
-                           group_name      = NULL,
+                           group_name = NULL,
                            callback_fun,
                            input) {
       Sys.sleep(0.1)
@@ -209,6 +230,10 @@ PhaserGame <- R6::R6Class(
       }, ignoreNULL = TRUE)
     },
 
+   #' @description Create a reactive expression for overlap state between two objects.
+   #' @param object_one_name Character. Name of the first object.
+   #' @param object_two_name Character. Name of the second object.
+   #' @param input Shiny input list.
    are_overlap = function(object_one_name,
                           object_two_name,
                           input) {
@@ -225,6 +250,13 @@ PhaserGame <- R6::R6Class(
      })
     },
 
+   #' @description Register a callback fired when overlap between objects ends.
+   #' @param object_one_name Character. Name of the first object.
+   #' @param object_two_name Character. Name of the second object.
+   #' @param group_name Character. Name of the group to compare against.
+   #' @param callback_fun Function. Callback executed when overlap ends.
+   #' @param input Shiny input list.
+   #' @param session Shiny session object.
    add_overlap_end = function(object_one_name,
                               object_two_name = NULL,
                               group_name = NULL,
@@ -246,9 +278,11 @@ PhaserGame <- R6::R6Class(
      })
    },
 
-   #' @key A character, accepts Javascript key events (they need to align with
+   #' @description Register a callback fired when a specific key is pressed.
+   #' @param key A character, accepts Javascript key events (they need to align with
    #'   event.code).
-   #' @action A function to be run after key is pressed.
+   #' @param action A function to be run after key is pressed.
+   #' @param input Shiny input list.
    add_control = function(key, action, input) {
      event <- paste0(key, "_action")
      js <- sprintf("addKeyControl('%s');", key)
@@ -265,9 +299,20 @@ PhaserGame <- R6::R6Class(
   )
 )
 
+#' @title Text
+#' @description R6 class to represent a text object in the Phaser scene, allowing
+#'  dynamic updates to its content. Created with PhaserGame$add_text() method.
+#' @export
 TextObject <- R6::R6Class(
   classname = "TextObject",
   public = list(
+    #' @description Create a text object in the Phaser scene.
+    #' @param text Character. Text value to display.
+    #' @param id Character. Unique ID for the text object.
+    #' @param x Numeric. X-coordinate in pixels.
+    #' @param y Numeric. Y-coordinate in pixels.
+    #' @param style Named list. Styling options passed to Phaser text rendering.
+    #' @param session Shiny session object.
     initialize = function(text, id, x, y, style, session = shiny::getDefaultReactiveDomain()) {
       js <- sprintf("addText('%s', '%s', %d, %d, %s);",
                     text, id, x, y, jsonlite::toJSON(style, auto_unbox = TRUE))
@@ -275,6 +320,8 @@ TextObject <- R6::R6Class(
       private$session <- session
       send_js(private, js)
     },
+    #' @description Update the text content of this object.
+    #' @param text Character. New text value to display.
     set = function(text) {
       js <- sprintf("setText('%s', '%s');",
                     text, private$id)

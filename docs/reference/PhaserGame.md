@@ -87,6 +87,8 @@ A new PhaserGame object.
 
 ### Method `set_shiny_session()`
 
+Set the Shiny session used to send Phaser custom messages.
+
 #### Usage
 
     PhaserGame$set_shiny_session(session = shiny::getDefaultReactiveDomain())
@@ -119,13 +121,39 @@ HTML tag list containing dependencies and initialization script.
 
 ### Method `add_text()`
 
+Add a text object to the Phaser scene.
+
 #### Usage
 
     PhaserGame$add_text(text, id, x, y, style = list(font_size = "22px"))
 
+#### Arguments
+
+- `text`:
+
+  Character. Text value to display.
+
+- `id`:
+
+  Character. Unique ID for the text object.
+
+- `x`:
+
+  Numeric. X-coordinate in pixels.
+
+- `y`:
+
+  Numeric. Y-coordinate in pixels.
+
+- `style`:
+
+  Named list. Styling options passed to Phaser text rendering.
+
 ------------------------------------------------------------------------
 
 ### Method `add_rectangle()`
+
+Add a rectangle object to the Phaser scene.
 
 #### Usage
 
@@ -139,6 +167,40 @@ HTML tag list containing dependencies and initialization script.
       visible = TRUE,
       clickable = FALSE
     )
+
+#### Arguments
+
+- `name`:
+
+  Character. Unique name for the rectangle.
+
+- `x`:
+
+  Numeric. X-coordinate in pixels.
+
+- `y`:
+
+  Numeric. Y-coordinate in pixels.
+
+- `width`:
+
+  Numeric. Rectangle width in pixels.
+
+- `height`:
+
+  Numeric. Rectangle height in pixels.
+
+- `color`:
+
+  Character. Fill color in Phaser-compatible format.
+
+- `visible`:
+
+  Logical. Whether rectangle is initially visible.
+
+- `clickable`:
+
+  Logical. Whether rectangle emits click events.
 
 ------------------------------------------------------------------------
 
@@ -168,9 +230,13 @@ Adds a static image to the Phaser scene.
 
   Numeric. Y-coordinate in pixels.
 
-#### Returns
+- `visible`:
 
-Invisible; sends a custom message to the client.
+  Logical. Whether the image is initially visible (default: TRUE).
+
+- `clickable`:
+
+  Logical. Whether the image should emit click events (default: FALSE).
 
 ------------------------------------------------------------------------
 
@@ -367,6 +433,18 @@ Adds a collider between two game objects.
 
   Character. Name of the second object.
 
+- `group_name`:
+
+  Character. Name of the group to compare against.
+
+- `callback_fun`:
+
+  A function to be run when collision occurs.
+
+- `input`:
+
+  Shiny input list.
+
 ------------------------------------------------------------------------
 
 ### Method `add_overlap()`
@@ -401,17 +479,39 @@ Adds a collider between two game objects.
 
   A function to be run when overlap occurs.
 
+- `input`:
+
+  Shiny input list.
+
 ------------------------------------------------------------------------
 
 ### Method `are_overlap()`
+
+Create a reactive expression for overlap state between two objects.
 
 #### Usage
 
     PhaserGame$are_overlap(object_one_name, object_two_name, input)
 
+#### Arguments
+
+- `object_one_name`:
+
+  Character. Name of the first object.
+
+- `object_two_name`:
+
+  Character. Name of the second object.
+
+- `input`:
+
+  Shiny input list.
+
 ------------------------------------------------------------------------
 
 ### Method `add_overlap_end()`
+
+Register a callback fired when overlap between objects ends.
 
 #### Usage
 
@@ -424,13 +524,56 @@ Adds a collider between two game objects.
       session = shiny::getDefaultReactiveDomain()
     )
 
+#### Arguments
+
+- `object_one_name`:
+
+  Character. Name of the first object.
+
+- `object_two_name`:
+
+  Character. Name of the second object.
+
+- `group_name`:
+
+  Character. Name of the group to compare against.
+
+- `callback_fun`:
+
+  Function. Callback executed when overlap ends.
+
+- `input`:
+
+  Shiny input list.
+
+- `session`:
+
+  Shiny session object.
+
 ------------------------------------------------------------------------
 
 ### Method `add_control()`
 
+Register a callback fired when a specific key is pressed.
+
 #### Usage
 
     PhaserGame$add_control(key, action, input)
+
+#### Arguments
+
+- `key`:
+
+  A character, accepts Javascript key events (they need to align with
+  event.code).
+
+- `action`:
+
+  A function to be run after key is pressed.
+
+- `input`:
+
+  Shiny input list.
 
 ------------------------------------------------------------------------
 
