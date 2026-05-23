@@ -8,7 +8,7 @@ reference:
 
   - title: Scene objects
     contents:
-      - TextObject
+      - Text
       - Image
       - Rectangle
       - Sprite

@@ -1,16 +1,22 @@
 # Package index
 
-## All functions
+## Game setup
 
-- [`Group`](Group.md) : Group
-- [`Image`](Image.md) : Image
 - [`PhaserGame`](PhaserGame.md) : PhaserGame
-- [`phaser_create_assets()`](phaser_create_assets.md) : Create assets
-  folder in your project
+
+## Scene objects
+
+- [`Text`](Text.md) : Text
+- [`Image`](Image.md) : Image
 - [`Rectangle`](Rectangle.md) : Rectangle
+- [`Sprite`](Sprite.md) : Sprite
+- [`StaticSprite`](StaticSprite.md) : Static Sprite
+- [`Group`](Group.md) : Group
+- [`StaticGroup`](StaticGroup.md) : Static Group
+
+## Utilities
+
 - [`run_sample_app()`](run_sample_app.md) : Run the packaged shinyphaser
   sample app
-- [`Sprite`](Sprite.md) : Sprite
-- [`StaticGroup`](StaticGroup.md) : Static Group
-- [`StaticSprite`](StaticSprite.md) : Static Sprite
-- [`TextObject`](TextObject.md) : Text
+- [`phaser_create_assets()`](phaser_create_assets.md) : Create assets
+  folder in your project
