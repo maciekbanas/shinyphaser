@@ -66,7 +66,7 @@ PhaserGame <- R6::R6Class(
     #' @param y Numeric. Y-coordinate in pixels.
     #' @param style Named list. Styling options passed to Phaser text rendering.
     add_text = function(text, id, x, y, style = list(font_size = '22px')) {
-      return(TextObject$new(text, id, x, y, style))
+      return(Text$new(text, id, x, y, style))
     },
 
     #' @description Add a rectangle object to the Phaser scene.
@@ -303,8 +303,8 @@ PhaserGame <- R6::R6Class(
 #' @description R6 class to represent a text object in the Phaser scene, allowing
 #'  dynamic updates to its content. Created with PhaserGame$add_text() method.
 #' @export
-TextObject <- R6::R6Class(
-  classname = "TextObject",
+Text <- R6::R6Class(
+  classname = "Text",
   public = list(
     #' @description Create a text object in the Phaser scene.
     #' @param text Character. Text value to display.

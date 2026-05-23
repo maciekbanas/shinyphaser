@@ -8,12 +8,8 @@
 [![R-CMD-check](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This package provides an **R Shiny interface to selected features of the
-[Phaser 3](https://phaser.io/) game framework**.
-
-It is designed to expose a practical subset of Phaser 3 capabilities
-inside Shiny apps, so you can build interactive game-like experiences
-from R without needing to use the full JavaScript API directly.
+This package provides an R Shiny interface to selected features of the
+[Phaser 3](https://phaser.io/) game framework.
 
 ## What you can do with shinyphaser
 
@@ -58,10 +54,8 @@ file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation,
-overlap, and collision), see the vignette:
-
-- [**Build your first shinyphaser
-  game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
+overlap, and collision), see [**Build your first shinyphaser
+game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
 
 ## Example games created with `shinyphaser`
 

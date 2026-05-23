@@ -1,6 +1,26 @@
 template:
   bootstrap: 5
 
+reference:
+  - title: Game setup
+    contents:
+      - PhaserGame
+
+  - title: Scene objects
+    contents:
+      - Text
+      - Image
+      - Rectangle
+      - Sprite
+      - StaticSprite
+      - Group
+      - StaticGroup
+
+  - title: Utilities
+    contents:
+      - run_sample_app
+      - phaser_create_assets
+
 articles:
   - title: Getting started
     navbar: ~
