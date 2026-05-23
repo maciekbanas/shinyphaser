@@ -8,12 +8,8 @@
 [![R-CMD-check](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/maciekbanas/shinyphaser/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-This package provides an **R Shiny interface to selected features of the
-[Phaser 3](https://phaser.io/) game framework**.
-
-It is designed to expose a practical subset of Phaser 3 capabilities
-inside Shiny apps, so you can build interactive game-like experiences
-from R without needing to use the full JavaScript API directly.
+This package provides an R Shiny interface to selected features of the
+[Phaser 3](https://phaser.io/) game framework.
 
 ## What you can do with shinyphaser
 
@@ -25,24 +21,6 @@ interactions in Shiny, including:
 - ⌨️ attaching keyboard-based player controls,
 - 💥 defining overlap and collision rules between objects,
 - 🔔 reacting to game events from R server logic.
-
-## Phaser basics worth adding next
-
-`shinyphaser` already covers a strong foundation (sprites, controls, map,
-collision, overlap, and callbacks), but these Phaser basics would unlock many
-more game patterns:
-
-- 🎵 **Audio support** (load/play/pause/loop sound effects and music).
-- 🎥 **Camera follow and zoom helpers** for player-centric worlds larger than
-  one screen.
-- 🧱 **Tilemap utility helpers** (object layers, spawn points, and easy
-  collision-layer setup).
-- 🧪 **Physics body configuration wrappers** (drag, max velocity, acceleration,
-  immovable flags, and world gravity).
-- 👆 **Pointer/touch input helpers** for mobile-friendly interactions.
-- ✨ **Tween/easing wrappers** for polished movement and UI transitions.
-- 🗂️ **Scene/state lifecycle hooks** (pause/resume/restart patterns for menus,
-  level flow, and game-over handling).
 
 ## Installation
 
@@ -76,10 +54,8 @@ file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation,
-overlap, and collision), see the vignette:
-
-- [**Build your first shinyphaser
-  game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
+overlap, and collision), see [**Build your first shinyphaser
+game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
 
 ## Example games created with `shinyphaser`
 
