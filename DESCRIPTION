@@ -9,7 +9,7 @@ Authors@R:
       role = c("aut", "cre")
     )
 Description: An R-based API to build and control 2D games using the 
-  'Phaser.js' JavaScript engine. It enables integration with Shiny 
+  'Phaser' JavaScript engine. It enables integration with Shiny 
   applications, allowing R developers to create interactive games and
   simulations using a declarative R syntax.
 License: MIT + file LICENSE
