@@ -45,10 +45,13 @@ You can run the built-in sample app:
 shinyphaser::run_sample_app()
 ```
 
-Or start from the example script:
+Or start from a temporary copy of the example script:
 
 ``` r
-file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
+example_file <- system.file("examples", "hedgehog.R", package = "shinyphaser")
+editable_copy <- file.path(tempdir(), "hedgehog.R")
+file.copy(example_file, editable_copy, overwrite = TRUE)
+file.edit(editable_copy)
 ```
 
 ## Learn by example

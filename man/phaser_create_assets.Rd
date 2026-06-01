@@ -2,11 +2,20 @@
 % Please edit documentation in R/dev_functions.R
 \name{phaser_create_assets}
 \alias{phaser_create_assets}
-\title{Create assets folder in your project}
+\title{Create an assets folder}
 \usage{
-phaser_create_assets()
+phaser_create_assets(path)
+}
+\arguments{
+\item{path}{Character. Directory path to create. No default is provided so
+the function does not write to the user's working directory unless a path
+is explicitly supplied.}
 }
 \description{
-Creates the default \verb{inst/examples/assets/} directory in your package project
-if it doesn't exist. Useful for storing your game's graphic assets.
+Creates an assets directory at the user-supplied \code{path} if it
+doesn't exist. Useful for storing your game's graphic assets.
+}
+\examples{
+assets_dir <- file.path(tempdir(), "shinyphaser-assets")
+phaser_create_assets(assets_dir)
 }
