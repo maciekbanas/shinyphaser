@@ -27,7 +27,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -64,7 +64,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -116,7 +116,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -172,7 +172,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -246,7 +246,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -336,7 +336,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -445,7 +445,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {
@@ -587,7 +587,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$use_phaser()
+  game$ui()
 )
 
 server <- function(input, output, session) {

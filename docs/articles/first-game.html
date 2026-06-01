@@ -78,7 +78,8 @@ game where a hedgehog:</p>
 </h2>
 <p>A shinyphaser game lives inside a regular Shiny app.</p>
 <p>In <code>UI</code> we need to load <code>Phaser.js</code>
-dependencies and we do it with calling <code>use_phaser()</code> method.</p>
+dependencies and we do it with calling <code>use_phaser()</code>
+method.</p>
 <p><code>set_shiny_session()</code> method is a helper to set Shiny
 session inside R6 object private environment as it will be reused by
 <code>shinyphaser</code> methods many times.</p>
@@ -89,7 +90,7 @@ session inside R6 object private environment as it will be reused by
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -124,7 +125,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -170,7 +171,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -224,7 +225,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -295,7 +296,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -383,7 +384,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -486,7 +487,7 @@ Show full code
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -624,7 +625,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/tagList.html" class="external-link">tagList</a></span><span class="op">(</span></span>
-<span>  <span class="va">game</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="op">)</span></span>
+<span>  <span class="va">game</span><span class="op">$</span><span class="fu">use_phaser</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
