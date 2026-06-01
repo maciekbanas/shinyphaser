@@ -5,7 +5,7 @@ game <- PhaserGame$new(width = 1500, height = 800)
 moves <- c("move_left", "move_right", "move_up", "move_down")
 
 ui <- shiny::tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {

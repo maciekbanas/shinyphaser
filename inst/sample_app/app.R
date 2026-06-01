@@ -4,7 +4,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
