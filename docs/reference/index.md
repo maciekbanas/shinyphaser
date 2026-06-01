@@ -18,5 +18,5 @@
 
 - [`run_sample_app()`](run_sample_app.md) : Run the packaged shinyphaser
   sample app
-- [`phaser_create_assets()`](phaser_create_assets.md) : Create assets
-  folder in your project
+- [`phaser_create_assets()`](phaser_create_assets.md) : Create an assets
+  folder

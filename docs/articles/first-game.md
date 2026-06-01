@@ -316,8 +316,8 @@ apples$create(730, 390)
 score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
 game$add_overlap(
-  object_name = "hedgehog",
-  group_name = "apples",
+  object_one = "hedgehog",
+  group = "apples",
   callback_fun = function(evt) {
     apples$disable(evt)        # hide collected apple
     score(score() + 1)
@@ -387,8 +387,8 @@ server <- function(input, output, session) {
   score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
   game$add_overlap(
-    object_name = "hedgehog",
-    group_name = "apples",
+    object_one = "hedgehog",
+    group = "apples",
     callback_fun = function(evt) {
       apples$disable(evt)        # hide collected apple
       score(score() + 1)
@@ -431,8 +431,8 @@ rocks$create(
 
 ``` r
 game$add_collider(
-  object_name = "hedgehog",
-  group_name = "rocks"
+  object_one = "hedgehog",
+  group = "rocks"
 )
 ```
 
@@ -506,8 +506,8 @@ server <- function(input, output, session) {
   score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
   game$add_overlap(
-    object_name = "hedgehog",
-    group_name = "apples",
+    object_one = "hedgehog",
+    group = "apples",
     callback_fun = function(evt) {
       apples$disable(evt)        # hide collected apple
       score(score() + 1)
@@ -517,8 +517,8 @@ server <- function(input, output, session) {
   )
 
   game$add_collider(
-    object_name = "hedgehog",
-    group_name = "rocks"
+    object_one = "hedgehog",
+    group = "rocks"
   )
 }
 shinyApp(ui, server)
@@ -549,7 +549,7 @@ enemy <- game$add_sprite(
 )
 
 game$add_overlap(
-  object_name = "hedgehog",
+  object_one = "hedgehog",
   object_two = "badger",
   callback_fun = function(evt) {
     shinyalert::shinyalert(
@@ -648,8 +648,8 @@ server <- function(input, output, session) {
   score_text <- game$add_text(text = "Score: 0", id = "score", x = 20, y = 20)
 
   game$add_overlap(
-    object_name = "hedgehog",
-    group_name = "apples",
+    object_one = "hedgehog",
+    group = "apples",
     callback_fun = function(evt) {
       apples$disable(evt)
       score(score() + 1)
@@ -659,8 +659,8 @@ server <- function(input, output, session) {
   )
 
   game$add_collider(
-    object_name = "hedgehog",
-    group_name = "rocks"
+    object_one = "hedgehog",
+    group = "rocks"
   )
 
   enemy <- game$add_sprite(
@@ -675,7 +675,7 @@ server <- function(input, output, session) {
   )
 
   game$add_overlap(
-    object_name = "hedgehog",
+    object_one = "hedgehog",
     object_two = "badger",
     callback_fun = function(evt) {
       shinyalert::shinyalert(

@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>An R Interface to the Phaser.js Game Framework • shinyphaser</title>
+<title>An Interface to the Phaser.js Game Framework • shinyphaser</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="An R Interface to the Phaser.js Game Framework">
-<meta name="description" content="An R-based API to build and control 2D games using the Phaser.js JavaScript engine. It enables integration with Shiny applications, allowing R developers to create interactive games and simulations using a declarative R syntax.">
-<meta property="og:description" content="An R-based API to build and control 2D games using the Phaser.js JavaScript engine. It enables integration with Shiny applications, allowing R developers to create interactive games and simulations using a declarative R syntax.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="An Interface to the Phaser.js Game Framework">
+<meta name="description" content="An API to build and control 2D games using the Phaser JavaScript engine. It enables integration with shiny applications, allowing to create interactive games and simulations.">
+<meta property="og:description" content="An API to build and control 2D games using the Phaser JavaScript engine. It enables integration with shiny applications, allowing to create interactive games and simulations.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -86,12 +86,6 @@
 <p>You can run the built-in sample app:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">shinyphaser</span><span class="fu">::</span><span class="fu"><a href="reference/run_sample_app.html">run_sample_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Or start from a temporary copy of the example script:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">example_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog.R"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span></span>
-<span><span class="va">editable_copy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"hedgehog.R"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.copy</a></span><span class="op">(</span><span class="va">example_file</span>, <span class="va">editable_copy</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/file.edit.html" class="external-link">file.edit</a></span><span class="op">(</span><span class="va">editable_copy</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="learn-by-example">Learn by example<a class="anchor" aria-label="anchor" href="#learn-by-example"></a>

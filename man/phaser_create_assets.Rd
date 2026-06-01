@@ -18,4 +18,5 @@ doesn't exist. Useful for storing your game's graphic assets.
 \examples{
 assets_dir <- file.path(tempdir(), "shinyphaser-assets")
 phaser_create_assets(assets_dir)
+
 }

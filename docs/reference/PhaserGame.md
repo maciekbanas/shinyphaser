@@ -416,16 +416,16 @@ Adds a collider between two game objects.
 #### Usage
 
     PhaserGame$add_collider(
-      object_name,
+      object_one,
       object_two = NULL,
-      group_name = NULL,
+      group = NULL,
       callback_fun = NULL,
       input
     )
 
 #### Arguments
 
-- `object_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
@@ -433,7 +433,7 @@ Adds a collider between two game objects.
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group to compare against.
 
@@ -454,16 +454,16 @@ Adds a collider between two game objects.
 #### Usage
 
     PhaserGame$add_overlap(
-      object_name,
+      object_one,
       object_two = NULL,
-      group_name = NULL,
+      group = NULL,
       callback_fun,
       input
     )
 
 #### Arguments
 
-- `object_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
@@ -471,7 +471,7 @@ Adds a collider between two game objects.
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group.
 
@@ -491,15 +491,15 @@ Create a reactive expression for overlap state between two objects.
 
 #### Usage
 
-    PhaserGame$are_overlap(object_one_name, object_two_name, input)
+    PhaserGame$are_overlap(object_one, object_two, input)
 
 #### Arguments
 
-- `object_one_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
@@ -516,9 +516,9 @@ Register a callback fired when overlap between objects ends.
 #### Usage
 
     PhaserGame$add_overlap_end(
-      object_one_name,
-      object_two_name = NULL,
-      group_name = NULL,
+      object_one,
+      object_two = NULL,
+      group = NULL,
       callback_fun,
       input,
       session = shiny::getDefaultReactiveDomain()
@@ -526,15 +526,15 @@ Register a callback fired when overlap between objects ends.
 
 #### Arguments
 
-- `object_one_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group to compare against.
 
