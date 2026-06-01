@@ -208,7 +208,6 @@ PhaserGame <- R6::R6Class(
                            group = NULL,
                            callback_fun,
                            input) {
-      Sys.sleep(0.1)
       input_id <- paste(
         c("overlap", object_one,
           object_two %||% group),

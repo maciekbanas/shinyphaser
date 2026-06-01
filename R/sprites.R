@@ -58,7 +58,6 @@ Sprite <- R6::R6Class(
     #' @param duration Numeric. Optional duration in milliseconds to play the animation
     #'  before reverting to idle (defaults to Inf, which loops indefinitely until another animation is played).
     play_animation = function(anim_name, duration = Inf) {
-      Sys.sleep(0.1)
       js <- if (is.infinite(duration)) {
         sprintf(
           "playAnimation('%s','%s');",
@@ -107,7 +106,6 @@ Sprite <- R6::R6Class(
     #' @param y Numeric. Velocity in pixels/second (positive = down, negative =
     #'  up).
     set_gravity = function(x = 100, y = 100) {
-      Sys.sleep(0.1)
       js <- sprintf("setGravity('%s', %d, %d);",
                     private$name, x, y)
       send_js(private, js)
@@ -116,7 +114,6 @@ Sprite <- R6::R6Class(
     #' @description Set the sprite's bounce factor.
     #' @param x Numeric. Bounce factor.
     set_bounce = function(x) {
-      Sys.sleep(0.1)
       js <- sprintf("setBounce('%s', %f);",
                     private$name, x)
       send_js(private, js)
@@ -140,7 +137,6 @@ Sprite <- R6::R6Class(
                              speed,
                              distance,
                              lag = distance/speed) {
-      Sys.sleep(lag)
       js <- sprintf(
         "setSpriteInMotion('%s', %d, %d, %d, %d);",
         private$name, dir_x, dir_y, speed, distance

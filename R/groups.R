@@ -15,8 +15,6 @@ Group <- R6::R6Class(
 
       js <- sprintf("addGroup('%s');",name)
       send_js(private, js)
-
-      Sys.sleep(0.1)
     },
     #' @description Add an animation that can be used by members of this group.
     #' @param suffix Character. Animation suffix/key.
@@ -34,7 +32,6 @@ Group <- R6::R6Class(
         frame_width, frame_height, frame_count, frame_rate
       )
       send_js(private, js)
-      Sys.sleep(0.1)
     },
     #' @description Create one group member at a coordinate.
     #' @param x Numeric. X-coordinate in pixels.
@@ -70,8 +67,6 @@ StaticGroup <- R6::R6Class(
 
       js <- sprintf("addStaticGroup('%s','%s');", name, url)
       send_js(private, js)
-
-      Sys.sleep(0.1)
     },
     #' @description Create one static group member at a coordinate.
     #' @param x Numeric. X-coordinate in pixels.
