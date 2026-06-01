@@ -16,10 +16,10 @@ Provides methods for adding sprites, animations, images, backgrounds, controls, 
 game <- PhaserGame$new(id = "my_game", width = 1024, height = 768)
 
 ## ------------------------------------------------
-## Method `PhaserGame$ui`
+## Method `PhaserGame$use_phaser`
 ## ------------------------------------------------
 
- game$ui()
+ game$use_phaser()
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
@@ -33,7 +33,7 @@ game <- PhaserGame$new(id = "my_game", width = 1024, height = 768)
 \itemize{
 \item \href{#method-PhaserGame-new}{\code{PhaserGame$new()}}
 \item \href{#method-PhaserGame-set_shiny_session}{\code{PhaserGame$set_shiny_session()}}
-\item \href{#method-PhaserGame-ui}{\code{PhaserGame$ui()}}
+\item \href{#method-PhaserGame-use_phaser}{\code{PhaserGame$use_phaser()}}
 \item \href{#method-PhaserGame-add_text}{\code{PhaserGame$add_text()}}
 \item \href{#method-PhaserGame-add_rectangle}{\code{PhaserGame$add_rectangle()}}
 \item \href{#method-PhaserGame-add_image}{\code{PhaserGame$add_image()}}
@@ -101,12 +101,12 @@ Set the Shiny session used to send Phaser custom messages.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-PhaserGame-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-PhaserGame-ui}{}}}
-\subsection{Method \code{ui()}}{
+\if{html}{\out{<a id="method-PhaserGame-use_phaser"></a>}}
+\if{latex}{\out{\hypertarget{method-PhaserGame-use_phaser}{}}}
+\subsection{Method \code{use_phaser()}}{
 Load dependencies and initialize the Phaser game in the UI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$ui()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$use_phaser()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -114,7 +114,7 @@ HTML tag list containing dependencies and initialization script.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{ game$ui()
+\preformatted{ game$use_phaser()
 }
 \if{html}{\out{</div>}}
 

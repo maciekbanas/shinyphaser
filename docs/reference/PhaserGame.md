@@ -19,7 +19,7 @@ controls, and collision handling.
 
 - [`PhaserGame$set_shiny_session()`](#method-PhaserGame-set_shiny_session)
 
-- [`PhaserGame$ui()`](#method-PhaserGame-ui)
+- [`PhaserGame$use_phaser()`](#method-PhaserGame-use_phaser)
 
 - [`PhaserGame$add_text()`](#method-PhaserGame-add_text)
 
@@ -101,13 +101,13 @@ Set the Shiny session used to send Phaser custom messages.
 
 ------------------------------------------------------------------------
 
-### Method `ui()`
+### Method `use_phaser()`
 
 Load dependencies and initialize the Phaser game in the UI.
 
 #### Usage
 
-    PhaserGame$ui()
+    PhaserGame$use_phaser()
 
 #### Returns
 
@@ -115,7 +115,7 @@ HTML tag list containing dependencies and initialization script.
 
 #### Examples
 
-     game$ui()
+     game$use_phaser()
 
 ------------------------------------------------------------------------
 
@@ -601,10 +601,10 @@ The objects of this class are cloneable with this method.
 game <- PhaserGame$new(id = "my_game", width = 1024, height = 768)
 
 ## ------------------------------------------------
-## Method `PhaserGame$ui`
+## Method `PhaserGame$use_phaser`
 ## ------------------------------------------------
 
- game$ui()
+ game$use_phaser()
 #> <div id="my_game" style="width:100vw; height:100vh;"></div>
 #> <script>initPhaserGame('my_game', {"width":1024,"height":768});</script>
 ```

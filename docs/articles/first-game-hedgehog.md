@@ -14,7 +14,7 @@ hedgehog:
 A shinyphaser game lives inside a regular Shiny app.
 
 In `UI` we need to load `Phaser.js` dependencies and we do it with
-calling `ui()` method.
+calling `use_phaser()` method.
 
 `set_shiny_session()` method is a helper to set Shiny session inside R6
 object private environment as it will be reused by `shinyphaser` methods
@@ -27,7 +27,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -64,7 +64,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -116,7 +116,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -172,7 +172,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -246,7 +246,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -336,7 +336,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -445,7 +445,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -587,7 +587,7 @@ library(shinyphaser)
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
