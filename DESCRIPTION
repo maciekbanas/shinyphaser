@@ -1,5 +1,5 @@
 Package: shinyphaser
-Title: An R Interface to the Phaser.js Game Framework
+Title: An Interface to the 'Phaser.js' Game Framework
 Version: 0.1.0
 Authors@R: 
     person(
@@ -8,10 +8,9 @@ Authors@R:
       email = "banasmaciek@gmail.com", 
       role = c("aut", "cre")
     )
-Description: An R-based API to build and control 2D games using the 
-  'Phaser' JavaScript engine. It enables integration with Shiny 
-  applications, allowing R developers to create interactive games and
-  simulations using a declarative R syntax.
+Description: An API to build and control 2D games using the 'Phaser'
+  'JavaScript' engine. It enables integration with 'shiny' applications, 
+  allowing to create interactive games and simulations.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
