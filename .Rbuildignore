@@ -8,3 +8,5 @@
 _\.new\.png$
 ^_pkgdown\.yml$
 ^docs$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
