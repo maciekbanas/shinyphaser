@@ -364,9 +364,9 @@ Adds a static group to the scene (non-animated).
 Adds a collider between two game objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_collider(
-  object_name,
+  object_one,
   object_two = NULL,
-  group_name = NULL,
+  group = NULL,
   callback_fun = NULL,
   input
 )}\if{html}{\out{</div>}}
@@ -375,11 +375,11 @@ Adds a collider between two game objects.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_name}}{Character. Name of the first object.}
+\item{\code{object_one}}{Character. Name of the first object.}
 
 \item{\code{object_two}}{Character. Name of the second object.}
 
-\item{\code{group_name}}{Character. Name of the group to compare against.}
+\item{\code{group}}{Character. Name of the group to compare against.}
 
 \item{\code{callback_fun}}{A function to be run when collision occurs.}
 
@@ -395,9 +395,9 @@ Adds a collider between two game objects.
 Adds a collider between two game objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_overlap(
-  object_name,
+  object_one,
   object_two = NULL,
-  group_name = NULL,
+  group = NULL,
   callback_fun,
   input
 )}\if{html}{\out{</div>}}
@@ -406,11 +406,11 @@ Adds a collider between two game objects.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_name}}{Character. Name of the first object.}
+\item{\code{object_one}}{Character. Name of the first object.}
 
 \item{\code{object_two}}{Character. Name of the second object.}
 
-\item{\code{group_name}}{Character. Name of the group.}
+\item{\code{group}}{Character. Name of the group.}
 
 \item{\code{callback_fun}}{A function to be run when overlap occurs.}
 
@@ -425,15 +425,15 @@ Adds a collider between two game objects.
 \subsection{Method \code{are_overlap()}}{
 Create a reactive expression for overlap state between two objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$are_overlap(object_one_name, object_two_name, input)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{PhaserGame$are_overlap(object_one, object_two, input)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_one_name}}{Character. Name of the first object.}
+\item{\code{object_one}}{Character. Name of the first object.}
 
-\item{\code{object_two_name}}{Character. Name of the second object.}
+\item{\code{object_two}}{Character. Name of the second object.}
 
 \item{\code{input}}{Shiny input list.}
 }
@@ -447,9 +447,9 @@ Create a reactive expression for overlap state between two objects.
 Register a callback fired when overlap between objects ends.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_overlap_end(
-  object_one_name,
-  object_two_name = NULL,
-  group_name = NULL,
+  object_one,
+  object_two = NULL,
+  group = NULL,
   callback_fun,
   input,
   session = shiny::getDefaultReactiveDomain()
@@ -459,11 +459,11 @@ Register a callback fired when overlap between objects ends.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{object_one_name}}{Character. Name of the first object.}
+\item{\code{object_one}}{Character. Name of the first object.}
 
-\item{\code{object_two_name}}{Character. Name of the second object.}
+\item{\code{object_two}}{Character. Name of the second object.}
 
-\item{\code{group_name}}{Character. Name of the group to compare against.}
+\item{\code{group}}{Character. Name of the group to compare against.}
 
 \item{\code{callback_fun}}{Function. Callback executed when overlap ends.}
 

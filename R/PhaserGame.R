@@ -165,28 +165,28 @@ PhaserGame <- R6::R6Class(
     },
 
     #' @description Adds a collider between two game objects.
-    #' @param object_name Character. Name of the first object.
+    #' @param object_one Character. Name of the first object.
     #' @param object_two Character. Name of the second object.
-    #' @param group_name Character. Name of the group to compare against.
+    #' @param group Character. Name of the group to compare against.
     #' @param callback_fun A function to be run when collision occurs.
     #' @param input Shiny input list.
-    add_collider = function(object_name,
+    add_collider = function(object_one,
                             object_two = NULL,
-                            group_name = NULL,
+                            group = NULL,
                             callback_fun = NULL,
                             input) {
       input_id <- paste(
-        c("collide", object_name,
-          object_two %||% group_name),
+        c("collide", object_one,
+          object_two %||% group),
         collapse = "_"
       )
 
       js <- if (!is.null(object_two)) {
         sprintf("addCollider('%s','%s','%s')",
-                object_name, object_two, input_id)
+                object_one, object_two, input_id)
       } else {
         sprintf("addGroupCollider('%s','%s','%s')",
-                object_name, group_name, input_id)
+                object_one, group, input_id)
       }
       send_js(private, js)
       if (!is.null(callback_fun)) {
@@ -198,29 +198,29 @@ PhaserGame <- R6::R6Class(
     },
 
     #' @description Adds a collider between two game objects.
-    #' @param object_name Character. Name of the first object.
+    #' @param object_one Character. Name of the first object.
     #' @param object_two Character. Name of the second object.
-    #' @param group_name Character. Name of the group.
+    #' @param group Character. Name of the group.
     #' @param callback_fun A function to be run when overlap occurs.
     #' @param input Shiny input list.
-    add_overlap = function(object_name,
+    add_overlap = function(object_one,
                            object_two = NULL,
-                           group_name = NULL,
+                           group = NULL,
                            callback_fun,
                            input) {
       Sys.sleep(0.1)
       input_id <- paste(
-        c("overlap", object_name,
-          object_two %||% group_name),
+        c("overlap", object_one,
+          object_two %||% group),
         collapse = "_"
       )
 
       js <- if (!is.null(object_two)) {
         sprintf("addOverlap('%s','%s','%s')",
-                object_name, object_two, input_id)
+                object_one, object_two, input_id)
       } else {
         sprintf("addGroupOverlap('%s','%s','%s')",
-                object_name, group_name, input_id)
+                object_one, group, input_id)
       }
       send_js(private, js)
 
@@ -231,19 +231,19 @@ PhaserGame <- R6::R6Class(
     },
 
    #' @description Create a reactive expression for overlap state between two objects.
-   #' @param object_one_name Character. Name of the first object.
-   #' @param object_two_name Character. Name of the second object.
+   #' @param object_one Character. Name of the first object.
+   #' @param object_two Character. Name of the second object.
    #' @param input Shiny input list.
-   are_overlap = function(object_one_name,
-                          object_two_name,
+   are_overlap = function(object_one,
+                          object_two,
                           input) {
      input_id <- paste(
-       c("are_overlap", object_one_name,
-         object_two_name %||% group_name),
+       c("are_overlap", object_one,
+         object_two %||% group),
        collapse = "_"
      )
      js <- sprintf("areOverlap('%s','%s','%s')",
-            object_one_name, object_two_name, input_id)
+            object_one, object_two, input_id)
      send_js(private, js)
      shiny::eventReactive(input[[input_id]], {
        input[[input_id]]
@@ -251,25 +251,25 @@ PhaserGame <- R6::R6Class(
     },
 
    #' @description Register a callback fired when overlap between objects ends.
-   #' @param object_one_name Character. Name of the first object.
-   #' @param object_two_name Character. Name of the second object.
-   #' @param group_name Character. Name of the group to compare against.
+   #' @param object_one Character. Name of the first object.
+   #' @param object_two Character. Name of the second object.
+   #' @param group Character. Name of the group to compare against.
    #' @param callback_fun Function. Callback executed when overlap ends.
    #' @param input Shiny input list.
    #' @param session Shiny session object.
-   add_overlap_end = function(object_one_name,
-                              object_two_name = NULL,
-                              group_name = NULL,
+   add_overlap_end = function(object_one,
+                              object_two = NULL,
+                              group = NULL,
                               callback_fun,
                               input,
                               session = shiny::getDefaultReactiveDomain()) {
      input_id <- paste(
-       c("overlap_end", object_one_name,
-         object_two_name %||% group_name),
+       c("overlap_end", object_one,
+         object_two %||% group),
        collapse = "_"
      )
      js <- sprintf("addOverlapEnd('%s','%s','%s');",
-                   object_one_name, object_two_name, input_id)
+                   object_one, object_two, input_id)
      session$sendCustomMessage("phaser", list(js = js))
 
      shiny::observeEvent(input[[input_id]], {
