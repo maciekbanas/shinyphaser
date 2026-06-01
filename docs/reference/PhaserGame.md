@@ -605,5 +605,6 @@ game <- PhaserGame$new(id = "my_game", width = 1024, height = 768)
 ## ------------------------------------------------
 
  game$use_phaser()
-#> Error: attempt to apply non-function
+#> <div id="my_game" style="width:100vw; height:100vh;"></div>
+#> <script>initPhaserGame('my_game', {"width":1024,"height":768});</script>
 ```
