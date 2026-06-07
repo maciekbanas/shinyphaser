@@ -52,12 +52,6 @@ You can run the built-in sample app:
 shinyphaser::run_sample_app()
 ```
 
-Or start from the example script:
-
-```r
-file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
-```
-
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation, overlap, and collision), see [**Build your first shinyphaser game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)

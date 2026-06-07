@@ -6,12 +6,17 @@
 
 ## Citation
 
-Banas M (2026). *shinyphaser: An R Interface to the Phaser.js Game
-Framework*. R package version 0.0.0.9040.
+Source:
+[`DESCRIPTION`](https://github.com/maciekbanas/shinyphaser/blob/HEAD/DESCRIPTION)
+
+Banas M (2026). *shinyphaser: An Interface to the 'Phaser.js' Game
+Framework*. R package version 0.1.0,
+<https://github.com/maciekbanas/shinyphaser>.
 
     @Manual{,
-      title = {shinyphaser: An R Interface to the Phaser.js Game Framework},
+      title = {shinyphaser: An Interface to the 'Phaser.js' Game Framework},
       author = {Maciej Banas},
       year = {2026},
-      note = {R package version 0.0.0.9040},
+      note = {R package version 0.1.0},
+      url = {https://github.com/maciekbanas/shinyphaser},
     }

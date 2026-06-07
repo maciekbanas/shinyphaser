@@ -75,3 +75,10 @@ test_that("sample app and hedgehog assets are available", {
   expect_true(file.exists(sample_app))
   expect_true(file.exists(system.file("assets", "hedgehog", "terrain", "grass.png", package = "shinyphaser")))
 })
+
+test_that("PhaserGame exposes use_phaser UI initializer", {
+  game <- PhaserGame$new()
+
+  expect_true(is.function(game$use_phaser))
+  expect_null(game$ui)
+})

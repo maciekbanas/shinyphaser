@@ -37,12 +37,6 @@ You can run the built-in sample app:
 shinyphaser::run_sample_app()
 ```
 
-Or start from the example script:
-
-``` r
-file.edit(system.file("examples", "hedgehog_simple.R", package = "shinyphaser"))
-```
-
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation,
@@ -73,8 +67,6 @@ game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
 
 - [`run_sample_app()`](run_sample_app.md) : Run the packaged shinyphaser
   sample app
-- [`phaser_create_assets()`](phaser_create_assets.md) : Create assets
-  folder in your project
 
 # Articles
 

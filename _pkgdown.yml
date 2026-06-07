@@ -19,7 +19,6 @@ reference:
   - title: Utilities
     contents:
       - run_sample_app
-      - phaser_create_assets
 
 articles:
   - title: Getting started

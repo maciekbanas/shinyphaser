@@ -19,7 +19,7 @@ controls, and collision handling.
 
 - [`PhaserGame$set_shiny_session()`](#method-PhaserGame-set_shiny_session)
 
-- [`PhaserGame$ui()`](#method-PhaserGame-ui)
+- [`PhaserGame$use_phaser()`](#method-PhaserGame-use_phaser)
 
 - [`PhaserGame$add_text()`](#method-PhaserGame-add_text)
 
@@ -101,13 +101,13 @@ Set the Shiny session used to send Phaser custom messages.
 
 ------------------------------------------------------------------------
 
-### Method `ui()`
+### Method `use_phaser()`
 
 Load dependencies and initialize the Phaser game in the UI.
 
 #### Usage
 
-    PhaserGame$ui()
+    PhaserGame$use_phaser()
 
 #### Returns
 
@@ -115,7 +115,7 @@ HTML tag list containing dependencies and initialization script.
 
 #### Examples
 
-     game$ui()
+     game$use_phaser()
 
 ------------------------------------------------------------------------
 
@@ -416,16 +416,16 @@ Adds a collider between two game objects.
 #### Usage
 
     PhaserGame$add_collider(
-      object_name,
+      object_one,
       object_two = NULL,
-      group_name = NULL,
+      group = NULL,
       callback_fun = NULL,
       input
     )
 
 #### Arguments
 
-- `object_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
@@ -433,7 +433,7 @@ Adds a collider between two game objects.
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group to compare against.
 
@@ -454,16 +454,16 @@ Adds a collider between two game objects.
 #### Usage
 
     PhaserGame$add_overlap(
-      object_name,
+      object_one,
       object_two = NULL,
-      group_name = NULL,
+      group = NULL,
       callback_fun,
       input
     )
 
 #### Arguments
 
-- `object_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
@@ -471,7 +471,7 @@ Adds a collider between two game objects.
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group.
 
@@ -491,15 +491,15 @@ Create a reactive expression for overlap state between two objects.
 
 #### Usage
 
-    PhaserGame$are_overlap(object_one_name, object_two_name, input)
+    PhaserGame$are_overlap(object_one, object_two, input)
 
 #### Arguments
 
-- `object_one_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
@@ -516,9 +516,9 @@ Register a callback fired when overlap between objects ends.
 #### Usage
 
     PhaserGame$add_overlap_end(
-      object_one_name,
-      object_two_name = NULL,
-      group_name = NULL,
+      object_one,
+      object_two = NULL,
+      group = NULL,
       callback_fun,
       input,
       session = shiny::getDefaultReactiveDomain()
@@ -526,15 +526,15 @@ Register a callback fired when overlap between objects ends.
 
 #### Arguments
 
-- `object_one_name`:
+- `object_one`:
 
   Character. Name of the first object.
 
-- `object_two_name`:
+- `object_two`:
 
   Character. Name of the second object.
 
-- `group_name`:
+- `group`:
 
   Character. Name of the group to compare against.
 
@@ -601,10 +601,10 @@ The objects of this class are cloneable with this method.
 game <- PhaserGame$new(id = "my_game", width = 1024, height = 768)
 
 ## ------------------------------------------------
-## Method `PhaserGame$ui`
+## Method `PhaserGame$use_phaser`
 ## ------------------------------------------------
 
- game$ui()
+ game$use_phaser()
 #> <div id="my_game" style="width:100vw; height:100vh;"></div>
 #> <script>initPhaserGame('my_game', {"width":1024,"height":768});</script>
 ```

@@ -5,8 +5,7 @@ game <- PhaserGame$new(width = 1500, height = 800)
 moves <- c("move_left", "move_right", "move_up", "move_down")
 
 ui <- shiny::tagList(
-  shinyalert::useShinyalert(),
-  game$ui()
+  game$use_phaser()
 )
 
 server <- function(input, output, session) {
@@ -116,15 +115,19 @@ server <- function(input, output, session) {
   }
 
   add_enemy_overlap <- function(name, level_id, enemy_name) {
-    game$add_overlap("hedgehog", object_two = name, callback_fun = function(evt) {
-      if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
-      state$game_over <- TRUE
-      shinyalert::shinyalert(
-        title = "Game over", text = paste0("A ", enemy_name, " caught the hedgehog. Try again!"), type = "error",
-        closeOnClickOutside = FALSE, showCancelButton = FALSE,
-        callbackR = function(value) shiny::stopApp()
-      )
-    }, input = input)
+    game$add_overlap(
+      object_one = "hedgehog", 
+      object_two = name, 
+      callback_fun = function(evt) {
+        if (!state$started || state$game_over || state$current_level != level_id) return(invisible(NULL))
+        state$game_over <- TRUE
+        shinyalert::shinyalert(
+          title = "Game over", text = paste0("A ", enemy_name, " caught the hedgehog. Try again!"), type = "error",
+          closeOnClickOutside = FALSE, showCancelButton = FALSE,
+          callbackR = function(value) shiny::stopApp()
+        )
+      }, input = input
+    )
   }
 
   pause_gameplay <- function(level_id = state$current_level) {
@@ -179,8 +182,8 @@ server <- function(input, output, session) {
     for (i in seq_along(attackers)) add_enemy_overlap(paste0("attacker_lvl", level_id, "_", i), level_id, cfg$enemy_name)
 
     game$add_overlap(
-      object_name = "hedgehog", 
-      group_name = paste0("apples_lvl", level_id), 
+      object_one = "hedgehog", 
+      group = paste0("apples_lvl", level_id), 
       callback_fun = function(evt) {
         if (!state$started || state$current_level != level_id || state$game_over) return(invisible(NULL))
 

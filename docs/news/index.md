@@ -4,7 +4,7 @@
 
 Initial CRAN release.
 
-- Added an R6-based `PhaserGame` API to define Phaser.js scenes,
+- Added an R6-based `PhaserGame` API to define `Phaser.js` scenes,
   sprites, image assets, groups, and rectangle helpers from R.
 - Added Shiny/htmltools bindings that render Phaser games in Shiny apps
   and synchronize game actions from R to JavaScript.
