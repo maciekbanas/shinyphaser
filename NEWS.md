@@ -1,4 +1,4 @@
-# shinyphaser (development version)
+# shinyphaser 0.2.0
 
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
