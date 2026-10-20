@@ -91,5 +91,5 @@ actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-act
 The package also includes a larger modular example. Run it locally with:
 
 ``` r
-shinyphaser::run_swamps_rpg()
+shiny::runApp(system.file("examples", "swamps_rpg", package = "shinyphaser"))
 ```

@@ -1,21 +1,15 @@
 # Swamps RPG example
 
-When developing shinyphaser, load the working tree and run the example with:
+From the repository root, after installing shinyphaser:
 
 ```r
-devtools::load_all()
-run_swamps_rpg()
+shiny::runApp("inst/examples/swamps_rpg")
 ```
 
-Use the unqualified function name after `devtools::load_all()`: the `::` operator
-can still address an older installed copy of shinyphaser in the same R session.
-
-Installed-package users must first install a version containing this example,
-then can call the exported function:
+To run the example bundled with an installed package:
 
 ```r
-devtools::install()
-shinyphaser::run_swamps_rpg()
+shiny::runApp(system.file("examples", "swamps_rpg", package = "shinyphaser"))
 ```
 
 The entry point only establishes shared game state and loads focused modules:

@@ -2,9 +2,7 @@ test_that("run_sample_app is available", {
   expect_true(is.function(run_sample_app))
 })
 
-test_that("run_swamps_rpg is available and its app is packaged", {
-  expect_true(is.function(run_swamps_rpg))
-  expect_true("run_swamps_rpg" %in% getNamespaceExports("shinyphaser"))
+test_that("Swamps RPG app and modules are packaged", {
   app_file <- system.file(
     "examples", "swamps_rpg", "app.R", package = "shinyphaser"
   )
