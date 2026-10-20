@@ -1,6 +1,25 @@
 library(shiny)
 library(shinyphaser)
 
+# Embed the tiny original PNGs so sourcing app.R also works. Phaser 3.55
+# requires HTTP image URLs, so serve decoded copies through an explicit path.
+cube_png <- paste0(
+  "iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAT0lEQVR4nGMQ1LL7P5CYYdA4IPLrBbriUQeMOmDUAUQ7AD3fkmI4Pj2jDhh1wNBxAK3wqANGHTDqALLLAXLwqAOGdhoYdcDIccBA4QF3AAA4nUcYJNoUFgAAAABJRU5ErkJggg=="
+)
+spike_png <- paste0(
+  "iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAlUlEQVR4nOXOOQrAMAwFUZ8x18qhHVKkMdjyIukPZGD6V8qfqtdd39WObmjgh8Mi0cAWh0OigT0cBokGWjg5Eg2cxcmQaOAqLh2JBu7i0pBo4CkuHIkGeuHCkGigN84diQZG4dyQaGA07hiJBmbhtpFoYDZuGYkGqnDTSDRQjTORatgQqEaZSDVoCFRjTKQaMgSqEdYPmMns2ZQIPJUAAAAASUVORK5CYII="
+)
+
+art_directory <- file.path(tempdir(), "shinyphaser-geometry-dash-art")
+dir.create(art_directory, recursive = TRUE, showWarnings = FALSE)
+for (name in c("cube", "spike")) {
+  encoded <- if (name == "cube") cube_png else spike_png
+  writeBin(jsonlite::base64_dec(encoded), file.path(art_directory, paste0(name, ".png")))
+}
+addResourcePath("geometry-dash-art", art_directory)
+cube_texture <- "geometry-dash-art/cube.png"
+spike_texture <- "geometry-dash-art/spike.png"
+
 # A short, fixed course. All movement and collision reactions run in the browser.
 course_width <- 3600
 game <- PhaserGame$new(width = 960, height = 480, gravity_y = 1400)
@@ -49,7 +68,7 @@ server <- function(input, output, session) {
   game$add_rectangle("floor_edge", course_width / 2, 402, course_width, 4, "0x59f5d0")
   game$add_collision_rectangle("floor", course_width / 2, 440, course_width, 80)
 
-  player <- game$add_sprite("cube", "cube.png", 120, 384,
+  player <- game$add_sprite("cube", cube_texture, 120, 384,
                             frame_width = 32, frame_height = 32)
   player$set_depth(10)
   player$follow_camera()
@@ -77,7 +96,7 @@ server <- function(input, output, session) {
   for (i in seq_along(c(560, 900, 1240, 1580, 1920, 2260, 2600, 2940))) {
     x <- c(560, 900, 1240, 1580, 1920, 2260, 2600, 2940)[i]
     name <- paste0("spike_", i)
-    game$add_image(paste0(name, "_art"), "spike.png", x, 380)
+    game$add_image(paste0(name, "_art"), spike_texture, x, 380)
     game$add_collision_rectangle(name, x, 385, 20, 30)
     game$add_overlap("cube", name, browser_action = browser_actions({
       if (alive$is_true()) {

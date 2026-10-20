@@ -12,6 +12,13 @@ From the repository root, install the package and run:
 shiny::runApp("inst/examples/geometry_dash")
 ```
 
+Sourcing the file from the repository root also works:
+
+```r
+app <- source("inst/examples/geometry_dash/app.R")$value
+shiny::runApp(app)
+```
+
 Or, after installing the package:
 
 ```r
@@ -22,7 +29,11 @@ shiny::runApp(system.file("examples", "geometry_dash", package = "shinyphaser"))
 finish through the R API. `browser_actions()` handles jumping, grounded state,
 crashes, and completion locally without a Shiny round trip. The small inline
 JavaScript only maps taps to the keyboard control and prevents page scrolling.
-The PNG artwork in `www/` is original and needs no external game assets.
+The original PNG artwork is embedded in `app.R`, decoded into a temporary
+directory, and served with `shiny::addResourcePath()`. Copying or sourcing the
+app does not depend on Shiny automatically serving a `www/` directory. Copies
+of the artwork are included in `www/` for reference. No external game assets
+are needed.
 Phaser itself loads from the package's standard jsDelivr dependency, so the
 browser needs Internet access. No additional R packages beyond shinyphaser's
 dependencies are required.
