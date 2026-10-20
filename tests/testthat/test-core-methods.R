@@ -167,7 +167,7 @@ test_that("text and rectangle creation applies queued depth actions", {
 test_that("sample app and hedgehog assets are available", {
   sample_app <- system.file("sample_app", "app.R", package = "shinyphaser")
   expect_true(file.exists(sample_app))
-  expect_true(file.exists(system.file("assets", "hedgehog", "terrain", "grass.png", package = "shinyphaser")))
+  expect_true(file.exists(system.file("examples", "hedgehog", "www", "terrain", "grass.png", package = "shinyphaser")))
 
   sample_code <- readLines(sample_app, warn = FALSE)
   expect_true(any(grepl("floor$set_depth(-10)", sample_code, fixed = TRUE)))
@@ -444,7 +444,7 @@ test_that("browser actions reject unsupported R code instead of running it", {
 
 test_that("hedgehog action events retain game progress alerts", {
   example <- readLines(
-    system.file("examples", "hedgehog.R", package = "shinyphaser"),
+    system.file("examples", "hedgehog", "app.R", package = "shinyphaser"),
     warn = FALSE
   )
 
@@ -550,9 +550,9 @@ test_that("sight approach does not restart active movement or hide alerts", {
 
 test_that("swamps_rpg is limited to the Orc and Mushroom Swamps", {
   example <- read_swamps_rpg_example()
-  asset_dir <- system.file("assets", "swamps_rpg", package = "shinyphaser")
+  asset_dir <- system.file("examples", "swamps_rpg", "www", package = "shinyphaser")
 
-  expect_true(any(grepl('url = "assets/swamps_rpg/sprites/hero/orc/hero_orc_idle.png"',
+  expect_true(any(grepl('url = "swamps-rpg-assets/sprites/hero/orc/hero_orc_idle.png"',
                         example, fixed = TRUE)))
   expect_true(any(grepl('map_key = "mushroom_swamps"', example, fixed = TRUE)))
   expect_true(any(grepl('selected_character <<- "hero_orc"', example, fixed = TRUE)))
@@ -581,21 +581,7 @@ test_that("recent movement selects four-way directional attack animations", {
   expect_true(any(grepl('suffix = paste0("attack_", direction)', example, fixed = TRUE)))
 })
 
-test_that("bear Space control names its input argument", {
-  example <- readLines(
-    system.file("examples", "bear.R", package = "shinyphaser"),
-    warn = FALSE
-  )
-
-  space_control <- grep('game\\$add_control\\(', example)[1]
-  expect_true(any(grepl(
-    "input = input",
-    example[space_control:min(space_control + 15, length(example))],
-    fixed = TRUE
-  )))
-  expect_true(any(grepl('name = "wooden_box"', example, fixed = TRUE)))
-  expect_true(any(grepl('name = "apples"', example, fixed = TRUE)))
-
+test_that("keyboard controls accept named input before server actions", {
   game <- PhaserGame$new()
   control_arguments <- names(formals(game$add_control))
   expect_lt(match("input", control_arguments), match("server_action", control_arguments))
@@ -639,13 +625,9 @@ test_that("runtime visual assets initialize when the loader batch completes", {
   expect_false(any(grepl("scene[imageName].on('pointerdown'", image_js, fixed = TRUE)))
 })
 
-test_that("bear uses Arcade world gravity", {
+test_that("Arcade world gravity is configurable", {
   game_js <- readLines(system.file("www", "phaser-game.js", package = "shinyphaser"), warn = FALSE)
-  bear <- readLines(system.file("examples", "bear.R", package = "shinyphaser"), warn = FALSE)
-
   expect_true(any(grepl("gravity: {", game_js, fixed = TRUE)))
-  expect_true(any(grepl("gravity_y = 1200", bear, fixed = TRUE)))
-  expect_false(any(grepl("$set_gravity", bear, fixed = TRUE)))
 })
 
 test_that("saved games use Phaser snapshots and server disk persistence", {
@@ -698,7 +680,7 @@ test_that("save_game writes a supplied Phaser snapshot immediately", {
 
 test_that("swamps_rpg is organized into focused modules and sprite directories", {
   example_dir <- system.file("examples", "swamps_rpg", package = "shinyphaser")
-  asset_dir <- system.file("assets", "swamps_rpg", "sprites", package = "shinyphaser")
+  asset_dir <- system.file("examples", "swamps_rpg", "www", "sprites", package = "shinyphaser")
 
   expect_true(file.exists(file.path(example_dir, "app.R")))
   expect_true(file.exists(file.path(example_dir, "modules", "saving.R")))

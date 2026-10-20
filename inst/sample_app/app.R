@@ -1,6 +1,10 @@
 library(shiny)
 library(shinyphaser)
 
+# Reuse the artwork owned by the full hedgehog example.
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
+
 game <- PhaserGame$new(width = 1500, height = 800)
 
 ui <- tagList(
@@ -12,7 +16,7 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
@@ -20,7 +24,7 @@ server <- function(input, output, session) {
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -41,7 +45,7 @@ server <- function(input, output, session) {
   for (move in moves) {
     hedgehog$add_animation(
       suffix = move,
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 5
@@ -49,7 +53,7 @@ server <- function(input, output, session) {
   }
 
   score <- reactiveVal(0)
-  apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+  apples <- game$add_static_group("apples", "hedgehog-assets/perks/apple_20.png")
 
   apples$create(260, 140)
   apples$create(640, 180)
@@ -57,7 +61,7 @@ server <- function(input, output, session) {
 
   rocks <- game$add_static_group(
     name = "rocks",
-    url = "assets/hedgehog/obstacles/rock.png"
+    url = "hedgehog-assets/obstacles/rock.png"
   )
 
   rocks$create(400, 200)
@@ -85,7 +89,7 @@ server <- function(input, output, session) {
 
   enemy <- game$add_sprite(
     name = "badger",
-    url = "assets/hedgehog/sprites/badger_move_left_50.png",
+    url = "hedgehog-assets/sprites/badger_move_left_50.png",
     x = 700,
     y = 300,
     frame_width = 50,

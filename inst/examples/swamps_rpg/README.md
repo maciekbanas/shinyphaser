@@ -30,3 +30,17 @@ The entry point only establishes shared game state and loads focused modules:
 Modules are sourced into the active Shiny server invocation in the order listed
 in `app.R`; this lets callbacks share session state without turning the example
 back into one large file.
+
+## Local assets and sourcing
+
+All maps, terrain, sprites, perks, and sounds live in this example's `www/`
+directory. The app explicitly registers `swamps-rpg-assets` and resolves its UI
+and modules relative to `app.R`, so it can be sourced from another directory:
+
+```r
+app <- source("/path/to/shinyphaser/inst/examples/swamps_rpg/app.R")$value
+shiny::runApp(app)
+```
+
+From the repository root, use `shiny::runApp("inst/examples/swamps_rpg")`.
+Keep the entire example directory together.

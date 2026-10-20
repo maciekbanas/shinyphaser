@@ -1,4 +1,15 @@
-devtools::load_all()
+library(shiny)
+library(shinyphaser)
+
+# Resolve paths from the sourced file, or Shiny's app working directory.
+example_dir <- local({
+  paths <- vapply(sys.frames(), function(frame) {
+    if (is.null(frame$ofile)) "" else as.character(frame$ofile)[1]
+  }, character(1))
+  paths <- paths[nzchar(paths)]
+  if (length(paths)) dirname(normalizePath(tail(paths, 1), mustWork = TRUE)) else getwd()
+})
+shiny::addResourcePath("hedgehog-assets", file.path(example_dir, "www"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -50,28 +61,28 @@ server <- function(input, output, session) {
 
   grass <- game$add_image(
     name = "grass", 
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300   
   )
 
   hedgehog <- game$add_sprite(
-    name = "hedgehog", url = "assets/hedgehog/sprites/hedgehog_32.png",
+    name = "hedgehog", url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 120, y = 300, frame_width = 32, frame_height = 32, frame_count = 5, frame_rate = 6
   )
-  purrr::walk(moves, function(move) {
+  lapply(moves, function(move) {
     hedgehog$add_animation(
       suffix = move, 
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"), 
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32, 
       frame_height = 32, 
       frame_rate = 4
     )
   })
-  purrr::walk(moves, function(move) {
+  lapply(moves, function(move) {
     hedgehog$add_animation(
       suffix = paste0("run_", move), 
-      url = paste0("assets/hedgehog/sprites/hedgehog_run_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_run_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 8
@@ -93,7 +104,7 @@ server <- function(input, output, session) {
 
       enemy <- game$add_sprite(
         name = paste0(prefix, i), 
-        url = paste0("assets/hedgehog/sprites/", enemy_name, "_move_left_50.png"),
+        url = paste0("hedgehog-assets/sprites/", enemy_name, "_move_left_50.png"),
         x = spawn_point$x, 
         y = spawn_point$y, 
         frame_width = 50, 
@@ -101,10 +112,10 @@ server <- function(input, output, session) {
         frame_count = 1, 
         frame_rate = 1
       )
-      purrr::walk(moves, function(move) {
+      lapply(moves, function(move) {
         enemy$add_animation(
           suffix = move, 
-          url = paste0("assets/hedgehog/sprites/", enemy_name, "_", move, "_50.png"), 
+          url = paste0("hedgehog-assets/sprites/", enemy_name, "_", move, "_50.png"),
           frame_width = 50,
           frame_height = 50, 
           frame_rate = 4
@@ -186,7 +197,7 @@ server <- function(input, output, session) {
       }
     )
     cfg <- level_config[[as.character(level_id)]]
-    apples_group <- game$add_static_group(name = paste0("apples_lvl", level_id), url = "assets/hedgehog/perks/apple_20.png")
+    apples_group <- game$add_static_group(name = paste0("apples_lvl", level_id), url = "hedgehog-assets/perks/apple_20.png")
     for (i in seq_len(nrow(cfg$apples))) apples_group$create(x = cfg$apples$x[i], y = cfg$apples$y[i])
 
     attackers <- create_attackers(paste0("attacker_lvl", level_id, "_"), cfg$attackers, cfg$enemy_name)
