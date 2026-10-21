@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinyphaser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9022</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9023</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,6 +19,7 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/first-game.html">Build your first shinyphaser game</a></li>
+    <li><a class="dropdown-item" href="../articles/geometry-dash.html">Build a Geometry Dash-style runner</a></li>
     <li><a class="dropdown-item" href="../articles/browser-server-actions.html">Choose between browser and server actions</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -84,9 +85,9 @@
 </div>
 <div class="section level3">
 <h3 id="updates-in-examples-development-version">Updates in examples<a class="anchor" aria-label="anchor" href="#updates-in-examples-development-version"></a></h3>
-<ul><li>Added new arcade example game (bear).</li>
+<ul><li>Added a Geometry Dash-style runner (<code>geometry_dash</code>) with automatic movement, jumping, spike obstacles, a finish line, and restart controls.</li>
 <li>Added the Swamps RPG game example (<code>swamps_rpg</code>).</li>
-<li>Updated the sample game to layer its background and score display with <code>set_depth()</code>.</li>
+<li>Organized games and their assets into individual directories under <code>inst/examples</code>, with launch instructions using <code><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">shiny::runApp()</a></code>.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="readme-development-version">README<a class="anchor" aria-label="anchor" href="#readme-development-version"></a></h3>

@@ -24,6 +24,8 @@ many times.
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -51,7 +53,7 @@ scene.
 
 floor <- game$add_image(
   name = "floor",
-  url = "assets/hedgehog/terrain/grass.png",
+  url = "hedgehog-assets/terrain/grass.png",
   x = 800,
   y = 300
 )
@@ -63,6 +65,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -75,7 +79,7 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
@@ -99,7 +103,7 @@ per second.
 
 hedgehog <- game$add_sprite(
   name = "hedgehog",
-  url = "assets/hedgehog/sprites/hedgehog_32.png",
+  url = "hedgehog-assets/sprites/hedgehog_32.png",
   x = 140,
   y = 260,
   frame_width = 32,
@@ -117,6 +121,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -129,14 +135,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -175,6 +181,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -187,14 +195,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -237,7 +245,7 @@ moves <- c("move_left", "move_right", "move_up", "move_down")
 for (move in moves) {
   hedgehog$add_animation(
     suffix = move,
-    url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+    url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
     frame_width = 32,
     frame_height = 32,
     frame_rate = 5
@@ -251,6 +259,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -263,14 +273,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -289,7 +299,7 @@ server <- function(input, output, session) {
   for (move in moves) {
     hedgehog$add_animation(
       suffix = move,
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 5
@@ -318,7 +328,7 @@ objective.
 
 ``` r
 
-apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+apples <- game$add_static_group("apples", "hedgehog-assets/perks/apple_20.png")
 
 apples$create(260, 140)
 apples$create(640, 180)
@@ -345,6 +355,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -357,14 +369,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -383,7 +395,7 @@ server <- function(input, output, session) {
   for (move in moves) {
     hedgehog$add_animation(
       suffix = move,
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 5
@@ -391,7 +403,7 @@ server <- function(input, output, session) {
   }
 
   score <- reactiveVal(0)
-  apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+  apples <- game$add_static_group("apples", "hedgehog-assets/perks/apple_20.png")
 
   apples$create(260, 140)
   apples$create(640, 180)
@@ -425,7 +437,7 @@ game$enable_terrain_collision("hedgehog")
 
 rocks <- game$add_static_group(
   name = "rocks",
-  url = "assets/hedgehog/obstacles/rock.png"
+  url = "hedgehog-assets/obstacles/rock.png"
 )
 
 rocks$create(
@@ -452,6 +464,8 @@ Show full code
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -464,14 +478,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -492,7 +506,7 @@ server <- function(input, output, session) {
   for (move in moves) {
     hedgehog$add_animation(
       suffix = move,
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 5
@@ -500,7 +514,7 @@ server <- function(input, output, session) {
   }
 
   score <- reactiveVal(0)
-  apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+  apples <- game$add_static_group("apples", "hedgehog-assets/perks/apple_20.png")
 
   apples$create(260, 140)
   apples$create(640, 180)
@@ -508,7 +522,7 @@ server <- function(input, output, session) {
 
   rocks <- game$add_static_group(
     name = "rocks",
-    url = "assets/hedgehog/obstacles/rock.png"
+    url = "hedgehog-assets/obstacles/rock.png"
   )
 
   rocks$create(400, 200)
@@ -546,7 +560,7 @@ patrol/chase feeling without writing a full AI system.
 
 enemy <- game$add_sprite(
   name = "badger",
-  url = "assets/hedgehog/sprites/badger_move_left_50.png",
+  url = "hedgehog-assets/sprites/badger_move_left_50.png",
   x = 700,
   y = 300,
   frame_width = 50,
@@ -584,6 +598,8 @@ Put all pieces together:
 
 library(shiny)
 library(shinyphaser)
+shiny::addResourcePath("hedgehog-assets",
+  system.file("examples", "hedgehog", "www", package = "shinyphaser"))
 
 game <- PhaserGame$new(width = 1500, height = 800)
 
@@ -596,14 +612,14 @@ server <- function(input, output, session) {
 
   floor <- game$add_image(
     name = "floor",
-    url = "assets/hedgehog/terrain/grass.png",
+    url = "hedgehog-assets/terrain/grass.png",
     x = 800,
     y = 300
   )
 
   hedgehog <- game$add_sprite(
     name = "hedgehog",
-    url = "assets/hedgehog/sprites/hedgehog_32.png",
+    url = "hedgehog-assets/sprites/hedgehog_32.png",
     x = 140,
     y = 260,
     frame_width = 32,
@@ -624,7 +640,7 @@ server <- function(input, output, session) {
   for (move in moves) {
     hedgehog$add_animation(
       suffix = move,
-      url = paste0("assets/hedgehog/sprites/hedgehog_", move, "_32.png"),
+      url = paste0("hedgehog-assets/sprites/hedgehog_", move, "_32.png"),
       frame_width = 32,
       frame_height = 32,
       frame_rate = 5
@@ -632,7 +648,7 @@ server <- function(input, output, session) {
   }
 
   score <- reactiveVal(0)
-  apples <- game$add_static_group("apples", "assets/hedgehog/perks/apple_20.png")
+  apples <- game$add_static_group("apples", "hedgehog-assets/perks/apple_20.png")
 
   apples$create(260, 140)
   apples$create(640, 180)
@@ -640,7 +656,7 @@ server <- function(input, output, session) {
 
   rocks <- game$add_static_group(
     name = "rocks",
-    url = "assets/hedgehog/obstacles/rock.png"
+    url = "hedgehog-assets/obstacles/rock.png"
   )
 
   rocks$create(400, 200)
@@ -661,7 +677,7 @@ server <- function(input, output, session) {
 
   enemy <- game$add_sprite(
     name = "badger",
-    url = "assets/hedgehog/sprites/badger_move_left_50.png",
+    url = "hedgehog-assets/sprites/badger_move_left_50.png",
     x = 700,
     y = 300,
     frame_width = 50,

@@ -3,6 +3,8 @@
 This package provides an R Shiny interface to selected features of the
 [Phaser 3](https://phaser.io/) game framework.
 
+![](man/geometry_dash_example.gif)
+
 ## What you can do with shinyphaser
 
 With the current API, you can build small-to-medium 2D game-like
@@ -53,20 +55,15 @@ Example-specific quests, combat rules, dialogue, and map progression
 remain in example applications. This keeps the core API broadly useful
 without limiting it to thin Phaser bindings.
 
-## Quick start
-
-You can run the built-in sample app:
-
-``` r
-
-shinyphaser::run_sample_app()
-```
-
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation,
 overlap, and collision), see [**Build your first shinyphaser
 game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
+
+For a simple runner with gravity, jumping, and obstacles, see [**Build a
+Geometry Dash-style
+runner**](https://maciekbanas.github.io/shinyphaser/articles/geometry-dash.html).
 
 For the complete list of supported browser expressions and guidance on
 when to use ordinary R callbacks, see [**Choose between browser and
@@ -77,11 +74,22 @@ actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-act
 
 ## Example games created with `shinyphaser`
 
-- [hedgehog](https://maciekbanas.shinyapps.io/hedgehog)
+Three games are included in `inst/examples`, each with its own assets:
 
-The package also includes a larger modular example. Run it locally with:
+- **Hedgehog**: collect apples, avoid enemies, and progress through
+  three levels. [Play
+  online](https://maciekbanas.shinyapps.io/hedgehog).
+- **Geometry Dash**: jump over spikes in a one-button runner and reach
+  the finish.
+- **Swamps RPG**: explore the Mushroom Swamps, fight enemies, and save
+  your game.
+
+With the current development version of shinyphaser installed, run each
+game from the repository root:
 
 ``` r
 
-shinyphaser::run_swamps_rpg()
+shiny::runApp("inst/examples/hedgehog")
+shiny::runApp("inst/examples/geometry_dash")
+shiny::runApp("inst/examples/swamps_rpg")
 ```

@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">shinyphaser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9022</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9023</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,6 +34,7 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/first-game.html">Build your first shinyphaser game</a></li>
+    <li><a class="dropdown-item" href="../articles/geometry-dash.html">Build a Geometry Dash-style runner</a></li>
     <li><a class="dropdown-item" href="../articles/browser-server-actions.html">Choose between browser and server actions</a></li>
   </ul>
 </li>
@@ -88,6 +89,8 @@ session inside R6 object private environment as it will be reused by
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -114,7 +117,7 @@ of the scene.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>  x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>  y <span class="op">=</span> <span class="fl">300</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -123,6 +126,8 @@ Show full code
 </summary><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -135,7 +140,7 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
@@ -156,7 +161,7 @@ speed to 6 frames per second.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>  x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>  y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>  frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -169,6 +174,8 @@ Show full code
 </summary><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -181,14 +188,14 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -223,6 +230,8 @@ Show full code
 </summary><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -235,14 +244,14 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -283,7 +292,7 @@ describe how to read and play each animation strip.</p>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">move</span> <span class="kw">in</span> <span class="va">moves</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">hedgehog</span><span class="op">$</span><span class="fu">add_animation</span><span class="op">(</span></span>
 <span>    suffix <span class="op">=</span> <span class="va">move</span>,</span>
-<span>    url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"assets/hedgehog/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
+<span>    url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"hedgehog-assets/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>    frame_height <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>    frame_rate <span class="op">=</span> <span class="fl">5</span></span>
@@ -294,6 +303,8 @@ Show full code
 </summary><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -306,14 +317,14 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -332,7 +343,7 @@ Show full code
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">move</span> <span class="kw">in</span> <span class="va">moves</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">hedgehog</span><span class="op">$</span><span class="fu">add_animation</span><span class="op">(</span></span>
 <span>      suffix <span class="op">=</span> <span class="va">move</span>,</span>
-<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"assets/hedgehog/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
+<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"hedgehog-assets/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
 <span>      frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_height <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_rate <span class="op">=</span> <span class="fl">5</span></span>
@@ -358,7 +369,7 @@ waiting for Shiny. In short: hedgehog meets apple, apple disappears,
 score goes up — because every hedgehog knows apples are the true quest
 objective.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"assets/hedgehog/perks/apple_20.png"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"hedgehog-assets/perks/apple_20.png"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">260</span>, <span class="fl">140</span><span class="op">)</span></span>
 <span><span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">640</span>, <span class="fl">180</span><span class="op">)</span></span>
@@ -382,6 +393,8 @@ Show full code
 </summary><div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -394,14 +407,14 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -420,7 +433,7 @@ Show full code
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">move</span> <span class="kw">in</span> <span class="va">moves</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">hedgehog</span><span class="op">$</span><span class="fu">add_animation</span><span class="op">(</span></span>
 <span>      suffix <span class="op">=</span> <span class="va">move</span>,</span>
-<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"assets/hedgehog/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
+<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"hedgehog-assets/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
 <span>      frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_height <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_rate <span class="op">=</span> <span class="fl">5</span></span>
@@ -428,7 +441,7 @@ Show full code
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
-<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"assets/hedgehog/perks/apple_20.png"</span><span class="op">)</span></span>
+<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"hedgehog-assets/perks/apple_20.png"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">260</span>, <span class="fl">140</span><span class="op">)</span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">640</span>, <span class="fl">180</span><span class="op">)</span></span>
@@ -459,7 +472,7 @@ apples are pickups, rocks are barriers.</p>
 <span></span>
 <span><span class="va">rocks</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"rocks"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/obstacles/rock.png"</span></span>
+<span>  url <span class="op">=</span> <span class="st">"hedgehog-assets/obstacles/rock.png"</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">rocks</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span></span>
@@ -480,6 +493,8 @@ Show full code
 </summary><div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -492,14 +507,14 @@ Show full code
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -520,7 +535,7 @@ Show full code
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">move</span> <span class="kw">in</span> <span class="va">moves</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">hedgehog</span><span class="op">$</span><span class="fu">add_animation</span><span class="op">(</span></span>
 <span>      suffix <span class="op">=</span> <span class="va">move</span>,</span>
-<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"assets/hedgehog/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
+<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"hedgehog-assets/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
 <span>      frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_height <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_rate <span class="op">=</span> <span class="fl">5</span></span>
@@ -528,7 +543,7 @@ Show full code
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
-<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"assets/hedgehog/perks/apple_20.png"</span><span class="op">)</span></span>
+<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"hedgehog-assets/perks/apple_20.png"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">260</span>, <span class="fl">140</span><span class="op">)</span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">640</span>, <span class="fl">180</span><span class="op">)</span></span>
@@ -536,7 +551,7 @@ Show full code
 <span></span>
 <span>  <span class="va">rocks</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"rocks"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/obstacles/rock.png"</span></span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/obstacles/rock.png"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">rocks</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">400</span>, <span class="fl">200</span><span class="op">)</span></span>
@@ -571,7 +586,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">enemy</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">"badger"</span>,</span>
-<span>  url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/badger_move_left_50.png"</span>,</span>
+<span>  url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/badger_move_left_50.png"</span>,</span>
 <span>  x <span class="op">=</span> <span class="fl">700</span>,</span>
 <span>  y <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>  frame_width <span class="op">=</span> <span class="fl">50</span>,</span>
@@ -606,6 +621,8 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/maciekbanas/shinyphaser" class="external-link">shinyphaser</a></span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/resourcePaths.html" class="external-link">addResourcePath</a></span><span class="op">(</span><span class="st">"hedgehog-assets"</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"examples"</span>, <span class="st">"hedgehog"</span>, <span class="st">"www"</span>, package <span class="op">=</span> <span class="st">"shinyphaser"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">game</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/PhaserGame.html">PhaserGame</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">1500</span>, height <span class="op">=</span> <span class="fl">800</span><span class="op">)</span></span>
 <span></span>
@@ -618,14 +635,14 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span></span>
 <span>  <span class="va">floor</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_image</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"floor"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/terrain/grass.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/terrain/grass.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">800</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">hedgehog</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"hedgehog"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/hedgehog_32.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/hedgehog_32.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">140</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">260</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
@@ -646,7 +663,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">move</span> <span class="kw">in</span> <span class="va">moves</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">hedgehog</span><span class="op">$</span><span class="fu">add_animation</span><span class="op">(</span></span>
 <span>      suffix <span class="op">=</span> <span class="va">move</span>,</span>
-<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"assets/hedgehog/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
+<span>      url <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"hedgehog-assets/sprites/hedgehog_"</span>, <span class="va">move</span>, <span class="st">"_32.png"</span><span class="op">)</span>,</span>
 <span>      frame_width <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_height <span class="op">=</span> <span class="fl">32</span>,</span>
 <span>      frame_rate <span class="op">=</span> <span class="fl">5</span></span>
@@ -654,7 +671,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span>  <span class="op">}</span></span>
 <span></span>
 <span>  <span class="va">score</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
-<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"assets/hedgehog/perks/apple_20.png"</span><span class="op">)</span></span>
+<span>  <span class="va">apples</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span><span class="st">"apples"</span>, <span class="st">"hedgehog-assets/perks/apple_20.png"</span><span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">260</span>, <span class="fl">140</span><span class="op">)</span></span>
 <span>  <span class="va">apples</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">640</span>, <span class="fl">180</span><span class="op">)</span></span>
@@ -662,7 +679,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span></span>
 <span>  <span class="va">rocks</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_static_group</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"rocks"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/obstacles/rock.png"</span></span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/obstacles/rock.png"</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
 <span>  <span class="va">rocks</span><span class="op">$</span><span class="fu">create</span><span class="op">(</span><span class="fl">400</span>, <span class="fl">200</span><span class="op">)</span></span>
@@ -683,7 +700,7 @@ lightweight patrol/chase feeling without writing a full AI system.</p>
 <span></span>
 <span>  <span class="va">enemy</span> <span class="op">&lt;-</span> <span class="va">game</span><span class="op">$</span><span class="fu">add_sprite</span><span class="op">(</span></span>
 <span>    name <span class="op">=</span> <span class="st">"badger"</span>,</span>
-<span>    url <span class="op">=</span> <span class="st">"assets/hedgehog/sprites/badger_move_left_50.png"</span>,</span>
+<span>    url <span class="op">=</span> <span class="st">"hedgehog-assets/sprites/badger_move_left_50.png"</span>,</span>
 <span>    x <span class="op">=</span> <span class="fl">700</span>,</span>
 <span>    y <span class="op">=</span> <span class="fl">300</span>,</span>
 <span>    frame_width <span class="op">=</span> <span class="fl">50</span>,</span>
