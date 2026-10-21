@@ -21,6 +21,10 @@ knitr::opts_chunk$set(
 
 This package provides an R Shiny interface to selected features of the [Phaser 3](https://phaser.io/) game framework.
 
+```{r, echo=FALSE}
+knitr::include_graphics("man/geometry_dash_example.gif")
+```
+
 ## What you can do with shinyphaser
 
 With the current API, you can build small-to-medium 2D game-like interactions in Shiny, including:
@@ -77,6 +81,7 @@ For a simple runner with gravity, jumping, and obstacles, see
 For the complete list of supported browser expressions and guidance on when to
 use ordinary R callbacks, see [**Choose between browser and server actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-actions.html).
 
+
 ```{r, echo=FALSE}
 knitr::include_graphics("man/hedgehog_example.gif")
 ```
@@ -89,10 +94,6 @@ Three games are included in `inst/examples`, each with its own assets:
   [Play online](https://maciekbanas.shinyapps.io/hedgehog).
 - **Geometry Dash**: jump over spikes in a one-button runner and reach the finish.
 - **Swamps RPG**: explore the Mushroom Swamps, fight enemies, and save your game.
-
-```{r, echo=FALSE}
-knitr::include_graphics("man/geometry_dash_example.gif")
-```
 
 With the current development version of shinyphaser installed, run each game
 from the repository root:
