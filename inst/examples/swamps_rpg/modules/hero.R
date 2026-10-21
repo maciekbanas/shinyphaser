@@ -1,6 +1,6 @@
   hero <- game$add_sprite(
     name = "hero",
-    url = "assets/swamps_rpg/sprites/hero/orc/hero_orc_idle.png",
+    url = "swamps-rpg-assets/sprites/hero/orc/hero_orc_idle.png",
     x = 100, y = 100,
     frame_width = 100, frame_height = 100,
     frame_count = 29, frame_rate = 4
@@ -13,21 +13,21 @@
   lapply(c("down", "up", "left", "right"), function(direction) {
     hero$add_animation(
       suffix = paste0("move_", direction),
-      url = sprintf("assets/swamps_rpg/sprites/hero/orc/hero_orc_move_%s.png", direction),
+      url = sprintf("swamps-rpg-assets/sprites/hero/orc/hero_orc_move_%s.png", direction),
       frame_width = 100, frame_height = 100,
       frame_count = 6, frame_rate = 8
     )
   })
   hero$add_animation(
     suffix = "attack",
-    url = "assets/swamps_rpg/sprites/hero/orc/hero_orc_attack.png",
+    url = "swamps-rpg-assets/sprites/hero/orc/hero_orc_attack.png",
     frame_width = 100, frame_height = 100,
     frame_count = 3, frame_rate = 4
   )
   lapply(c("down", "up", "left", "right"), function(direction) {
     hero$add_animation(
       suffix = paste0("attack_", direction),
-      url = sprintf("assets/swamps_rpg/sprites/hero/orc/hero_orc_attack_%s.png", direction),
+      url = sprintf("swamps-rpg-assets/sprites/hero/orc/hero_orc_attack_%s.png", direction),
       frame_width = 100, frame_height = 100,
       frame_count = 3, frame_rate = 4
     )

@@ -1,7 +1,7 @@
   enemies <- stats::setNames(lapply(enemy_specs, function(spec) {
     enemy <- game$add_sprite(
       name = spec$name,
-      url = "assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_idle.png",
+      url = "swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_idle.png",
       x = spec$x,
       y = spec$y,
       frame_width = 100,
@@ -13,7 +13,7 @@
     lapply(c("down", "left", "right", "up"), function(direction) {
       enemy$add_animation(
         suffix = paste0("move_", direction),
-        url = sprintf("assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_walk_%s.png", direction),
+        url = sprintf("swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_walk_%s.png", direction),
         frame_width = 100, frame_height = 100,
         frame_count = 2, frame_rate = 8
       )
@@ -22,7 +22,7 @@
     lapply(c("down", "left", "right", "up"), function(direction) {
       enemy$add_animation(
         suffix = paste0("damage_", direction),
-        url = sprintf("assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_damage_%s.png", direction),
+        url = sprintf("swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_damage_%s.png", direction),
         frame_width = 100, frame_height = 100,
         frame_count = 3, frame_rate = 8
       )
@@ -30,21 +30,21 @@
 
     enemy$add_animation(
       suffix = "attack",
-      url = "assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_attack.png",
+      url = "swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_attack.png",
       frame_width = 100, frame_height = 100,
       frame_count = 4, frame_rate = 6
     )
     lapply(c("left", "right"), function(direction) {
       enemy$add_animation(
         suffix = paste0("attack_", direction),
-        url = sprintf("assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_attack_%s.png", direction),
+        url = sprintf("swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_attack_%s.png", direction),
         frame_width = 100, frame_height = 100,
         frame_count = 4, frame_rate = 6
       )
     })
     enemy$add_animation(
       suffix = "destroy",
-      url = "assets/swamps_rpg/sprites/enemies/mushroom_man/mushroom_man_destroy.png",
+      url = "swamps-rpg-assets/sprites/enemies/mushroom_man/mushroom_man_destroy.png",
       frame_width = 100, frame_height = 100,
       frame_count = 4, frame_rate = 8
     )
@@ -233,7 +233,7 @@
     position <- berry_specs[[berry_name]]
     game$add_static_sprite(
       name = berry_name,
-      url = "assets/swamps_rpg/perks/berries.png",
+      url = "swamps-rpg-assets/perks/berries.png",
       x = position[["x"]],
       y = position[["y"]]
     )
@@ -262,7 +262,7 @@
 
   wizard <- game$add_sprite(
     name = "wizard",
-    url = "assets/swamps_rpg/sprites/npc/wizard/wizard_idle.png",
+    url = "swamps-rpg-assets/sprites/npc/wizard/wizard_idle.png",
     x = 1600,
     y = 800,
     frame_width = 100,
@@ -272,14 +272,14 @@
   )
   wizard$add_animation(
     suffix = "talk",
-    url = "assets/swamps_rpg/sprites/npc/wizard/wizard_talk.png",
+    url = "swamps-rpg-assets/sprites/npc/wizard/wizard_talk.png",
     frame_width = 100, frame_height = 100,
     frame_count = 2, frame_rate = 4
   )
 
   mushroom_spirit <- game$add_sprite(
     name = "mushroom_spirit",
-    url = "assets/swamps_rpg/sprites/npc/mushroom_spirit/mushroom_spirit.png",
+    url = "swamps-rpg-assets/sprites/npc/mushroom_spirit/mushroom_spirit.png",
     x = 2850,
     y = 5850,
     frame_width = 32,

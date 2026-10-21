@@ -20,12 +20,11 @@ reference:
   - title: Utilities
     contents:
       - browser_actions
-      - run_sample_app
-      - run_swamps_rpg
 
 articles:
   - title: Getting started
     navbar: ~
     contents:
       - first-game
+      - geometry-dash
       - browser-server-actions

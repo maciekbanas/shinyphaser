@@ -1,6 +1,6 @@
 Package: shinyphaser
 Title: An Interface to the 'Phaser.js' Game Framework
-Version: 0.1.0.9022
+Version: 0.1.0.9023
 Authors@R: 
     person(
       given = "Maciej", 
@@ -28,6 +28,7 @@ Suggests:
   rmarkdown,
   shinyalert,
   testthat (>= 3.0.0),
-  shinytest2 (>= 0.5.1)
+  shinytest2 (>= 0.5.1),
+  withr
 VignetteBuilder: knitr
 Config/testthat/edition: 3

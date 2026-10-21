@@ -24,12 +24,12 @@
 
   wizard_laugh_sound <- game$add_sound(
     name = "wizard_laugh",
-    url = "assets/swamps_rpg/sounds/wizard_laugh.wav"
+    url = "swamps-rpg-assets/sounds/wizard_laugh.wav"
   )
 
   hero_attack_sound <- game$add_sound(
     name = "hero_attack",
-    url = "assets/swamps_rpg/sounds/attack.wav"
+    url = "swamps-rpg-assets/sounds/attack.wav"
   )
 
   max_life_points <- 100

@@ -69,10 +69,11 @@
 
 ## Updates in examples
 
-* Added new arcade example game (bear).
+* Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
+  jumping, spike obstacles, a finish line, and restart controls.
 * Added the Swamps RPG game example (`swamps_rpg`).
-* Updated the sample game to layer its background and score display with
-  `set_depth()`.
+* Organized games and their assets into individual directories under
+  `inst/examples`, with launch instructions using `shiny::runApp()`.
 
 ## README
 
