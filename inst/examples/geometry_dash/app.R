@@ -66,7 +66,8 @@ server <- function(input, output, session) {
 
   status <- game$add_text("Press Space / Up / tap to start", "status", 24, 24,
                          style = list(fontSize = "24px", color = "#59f5d0"))
-  status$set_depth(20)$set_scroll_factor(0)
+  status$set_depth(20)
+  status$set_scroll_factor(0)
 
   game$add_collider("cube", "floor", browser_action = browser_actions({
     grounded$set(TRUE)
