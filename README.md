@@ -63,14 +63,6 @@ Example-specific quests, combat rules, dialogue, and map progression
 remain in example applications. This keeps the core API broadly useful
 without limiting it to thin Phaser bindings.
 
-## Quick start
-
-You can run the built-in sample app:
-
-``` r
-shinyphaser::run_sample_app()
-```
-
 ## Learn by example
 
 For a full walkthrough (from static background to movement, animation,
