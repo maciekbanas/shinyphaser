@@ -27,8 +27,7 @@
     mushroom_swamps_objects, scenery_layout$name,
     paste0(scenery_layout$name, "_footprint")
   )
-  # Ground-space depth keeps actors behind objects above them and in front below.
-  session$sendCustomMessage("phaser", list(js = sprintf(
-    "configureSwampsScenery(%s);",
-    jsonlite::toJSON(c("hero", enemy_names, "wizard", "mushroom_spirit"))
-  )))
+  # All actors have centered 100px frames, with their feet 40px below the origin.
+  lapply(c(enemies, list(wizard, mushroom_spirit)), function(actor) {
+    actor$set_depth_by_y(offset = 40)
+  })

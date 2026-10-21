@@ -10,12 +10,12 @@ The entry point only establishes shared game state and loads focused modules:
 
 - `ui.R` contains menus, styles, and browser-side save controls.
 - `modules/game_state.R` contains combat state and status helpers.
-- `modules/hero.R` configures the Orc hero sprite and animations.
+- `modules/hero.R` configures the Orc sprite, animations, foot-sized collision
+  body (`set_body_size()`), and depth ordering (`set_depth_by_y()`).
 - `modules/navigation_setup.R` loads the Mushroom Swamps map, while `modules/navigation.R` starts the game directly in that realm.
 - `modules/saving.R` owns save/load observers.
 - `modules/scenery_layout.R` generates repeatable grass-only tree and bush placements.
 - `modules/scenery.R` creates scenery images, their solid footprints, and hero colliders.
-- `www/scenery.js` sorts actor depth by foot position and configures the hero's foot-sized body.
 - `modules/realms/mushroom_swamps_world.R` contains the swamp enemies, perks, and NPCs.
 
 Modules are sourced into the active Shiny server invocation in the order listed

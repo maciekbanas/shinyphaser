@@ -20,8 +20,8 @@ without walking through its base.
 |---|---|---|
 | Tree or bush image | Draw the whole object, including foliage | `add_image()`, `set_depth()` |
 | Invisible footprint | Block a small area on the ground | `add_collision_rectangle()`, `add_collider()` |
-| Hero's feet | Determine where the hero stands | Small Arcade Physics body |
-| Depth ordering | Draw the hero behind or in front as it moves | Ground-position depth, updated in the browser |
+| Hero's feet | Determine where the hero stands | `set_body_size()` |
+| Depth ordering | Draw the hero behind or in front as it moves | `set_depth_by_y()` |
 
 The complete implementation lives in `inst/examples/swamps_rpg`. With the
 current development version installed, run it from the repository root:
@@ -70,57 +70,47 @@ together when hiding, removing, or switching maps.
 ## Give the hero a foot-sized collision body
 
 The Orc has 100 by 100 pixel animation frames. Using the entire frame for
-collision would prevent the hero from getting close to the foliage. A 32 by
-18 pixel body, offset 34 pixels from the frame's left and 72 from its top,
-limits collision to the feet.
+collision would prevent the hero from getting close to the foliage. Set a
+32 by 18 pixel body, offset 34 pixels from the frame's left and 72 from its top:
 
-For this centered sprite, its ground position is `hero.y + 40`: the frame
-starts at `hero.y - 50`, and the feet end at pixel 90 within the frame.
-These dimensions are specific to this artwork; adjust them for your own hero.
+```{r eval=FALSE}
+hero$set_body_size(width = 32, height = 18, offset_x = 34, offset_y = 72)
+```
+
+Sizes and offsets are measured in unscaled frame pixels. Adjust them for your
+own artwork. The call is queued if the sprite is still loading.
 
 ## Change depth as the hero walks
 
 `set_depth()` sets a fixed drawing depth from R. Larger values draw in front.
-The scenery stays at `base_y`, but a moving hero needs its depth refreshed
-from its current ground position. This needs to happen in the browser each
-frame, rather than through a Shiny observer.
-
-The small JavaScript helper below is **app-specific code**, not a new
-shinyphaser method. Include it with `tags$script(HTML(...))` in the UI, after
-`game$use_phaser()`. It waits for the asynchronously loaded hero by checking
-for it on each scene update, then configures the feet once.
-
-```javascript
-window.configureObjectDepth = function () {
-  const scene = window.game.scene.scenes[0];
-  let feetConfigured = false;
-  const update = function () {
-    const hero = scene.children.getByName("hero");
-    if (!hero || !hero.body) return;
-    if (!feetConfigured) {
-      hero.body.setSize(32, 18);
-      hero.body.setOffset(34, 72);
-      feetConfigured = true;
-    }
-    hero.setDepth(hero.y + 40);
-  };
-  scene.events.on("postupdate", update);
-  scene.events.once("shutdown", function () {
-    scene.events.off("postupdate", update);
-  });
-};
-```
-
-Install the helper once per scene from the server:
+The tree stays at `base_y`, but the moving hero needs its depth refreshed from
+its ground position. Enable that behavior with:
 
 ```{r eval=FALSE}
-session$sendCustomMessage("phaser", list(js = "configureObjectDepth();"))
+hero$set_depth_by_y(offset = 40)
 ```
 
+The runtime now updates depth to `hero.y + 40` each frame in the browser.
+For the centered 100px Orc frame, the frame starts at `hero.y - 50` and the
+feet end at pixel 90 within the frame, giving the 40px offset. This value is
+in world pixels and should match the artwork's ground contact point.
+No custom JavaScript or Shiny position observer is needed.
+
 When the hero's feet are above the tree's base, its depth is smaller, so the
-canopy draws over the hero. When its feet are below the base, the hero draws
-in front. The footprint blocks movement at the trunk, independently of this
-visual ordering. This is often called **Y sorting**.
+canopy draws over the hero. Below the base, the hero draws in front. The
+footprint blocks movement at the trunk independently of drawing order.
+This is often called **Y sorting**.
+
+Apply `set_depth_by_y()` to enemies and NPCs too if they should participate in
+the same ordering. Repeating the call changes the offset without installing
+another update listener. To stop automatic sorting and keep the last depth:
+
+```{r eval=FALSE}
+hero$set_depth_by_y(enabled = FALSE)
+```
+
+Calling `hero$set_depth(20)` also stops sorting and sets a fixed depth.
+Listeners are removed when a sprite is destroyed or its scene shuts down.
 
 Keep screen-fixed text and health bars at a depth above the world, for example:
 
@@ -130,8 +120,8 @@ status$set_depth(10000)
 ```
 
 For a 6400-pixel-tall world, 10000 leaves the HUD above all ground-position
-depths. In the full example, `www/scenery.js` applies the same ordering to
-the hero, enemies, and NPCs, and keeps the HUD above them.
+depths. The full example applies these R methods to the hero, enemies, and NPCs,
+and sets a fixed HUD depth above them.
 
 ## Place objects only on grass
 
