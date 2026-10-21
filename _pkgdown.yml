@@ -26,4 +26,5 @@ articles:
     navbar: ~
     contents:
       - first-game
+      - geometry-dash
       - browser-server-actions

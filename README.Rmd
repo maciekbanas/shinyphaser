@@ -71,6 +71,9 @@ it to thin Phaser bindings.
 
 For a full walkthrough (from static background to movement, animation, overlap, and collision), see [**Build your first shinyphaser game**](https://maciekbanas.github.io/shinyphaser/articles/first-game.html)
 
+For a simple runner with gravity, jumping, and obstacles, see
+[**Build a Geometry Dash-style runner**](https://maciekbanas.github.io/shinyphaser/articles/geometry-dash.html).
+
 For the complete list of supported browser expressions and guidance on when to
 use ordinary R callbacks, see [**Choose between browser and server actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-actions.html).
 
