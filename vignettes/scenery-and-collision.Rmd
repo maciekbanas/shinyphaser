@@ -1,0 +1,156 @@
+---
+title: "Walk behind scenery and block its footprint"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Walk behind scenery and block its footprint}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+In a top-down game, a tree has two jobs: its canopy can hide the hero, while
+its trunk blocks movement. A bush works the same way. Use separate objects
+for appearance and collision so the player can walk behind the foliage
+without walking through its base.
+
+| Part | Purpose | shinyphaser API |
+|---|---|---|
+| Tree or bush image | Draw the whole object, including foliage | `add_image()`, `set_depth()` |
+| Invisible footprint | Block a small area on the ground | `add_collision_rectangle()`, `add_collider()` |
+| Hero's feet | Determine where the hero stands | Small Arcade Physics body |
+| Depth ordering | Draw the hero behind or in front as it moves | Ground-position depth, updated in the browser |
+
+The complete implementation lives in `inst/examples/swamps_rpg`. With the
+current development version installed, run it from the repository root:
+
+```{r eval=FALSE}
+shiny::runApp("inst/examples/swamps_rpg")
+```
+
+## Draw the image and block only its base
+
+The following snippets use the Swamps RPG resource path registered by that
+example. Put the R setup inside its server, after binding `game` to the session
+and creating `hero`. For another app, register your own image directory first.
+
+`tree_1.png` is 200 by 400 pixels. Its image is centered, so placing its center
+at `base_y - 200` puts the bottom at `base_y`. The depth uses that ground
+position, rather than the center of the tall image.
+
+```{r eval=FALSE}
+base_x <- 600
+base_y <- 1000
+
+tree <- game$add_image(
+  "tree", "swamps-rpg-assets/terrain/mushroom_swamps/tree_1.png",
+  x = base_x, y = base_y - 400 / 2
+)
+tree$set_depth(base_y)
+
+# A short, narrow rectangle around the trunk's base, not the entire canopy.
+game$add_collision_rectangle(
+  "tree_footprint", x = base_x, y = base_y - 12,
+  width = 64, height = 24
+)
+game$add_collider("hero", "tree_footprint")
+```
+
+The invisible rectangle has a static physics body. The collider prevents the
+hero from crossing it from any direction. The image itself has no physics
+body: overlapping the canopy is allowed. Use the same pattern for bushes,
+with a footprint sized to the part of the bush that touches the ground.
+
+An object is fully passable if you omit its footprint and collider. Hiding
+an image does **not** remove its separate footprint; manage both objects
+together when hiding, removing, or switching maps.
+
+## Give the hero a foot-sized collision body
+
+The Orc has 100 by 100 pixel animation frames. Using the entire frame for
+collision would prevent the hero from getting close to the foliage. A 32 by
+18 pixel body, offset 34 pixels from the frame's left and 72 from its top,
+limits collision to the feet.
+
+For this centered sprite, its ground position is `hero.y + 40`: the frame
+starts at `hero.y - 50`, and the feet end at pixel 90 within the frame.
+These dimensions are specific to this artwork; adjust them for your own hero.
+
+## Change depth as the hero walks
+
+`set_depth()` sets a fixed drawing depth from R. Larger values draw in front.
+The scenery stays at `base_y`, but a moving hero needs its depth refreshed
+from its current ground position. This needs to happen in the browser each
+frame, rather than through a Shiny observer.
+
+The small JavaScript helper below is **app-specific code**, not a new
+shinyphaser method. Include it with `tags$script(HTML(...))` in the UI, after
+`game$use_phaser()`. It waits for the asynchronously loaded hero by checking
+for it on each scene update, then configures the feet once.
+
+```javascript
+window.configureObjectDepth = function () {
+  const scene = window.game.scene.scenes[0];
+  let feetConfigured = false;
+  const update = function () {
+    const hero = scene.children.getByName("hero");
+    if (!hero || !hero.body) return;
+    if (!feetConfigured) {
+      hero.body.setSize(32, 18);
+      hero.body.setOffset(34, 72);
+      feetConfigured = true;
+    }
+    hero.setDepth(hero.y + 40);
+  };
+  scene.events.on("postupdate", update);
+  scene.events.once("shutdown", function () {
+    scene.events.off("postupdate", update);
+  });
+};
+```
+
+Install the helper once per scene from the server:
+
+```{r eval=FALSE}
+session$sendCustomMessage("phaser", list(js = "configureObjectDepth();"))
+```
+
+When the hero's feet are above the tree's base, its depth is smaller, so the
+canopy draws over the hero. When its feet are below the base, the hero draws
+in front. The footprint blocks movement at the trunk, independently of this
+visual ordering. This is often called **Y sorting**.
+
+Keep screen-fixed text and health bars at a depth above the world, for example:
+
+```{r eval=FALSE}
+status$set_scroll_factor(0)
+status$set_depth(10000)
+```
+
+For a 6400-pixel-tall world, 10000 leaves the HUD above all ground-position
+depths. In the full example, `www/scenery.js` applies the same ordering to
+the hero, enemies, and NPCs, and keeps the HUD above them.
+
+## Place objects only on grass
+
+Swamps RPG reads its Tiled JSON map and identifies tiles whose tileset names
+start with `mushroom_swamps_grass_`. Before placing an object, it checks every
+tile under the image's full bounding box, not just the trunk. This keeps
+both the footprint and the overhanging artwork away from swamp and bank tiles.
+
+The layout generator in `modules/scenery_layout.R` shuffles candidate positions
+and places five copies of each tree and fifteen of each bush. It also leaves
+space between images and around the hero's spawn, NPCs, enemies, and berries.
+A fixed random seed gives every session the same layout, so loading a saved
+game does not move the trees or introduce a new obstacle at the saved position.
+
+The rendering module, `modules/scenery.R`, creates each image and its footprint,
+sets the image's depth with `set_depth()`, and adds the hero collider. Both
+object names are included in the realm's object list so map visibility changes
+apply to the artwork and its blocking body together.
+
+To check your own version, walk behind the canopy, walk in front, and approach
+the footprint from both sides. The first two should change the drawing order;
+the last should stop the hero without blocking the entire visible image.

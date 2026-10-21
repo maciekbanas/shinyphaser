@@ -72,6 +72,9 @@
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
 * Added the Swamps RPG game example (`swamps_rpg`).
+* Populated Swamps RPG grass areas with trees and bushes, using repeatable
+  placement, foot-position depth ordering, and invisible blocking footprints.
+  Added a vignette explaining how to combine passable foliage with solid bases.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
 

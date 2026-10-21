@@ -124,6 +124,7 @@ ui <- shiny::tagList(
     )
   ),
   game$use_phaser(),
+  htmltools::tags$script(src = "swamps-rpg-assets/scenery.js"),
   htmltools::tags$script(htmltools::HTML("
     (function() {
       function renderSaves(items) {
