@@ -142,3 +142,9 @@ session state.
 The full example adds a longer course, Up-arrow and tap controls, and styling.
 Its images stay in the game's own `www/` directory. Phaser itself is loaded
 from jsDelivr, so the browser needs Internet access.
+
+## See it in action
+
+```{r, echo=FALSE, out.width="100%", fig.alt="Geometry Dash example with a cube jumping over spikes"}
+knitr::include_graphics("assets/geometry_dash_example.gif")
+```
