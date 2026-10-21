@@ -86,10 +86,18 @@ actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-act
 
 ## Example games created with `shinyphaser`
 
-- [hedgehog](https://maciekbanas.shinyapps.io/hedgehog)
+Three games are included in `inst/examples`, each with its own assets:
 
-The package also includes a larger modular example. Run it locally with:
+- **Hedgehog**: collect apples, avoid enemies, and progress through three levels.
+  [Play online](https://maciekbanas.shinyapps.io/hedgehog).
+- **Geometry Dash**: jump over spikes in a one-button runner and reach the finish.
+- **Swamps RPG**: explore the Mushroom Swamps, fight enemies, and save your game.
+
+With the current development version of shinyphaser installed, run each game
+from the repository root:
 
 ``` r
+shiny::runApp("inst/examples/hedgehog")
+shiny::runApp("inst/examples/geometry_dash")
 shiny::runApp("inst/examples/swamps_rpg")
 ```

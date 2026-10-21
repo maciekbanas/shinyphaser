@@ -15,8 +15,10 @@ test_that("game examples resolve their own assets when sourced elsewhere", {
       source(app_file, local = new.env(parent = globalenv()))$value
     })
     expect_s3_class(app, "shiny.appobj")
-    expect_identical(unname(shiny::resourcePaths()[prefix]),
-                     normalizePath(file.path(app_dir, "www")))
+    expect_identical(
+      normalizePath(unname(shiny::resourcePaths()[prefix]), winslash = "/"),
+      normalizePath(file.path(app_dir, "www"), winslash = "/")
+    )
     expect_true(length(list.files(file.path(app_dir, "www"), recursive = TRUE)) > 0)
   })
 })
