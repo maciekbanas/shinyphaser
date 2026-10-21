@@ -6,7 +6,8 @@
     frame_count = 29, frame_rate = 4
   )
   hero$follow_camera()
-  hero$set_depth(10)
+  hero$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+  hero$set_depth_by_y(offset = 40)
   Sys.sleep(0.1)
   game$enable_terrain_collision("hero")
 

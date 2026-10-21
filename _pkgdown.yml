@@ -27,4 +27,5 @@ articles:
     contents:
       - first-game
       - geometry-dash
+      - scenery-and-collision
       - browser-server-actions

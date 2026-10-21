@@ -165,6 +165,7 @@
     y = 85
   )
   inventory_text$set_scroll_factor(0)
+  inventory_text$set_depth(10000)
   lapply(seq_len(health_bar_segment_count), function(segment_index) {
     segment_x <- 1200 + ((segment_index - 1) * (health_bar_segment_width + health_bar_segment_gap))
     game$add_rectangle(
@@ -174,7 +175,7 @@
       width = health_bar_segment_width,
       height = health_bar_segment_height,
       color = "0xc0392b"
-    )$set_scroll_factor(0)
+    )$set_depth(10000)$set_scroll_factor(0)
   })
   health_bar_segments <- lapply(seq_len(health_bar_segment_count), function(segment_index) {
     segment_x <- 1200 + ((segment_index - 1) * (health_bar_segment_width + health_bar_segment_gap))
@@ -187,6 +188,7 @@
       color = "0x2ecc71"
     )
     life_bar$set_scroll_factor(0)
+    life_bar$set_depth(10000)
     life_bar
   })
   update_life_points()
@@ -197,6 +199,7 @@
     y = 120
   )
   enemy_status_text$set_scroll_factor(0)
+  enemy_status_text$set_depth(10000)
   combat_status_text <- game$add_text(
     text = "combat: face the enemies and protect the swamp",
     id = "combat_status",
@@ -204,6 +207,7 @@
     y = 660
   )
   combat_status_text$set_scroll_factor(0)
+  combat_status_text$set_depth(10000)
   update_enemy_status()
   version_text <- game$add_text(
     text = sprintf("shinyphaser v%s", shinyphaser_version),
@@ -212,6 +216,7 @@
     y = 660
   )
   version_text$set_scroll_factor(0)
+  version_text$set_depth(10000)
 
   berry_specs <- list(
     berries_1 = c(x = 650, y = 650),

@@ -22,6 +22,8 @@ with PhaserGame$add_sprite() method.
 \item \href{#method-Sprite-stop_camera_follow}{\code{Sprite$stop_camera_follow()}}
 \item \href{#method-Sprite-set_scroll_factor}{\code{Sprite$set_scroll_factor()}}
 \item \href{#method-Sprite-set_depth}{\code{Sprite$set_depth()}}
+\item \href{#method-Sprite-set_body_size}{\code{Sprite$set_body_size()}}
+\item \href{#method-Sprite-set_depth_by_y}{\code{Sprite$set_depth_by_y()}}
 \item \href{#method-Sprite-set_velocity_x}{\code{Sprite$set_velocity_x()}}
 \item \href{#method-Sprite-set_velocity_y}{\code{Sprite$set_velocity_y()}}
 \item \href{#method-Sprite-set_gravity}{\code{Sprite$set_gravity()}}
@@ -282,6 +284,54 @@ depth are rendered in front of objects with a smaller depth.
 }
 \subsection{Returns}{
 This sprite object, invisibly, to support method chaining.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Sprite-set_body_size"></a>}}
+\if{latex}{\out{\hypertarget{method-Sprite-set_body_size}{}}}
+\subsection{Method \code{set_body_size()}}{
+Set a collision body size and its offset within the unscaled
+sprite frame. Calls made before the sprite loads are queued.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Sprite$set_body_size(width, height, offset_x = 0, offset_y = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{width, height}}{Positive numeric. Body size in frame pixels.}
+
+\item{\code{offset_x, offset_y}}{Numeric. Offset from the frame's top-left corner.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+This sprite, invisibly.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-Sprite-set_depth_by_y"></a>}}
+\if{latex}{\out{\hypertarget{method-Sprite-set_depth_by_y}{}}}
+\subsection{Method \code{set_depth_by_y()}}{
+Continuously set drawing depth to the sprite's y-coordinate
+plus an offset, in the browser. Disable to retain the current depth;
+set_depth() also disables automatic depth sorting.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{Sprite$set_depth_by_y(offset = 0, enabled = TRUE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{offset}}{Numeric. Vertical distance from the sprite origin to its
+ground point, in world pixels (40 for the example's centered Orc).}
+
+\item{\code{enabled}}{Logical. Whether to update depth each frame.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+This sprite, invisibly.
 }
 }
 \if{html}{\out{<hr>}}

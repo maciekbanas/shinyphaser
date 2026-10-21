@@ -47,6 +47,9 @@
 
 ### Sprite
 
+* Added `Sprite$set_body_size()` for frame-relative collision bodies and
+  `Sprite$set_depth_by_y()` for automatic browser-side depth ordering.
+
 * Added `Sprite$start_approach_on_sight()` for browser-side wandering, sight
   checks, alerts, and movement toward a target sprite.
 * Added `Sprite$set_player_animation_prefix()` for switching the idle and directional movement animation set used by player controls at runtime.
@@ -72,6 +75,9 @@
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
 * Added the Swamps RPG game example (`swamps_rpg`).
+* Populated Swamps RPG grass areas with trees and bushes, using repeatable
+  placement, foot-position depth ordering, and invisible blocking footprints.
+  Added a vignette explaining how to combine passable foliage with solid bases.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
 
