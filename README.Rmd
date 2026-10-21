@@ -95,6 +95,10 @@ Three games are included in `inst/examples`, each with its own assets:
 - **Geometry Dash**: jump over spikes in a one-button runner and reach the finish.
 - **Swamps RPG**: explore the Mushroom Swamps, fight enemies, and save your game.
 
+```{r, echo=FALSE}
+knitr::include_graphics("man/geometry_dash_example.gif")
+```
+
 With the current development version of shinyphaser installed, run each game
 from the repository root:
 
