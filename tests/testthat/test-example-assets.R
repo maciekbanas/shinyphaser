@@ -1,5 +1,5 @@
 test_that("game examples resolve their own assets when sourced elsewhere", {
-  lapply(c("hedgehog", "swamps_rpg"), function(name) {
+  lapply(c("geometry_dash", "hedgehog", "swamps_rpg"), function(name) {
     app_dir <- system.file("examples", name, package = "shinyphaser")
     app_file <- file.path(app_dir, "app.R")
     prefix <- paste0(gsub("_", "-", name), "-assets")
