@@ -22,10 +22,17 @@ reference:
       - browser_actions
 
 articles:
-  - title: Getting started
-    navbar: ~
+  - title: Simple game examples
+    navbar: Simple game examples
     contents:
       - first-game
       - geometry-dash
-      - scenery-and-collision
+  - title: General
+    navbar: General
+    contents:
       - browser-server-actions
+  - title: Advanced features
+    navbar: Advanced features
+    contents:
+      - approach-on-sight
+      - scenery-and-collision

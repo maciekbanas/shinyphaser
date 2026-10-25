@@ -75,6 +75,9 @@ For a simple runner with gravity, jumping, and obstacles, see [**Build a
 Geometry Dash-style
 runner**](https://maciekbanas.github.io/shinyphaser/articles/geometry-dash.html).
 
+For enemies that notice and move toward the hero, see
+[**Make enemies approach the hero on sight**](https://maciekbanas.github.io/shinyphaser/articles/approach-on-sight.html).
+
 For trees and bushes that hide the hero while blocking movement at their
 bases, see [**Walk behind scenery and block its
 footprint**](https://maciekbanas.github.io/shinyphaser/articles/scenery-and-collision.html).
