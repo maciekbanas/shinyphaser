@@ -16,6 +16,10 @@ its trunk blocks movement. A bush works the same way. Use separate objects
 for appearance and collision so the player can walk behind the foliage
 without walking through its base.
 
+```{r, echo=FALSE}
+knitr::include_graphics("assets/walk_behind_and_block.gif")
+```
+
 | Part | Purpose | shinyphaser API |
 |---|---|---|
 | Tree or bush image | Draw the whole object, including foliage | `add_image()`, `set_depth()` |
