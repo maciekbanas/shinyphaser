@@ -15,7 +15,7 @@ downloads](https://cranlogs.r-pkg.org/badges/shinyphaser)](https://cran.r-projec
 This package provides an R Shiny interface to selected features of the
 [Phaser 3](https://phaser.io/) game framework.
 
-![](man/geometry_dash_example.gif)<!-- -->
+![](man/figures/geometry_dash_example.gif)<!-- -->
 
 ## What you can do with shinyphaser
 
@@ -75,15 +75,16 @@ For a simple runner with gravity, jumping, and obstacles, see [**Build a
 Geometry Dash-style
 runner**](https://maciekbanas.github.io/shinyphaser/articles/geometry-dash.html).
 
-For trees and bushes that hide the hero while blocking movement at their bases,
-see [**Walk behind scenery and block its footprint**](https://maciekbanas.github.io/shinyphaser/articles/scenery-and-collision.html).
+For trees and bushes that hide the hero while blocking movement at their
+bases, see [**Walk behind scenery and block its
+footprint**](https://maciekbanas.github.io/shinyphaser/articles/scenery-and-collision.html).
 
 For the complete list of supported browser expressions and guidance on
 when to use ordinary R callbacks, see [**Choose between browser and
 server
 actions**](https://maciekbanas.github.io/shinyphaser/articles/browser-server-actions.html).
 
-![](man/hedgehog_example.gif)<!-- -->
+![](man/figures/hedgehog_example.gif)<!-- -->
 
 ## Example games created with `shinyphaser`
 
