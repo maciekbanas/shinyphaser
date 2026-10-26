@@ -34,5 +34,6 @@ articles:
   - title: Advanced features
     navbar: Advanced features
     contents:
+      - creating-maps
       - approach-on-sight
       - scenery-and-collision

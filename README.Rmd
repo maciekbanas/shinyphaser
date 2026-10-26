@@ -78,6 +78,9 @@ For a full walkthrough (from static background to movement, animation, overlap, 
 For a simple runner with gravity, jumping, and obstacles, see
 [**Build a Geometry Dash-style runner**](https://maciekbanas.github.io/shinyphaser/articles/geometry-dash.html).
 
+For tile maps, shoreline selection, and terrain collisions, see
+[**Create tile maps for a Shiny game**](https://maciekbanas.github.io/shinyphaser/articles/creating-maps.html).
+
 For enemies that notice and move toward the hero, see
 [**Make enemies approach the hero on sight**](https://maciekbanas.github.io/shinyphaser/articles/approach-on-sight.html).
 
