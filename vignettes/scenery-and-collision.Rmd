@@ -126,25 +126,3 @@ status$set_depth(10000)
 For a 6400-pixel-tall world, 10000 leaves the HUD above all ground-position
 depths. The full example applies these R methods to the hero, enemies, and NPCs,
 and sets a fixed HUD depth above them.
-
-## Place objects only on grass
-
-Swamps RPG reads its Tiled JSON map and identifies tiles whose tileset names
-start with `mushroom_swamps_grass_`. Before placing an object, it checks every
-tile under the image's full bounding box, not just the trunk. This keeps
-both the footprint and the overhanging artwork away from swamp and bank tiles.
-
-The layout generator in `modules/scenery_layout.R` shuffles candidate positions
-and places five copies of each tree and fifteen of each bush. It also leaves
-space between images and around the hero's spawn, NPCs, enemies, and berries.
-A fixed random seed gives every session the same layout, so loading a saved
-game does not move the trees or introduce a new obstacle at the saved position.
-
-The rendering module, `modules/scenery.R`, creates each image and its footprint,
-sets the image's depth with `set_depth()`, and adds the hero collider. Both
-object names are included in the realm's object list so map visibility changes
-apply to the artwork and its blocking body together.
-
-To check your own version, walk behind the canopy, walk in front, and approach
-the footprint from both sides. The first two should change the drawing order;
-the last should stop the hero without blocking the entire visible image.

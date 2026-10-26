@@ -15,6 +15,10 @@ An enemy can wander until the hero gets close, show an alert, and then move
 toward the hero. `Sprite$start_approach_on_sight()` handles these reactions in
 the browser, so you do not need an R timer or custom JavaScript.
 
+```{r, echo=FALSE}
+knitr::include_graphics("assets/approaching.gif")
+```
+
 Swamps RPG uses this behavior for its mushroom enemies. With the current
 development version of shinyphaser installed, run the game from the repository
 root:
