@@ -112,3 +112,11 @@ shiny::runApp("inst/examples/hedgehog")
 shiny::runApp("inst/examples/geometry_dash")
 shiny::runApp("inst/examples/swamps_rpg")
 ```
+
+For cognitive task prototypes (GO / WAIT, visual search, and sequence memory),
+see `inst/examples/psychology-tasks`. These are task-design demonstrations,
+not validated clinical assessments or treatments:
+
+``` r
+shiny::runApp("inst/examples/psychology-tasks")
+```
