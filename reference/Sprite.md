@@ -31,6 +31,10 @@ PhaserGame\$add_sprite() method.
 
 - [`Sprite$set_depth()`](#method-Sprite-set_depth)
 
+- [`Sprite$set_body_size()`](#method-Sprite-set_body_size)
+
+- [`Sprite$set_depth_by_y()`](#method-Sprite-set_depth_by_y)
+
 - [`Sprite$set_velocity_x()`](#method-Sprite-set_velocity_x)
 
 - [`Sprite$set_velocity_y()`](#method-Sprite-set_velocity_y)
@@ -336,6 +340,58 @@ rendered in front of objects with a smaller depth.
 #### Returns
 
 This sprite object, invisibly, to support method chaining.
+
+------------------------------------------------------------------------
+
+### Method `set_body_size()`
+
+Set a collision body size and its offset within the unscaled sprite
+frame. Calls made before the sprite loads are queued.
+
+#### Usage
+
+    Sprite$set_body_size(width, height, offset_x = 0, offset_y = 0)
+
+#### Arguments
+
+- `width, height`:
+
+  Positive numeric. Body size in frame pixels.
+
+- `offset_x, offset_y`:
+
+  Numeric. Offset from the frame's top-left corner.
+
+#### Returns
+
+This sprite, invisibly.
+
+------------------------------------------------------------------------
+
+### Method `set_depth_by_y()`
+
+Continuously set drawing depth to the sprite's y-coordinate plus an
+offset, in the browser. Disable to retain the current depth; set_depth()
+also disables automatic depth sorting.
+
+#### Usage
+
+    Sprite$set_depth_by_y(offset = 0, enabled = TRUE)
+
+#### Arguments
+
+- `offset`:
+
+  Numeric. Vertical distance from the sprite origin to its ground point,
+  in world pixels (40 for the example's centered Orc).
+
+- `enabled`:
+
+  Logical. Whether to update depth each frame.
+
+#### Returns
+
+This sprite, invisibly.
 
 ------------------------------------------------------------------------
 

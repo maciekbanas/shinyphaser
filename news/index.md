@@ -61,11 +61,16 @@
 
 #### Sprite
 
+- Added `Sprite$set_body_size()` for frame-relative collision bodies and
+  `Sprite$set_depth_by_y()` for automatic browser-side depth ordering.
+
 - Added `Sprite$start_approach_on_sight()` for browser-side wandering,
   sight checks, alerts, and movement toward a target sprite.
+
 - Added `Sprite$set_player_animation_prefix()` for switching the idle
   and directional movement animation set used by player controls at
   runtime.
+
 - Added `Sprite$stop_motion()` for immediately cancelling scripted
   sprite movement, including from
   [`browser_actions()`](../reference/browser_actions.md).

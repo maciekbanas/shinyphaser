@@ -1,0 +1,388 @@
+# Create tile maps for a Shiny game
+
+A tile map describes which small terrain image belongs at each position
+in a grid. **shinyphaser** loads maps exported from
+[Tiled](https://www.mapeditor.org/) and displays them with Phaser. Start
+with a tiny room made from two tiles, then use the Mushroom Swamps map
+to explore shorelines and larger worlds.
+
+## Start with a tiny room
+
+Before working with Swamps RPG, create an **8-by-6 room** with only two
+tile IDs: **1 is floor** and **2 is wall**. Each tile is 64 pixels
+square. The room has a border and two wall tiles in the middle:
+
+``` text
+########
+#......#
+#..##..#
+#......#
+#......#
+########
+```
+
+Here `.` means floor and `#` means wall. A small orange square will be
+the player. The complete app, images, and JSON map are already provided
+in `inst/examples/simple-map`, so no file-generation step or Tiled
+installation is needed.
+
+### Run the example
+
+With shinyphaser installed, run this from the repository root:
+
+``` r
+
+shiny::runApp("inst/examples/simple-map")
+```
+
+The example contains:
+
+``` text
+inst/examples/simple-map/
+  app.R
+  www/
+    room.json
+    floor.png
+    wall.png
+    player.png
+```
+
+`room.json` contains the 8-by-6 tile grid and two embedded tileset
+definitions. Each tileset contains one image, and only the wall tile has
+the Boolean property `collides = true`.
+
+### How the app loads the map
+
+The following code is the supplied **`inst/examples/simple-map/app.R`**:
+
+``` r
+
+library(shiny)
+library(shinyphaser)
+
+game <- PhaserGame$new(width = 512, height = 384)
+ui <- tagList(tags$p("Arrow keys: move the orange square. Walls block movement."),
+              game$use_phaser())
+
+server <- function(input, output, session) {
+  game <- PhaserGame$new(width = 512, height = 384)
+  game$set_shiny_session(session)
+  game$set_world_bounds(512, 384)
+  game$add_map(
+    map_key = "room", map_url = "room.json",
+    tileset_urls = c("floor.png", "wall.png"),
+    tileset_names = c("floor", "wall"), layer_name = "terrain"
+  )
+  player <- game$add_sprite(
+    "player", "player.png", x = 96, y = 96,
+    frame_width = 32, frame_height = 32, frame_count = 1, frame_rate = 1
+  )
+  player$add_player_controls(speed = 140)
+  game$enable_terrain_collision("player")
+}
+
+shinyApp(ui, server)
+```
+
+Shiny serves the files in the app’s `www/` folder, so the URLs above
+need no extra resource-path setup. The first loaded map becomes active
+automatically. The 512-by-384 canvas matches `8 * 64` by `6 * 64`
+pixels, and the player starts in the center of the first interior floor
+tile.
+
+Try moving across the floor and into both the border and the middle
+wall. To change the room, edit the tile-data array in `www/room.json` (1
+for floor, 2 for wall), or open that JSON file in Tiled, then restart
+the app. You now have the same basic ingredients as a larger map: tile
+IDs, tileset images, a terrain layer, and an actor registered for
+terrain collision. Phaser still loads from jsDelivr, so the browser
+needs Internet access.
+
+### See the example in action
+
+The orange square moves across the floor and stops at the room’s border
+and the wall in the middle:
+
+![Orange player moving through a small tile map and colliding with
+walls](assets/simple_map_example.gif)
+
+## Organize the Swamps RPG map and artwork
+
+Swamps RPG uses the same map-loading API, with more terrain variants, a
+larger world, and separate scenery. With the current development version
+installed, run the full example from the repository root:
+
+``` r
+
+shiny::runApp("inst/examples/swamps_rpg")
+```
+
+Swamps RPG keeps its map and images together:
+
+``` text
+inst/examples/swamps_rpg/
+  app.R
+  modules/navigation_setup.R
+  www/
+    maps/mushroom_swamps.json
+    terrain/mushroom_swamps/
+      mushroom_swamps_grass_1.png
+      mushroom_swamps_swamp_1.png
+      ms_bank_left.png
+      ms_bank_left_right.png
+      ...
+```
+
+Its map is a **finite, orthogonal** grid with 32 columns and 64 rows.
+Each tile is 100 by 100 pixels, giving a world of **3200 by 6400
+pixels**. The visible canvas can be smaller: a following camera lets the
+hero explore the world.
+
+The map’s `terrain` layer contains tile IDs in row order, left to right
+and then top to bottom. Tiled uses zero-based cell coordinates. Cell
+`(column, row)` has its center at:
+
+``` r
+
+x <- (column + 0.5) * 100
+y <- (row + 0.5) * 100
+```
+
+These are world coordinates, not screen coordinates. In R, the
+corresponding position in the flat tile-data vector is
+`row * map$width + column + 1`.
+
+## Create or edit the map in Tiled
+
+1.  Create a finite **Orthogonal** map. For the supplied artwork, choose
+    100-pixel tile width and height, and a 32-by-64 map to match Swamps
+    RPG.
+2.  Add a tile layer named **`terrain`**.
+3.  Create tilesets from the terrain PNGs. Swamps RPG uses one
+    100-by-100 image per tileset, with one tile in each. Embed the
+    tilesets in the map so their definitions are included in the
+    exported JSON, rather than external TSX files.
+4.  Fill the layer with grass, paint swamp areas, and choose bank
+    variants for swamp cells that touch grass. Keep the hero’s spawn on
+    clear grass.
+5.  Set a Boolean tile property named **`collides`** to **`true`** on
+    the swamp and bank tiles. Grass tiles do not need this property.
+6.  Save/export as Tiled JSON under `www/maps/`. Use an uncompressed
+    numeric tile-data array for the inspection and shoreline code shown
+    below.
+
+Keep the images in their expected relative locations when moving the
+map. In Swamps RPG, the JSON image paths start with
+`../terrain/mushroom_swamps/`, relative to the map file. The JSON layer
+name and tileset names must match the names passed to the R API.
+
+## Understand tile IDs and collision properties
+
+The layer data stores **global tile IDs**, not image filenames. Each
+embedded tileset has a `firstgid`. In this example each tileset contains
+one tile, so that number identifies its image directly.
+
+| Current ID | Tileset or image             | Meaning                         |
+|------------|------------------------------|---------------------------------|
+| 1          | `mushroom_swamps_grass_1`    | Walkable grass                  |
+| 2          | `mushroom_swamps_swamp_1`    | Interior swamp, without a shore |
+| 5          | `ms_bank_left.png`           | Swamp with a shore on its left  |
+| 11         | `ms_bank_top_left_right.png` | Shores above, left, and right   |
+| 17         | `ms_bank_left_right.png`     | Shores on both left and right   |
+| 18–21      | Remaining grass variants     | Walkable grass                  |
+
+These IDs belong to the current map. Reordering tilesets can change
+them; derive IDs from the map’s tileset definitions when writing tools.
+
+The collision property is attached to the **tile inside its tileset**.
+Its local ID is 0 even when its global map ID is 2:
+
+``` json
+"tiles": [
+  {
+    "id": 0,
+    "properties": [
+      {"name": "collides", "type": "bool", "value": true}
+    ]
+  }
+]
+```
+
+Loading this property marks terrain tiles as collidable, but an actor
+still needs `game$enable_terrain_collision("hero")` to collide with that
+layer. The property must be a Boolean, not the text `"true"`.
+
+## Choose banks from neighboring cells
+
+A bank is still a **swamp cell**. Its suffix describes which sides meet
+grass. For example, `left_right` is the correct bank when grass touches
+both its left and right sides. Choosing just `left` leaves an abrupt
+edge on the other side. `top_left_right` means three shores, not a
+diagonal corner.
+
+For each swamp cell, examine the four immediate neighbors:
+
+- grass above requires `top`;
+- grass below requires `bottom`;
+- grass to the left requires `left`;
+- grass to the right requires `right`.
+
+Combine the sides and choose the matching variant. No grass neighbors
+means the plain swamp tile. Diagonal neighbors do not add sides in this
+scheme. Swamps RPG also keeps a shore where swamp touches the outer map
+boundary.
+
+This helper applies that rule across the map without changing which
+cells are grass or swamp. It is specific to Swamps RPG’s unflipped,
+single-tile tilesets and their naming convention:
+
+``` r
+
+update_swamp_banks <- function(map) {
+  layer_id <- which(vapply(map$layers, function(x) x$name == "terrain", logical(1)))
+  stopifnot(length(layer_id) == 1L)
+  original <- unlist(map$layers[[layer_id]]$data)
+  updated <- original
+  ids <- vapply(map$tilesets, function(x) x$firstgid, numeric(1))
+  tileset_labels <- vapply(map$tilesets, function(x) x$name, character(1))
+  grass <- ids[grepl("^mushroom_swamps_grass_", tileset_labels)]
+  signature <- function(sides) {
+    if (length(sides)) paste(sort(sides), collapse = "_") else "interior"
+  }
+  banks <- grepl("_bank_", tileset_labels)
+  keys <- vapply(strsplit(sub(".*_bank_", "", tileset_labels[banks]), "_"),
+                 signature, character(1))
+  choices <- c(setNames(ids[banks], keys),
+               interior = ids[tileset_labels == "mushroom_swamps_swamp_1"])
+  grass_at <- function(column, row) {
+    if (column < 0 || column >= map$width || row < 0 || row >= map$height) {
+      return(TRUE) # Close off swamp at the map's outer edge.
+    }
+    original[row * map$width + column + 1] %in% grass
+  }
+  for (row in seq_len(map$height) - 1) {
+    for (column in seq_len(map$width) - 1) {
+      index <- row * map$width + column + 1
+      if (original[index] %in% grass) next
+      neighbors <- c(
+        top = grass_at(column, row - 1), bottom = grass_at(column, row + 1),
+        left = grass_at(column - 1, row), right = grass_at(column + 1, row)
+      )
+      gid <- unname(choices[signature(names(neighbors)[neighbors])])
+      if (is.na(gid)) stop("No bank image for cell ", column, ", ", row)
+      updated[index] <- as.integer(gid)
+    }
+  }
+  map$layers[[layer_id]]$data <- as.list(updated)
+  map
+}
+```
+
+Read JSON with `simplifyVector = FALSE` to retain its nested structure.
+Work on a copy of the example directory, then save the corrected map
+there:
+
+``` r
+
+# In your own app directory, with the same www/ layout:
+map <- jsonlite::fromJSON("www/maps/mushroom_swamps.json", simplifyVector = FALSE)
+map <- update_swamp_banks(map)
+jsonlite::write_json(map, "www/maps/mushroom_swamps.json",
+                     auto_unbox = TRUE, pretty = TRUE)
+```
+
+This changes tile selection only. It preserves the swamp footprint and
+the tilesets’ collision metadata. If you add new terrain types, adapt
+the helper before applying it: this recipe treats every non-grass cell
+as swamp.
+
+## Load the map through R
+
+The complete small app below reuses the installed Swamps RPG map and
+artwork. Save it as `app.R` in a Shiny app directory. It loads terrain,
+creates the Orc, and lets you explore with the arrow keys.
+
+The two tileset vectors are derived from the same JSON entries, keeping
+each **tileset name** paired with the correct **image URL**. For
+example, the tileset `mushroom_swamps_swamp_bank_left` uses the file
+`ms_bank_left.png`; their names are not interchangeable.
+
+``` r
+
+library(shiny)
+library(shinyphaser)
+
+example_dir <- system.file("examples", "swamps_rpg", package = "shinyphaser")
+addResourcePath("map-assets", file.path(example_dir, "www"))
+map <- jsonlite::fromJSON(file.path(example_dir, "www", "maps", "mushroom_swamps.json"),
+                         simplifyVector = FALSE)
+tileset_names <- vapply(map$tilesets, function(x) x$name, character(1))
+tileset_urls <- vapply(map$tilesets, function(x) {
+  paste0("map-assets/terrain/mushroom_swamps/", basename(x$image))
+}, character(1))
+
+game <- PhaserGame$new(width = 960, height = 600)
+ui <- tagList(tags$p("Explore with the arrow keys. Swamp and banks block movement."),
+              game$use_phaser())
+
+server <- function(input, output, session) {
+  game <- PhaserGame$new(width = 960, height = 600)
+  game$set_shiny_session(session)
+  game$set_world_bounds(map$width * map$tilewidth, map$height * map$tileheight)
+  game$add_map(
+    map_key = "mushroom_swamps",
+    map_url = "map-assets/maps/mushroom_swamps.json",
+    tileset_urls = tileset_urls, tileset_names = tileset_names,
+    layer_name = "terrain"
+  )
+
+  hero <- game$add_sprite(
+    "hero", "map-assets/sprites/hero/orc/hero_orc_idle.png",
+    x = 100, y = 100, frame_width = 100, frame_height = 100,
+    frame_count = 29, frame_rate = 4
+  )
+  hero$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+  hero$add_player_controls(speed = 220)
+  hero$follow_camera()
+  game$enable_terrain_collision("hero")
+  game$activate_map("mushroom_swamps", player_name = "hero", x = 100, y = 100)
+}
+
+shinyApp(ui, server)
+```
+
+`add_map()` loads the named layer asynchronously; the first map is
+activated automatically. `activate_map()` explicitly selects a map and
+can reposition an existing hero. In Swamps RPG, the New game action
+calls it after setup. Register terrain collision for each enemy as well
+if it should respect the map.
+
+The supplied loader renders the layer selected by `layer_name`. A Tiled
+map may contain other layers or objects, but this call does not
+automatically turn every Tiled object into a shinyphaser sprite or
+collision rectangle. Swamps RPG creates actors and scenery separately
+through R.
+
+## Add scenery and check the result
+
+Trees and bushes are separate images with their own footprints, rather
+than terrain tiles. This lets their foliage cover the hero while their
+bases block movement. See [Walk behind scenery and block its
+footprint](scenery-and-collision.md) for `set_body_size()`,
+`set_depth_by_y()`, and invisible collision rectangles.
+
+After editing a map, check that:
+
+- the JSON and every tileset image load without 404 errors;
+- `terrain` and the tileset names match the R setup;
+- the spawn is on grass and leaves room for the hero’s collision body;
+- every bank includes all sides that touch grass;
+- grass remains walkable, and swamp and banks stop the hero;
+- the camera can reach the full map and the world bounds match its
+  dimensions.
+
+The package’s `test-swamp-banks.R` checks bank selection across the
+entire example map. Its scenery tests separately check that tree and
+bush images stay on grass. These checks catch different mistakes:
+correct shoreline artwork does not by itself guarantee correct collision
+or scenery placement.

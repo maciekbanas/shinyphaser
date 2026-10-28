@@ -43,8 +43,9 @@ as soon as the key is pressed. No Shiny input event is emitted when an
 event has only a browser action.
 
 [`browser_actions()`](../reference/browser_actions.md) is not a general
-R expression evaluator. For example, it cannot update a `reactiveVal()`,
-query a database, read a file, or call an arbitrary R helper:
+R expression evaluator. For example, it cannot update a
+[`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html), query
+a database, read a file, or call an arbitrary R helper:
 
 ``` r
 
@@ -70,13 +71,13 @@ listed here are ordinary server-side methods and cannot be placed in
 
 | Object | Supported methods inside [`browser_actions()`](../reference/browser_actions.md) |
 |----|----|
-| `Text` | `show()`, `hide()`, `set()` |
-| `Image`, `Rectangle` | `show()`, `hide()` |
+| `Text` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()`, `set()` |
+| `Image`, `Rectangle` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()` |
 | `Sound` | `play()`, `pause()`, `resume()`, [`stop()`](https://rdrr.io/r/base/stop.html) |
-| `Sprite` | `show()`, `hide()`, `play_animation()`, `set_in_motion()`, `set_velocity_x()`, `set_velocity_y()`, `stop_motion()`, `add_player_controls()`, `destroy()` |
-| `StaticSprite` | `show()`, `hide()`, `destroy()` |
-| `Group` | `show()`, `hide()` |
-| `StaticGroup` | `show()`, `hide()`, `disable()` |
+| `Sprite` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()`, `play_animation()`, `set_in_motion()`, `set_velocity_x()`, `set_velocity_y()`, `stop_motion()`, `add_player_controls()`, `destroy()` |
+| `StaticSprite` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()`, `destroy()` |
+| `Group` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()` |
+| `StaticGroup` | [`show()`](https://rdrr.io/r/methods/show.html), `hide()`, `disable()` |
 | Browser state returned by `game$add_state()` | `set()`, `increment()`, `decrement()`, `add()`, `subtract()` |
 | Browser cooldown returned by `game$add_cooldown()` | `trigger()` |
 | `PhaserGame` | `alert()`, `emit()`, `after()` |
@@ -118,7 +119,8 @@ game$add_overlap(
 
 Supplying `server_action` automatically enables the corresponding
 browser-to- server event. You do not need to create a separate
-`observeEvent()` for the generated input ID.
+[`observeEvent()`](https://rdrr.io/pkg/shiny/man/observeEvent.html) for
+the generated input ID.
 
 The event payload depends on the handler. An overlap event can include
 object coordinates, while a keyboard event includes its key code. Name

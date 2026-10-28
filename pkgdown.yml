@@ -2,7 +2,10 @@ pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
+  approach-on-sight: approach-on-sight.html
   browser-server-actions: browser-server-actions.html
+  creating-maps: creating-maps.html
   first-game: first-game.html
   geometry-dash: geometry-dash.html
-last_built: 2026-10-21T09:40Z
+  scenery-and-collision: scenery-and-collision.html
+last_built: 2026-10-28T14:32Z
