@@ -103,6 +103,15 @@ To change the room, edit the tile-data array in `www/room.json` (1 for floor,
 tileset images, a terrain layer, and an actor registered for terrain collision.
 Phaser still loads from jsDelivr, so the browser needs Internet access.
 
+### See the example in action
+
+The orange square moves across the floor and stops at the room's border and
+the wall in the middle:
+
+```{r, echo=FALSE, out.width="512px", fig.alt="Orange player moving through a small tile map and colliding with walls"}
+knitr::include_graphics("assets/simple_map_example.gif")
+```
+
 ## Organize the Swamps RPG map and artwork
 
 Swamps RPG uses the same map-loading API, with more terrain variants, a larger
