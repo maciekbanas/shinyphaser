@@ -32,67 +32,37 @@ has a border and two wall tiles in the middle:
 ```
 
 Here `.` means floor and `#` means wall. A small orange square will be the
-player. This example creates its own images and JSON in R, so you can try it
-without installing Tiled or borrowing artwork from Swamps RPG.
+player. The complete app, images, and JSON map are already provided in
+`inst/examples/simple-map`, so no file-generation step or Tiled installation
+is needed.
 
-### Create the files
+### Run the example
 
-Run this setup once from a writable working directory. It creates a new
-`simple-map/www/` folder. Use a fresh folder so you do not overwrite an
-existing example's files.
+With shinyphaser installed, run this from the repository root:
 
-```{r tiny-map-files, eval=FALSE}
-dir.create("simple-map/www", recursive = TRUE, showWarnings = FALSE)
-
-# Three small, solid-color images: two terrain tiles and the player.
-write_square <- function(file, color, size = 64) {
-  grDevices::png(file, width = size, height = size, bg = color)
-  graphics::par(mar = rep(0, 4))
-  graphics::plot.new()
-  grDevices::dev.off()
-}
-write_square("simple-map/www/floor.png", "#507c45")
-write_square("simple-map/www/wall.png", "#384152")
-write_square("simple-map/www/player.png", "#ffbb44", size = 32)
-
-room <- matrix(1L, nrow = 6, ncol = 8)
-room[c(1, 6), ] <- 2L
-room[, c(1, 8)] <- 2L
-room[3, 4:5] <- 2L
-
-make_tileset <- function(id, name, collides = FALSE) {
-  list(
-    firstgid = id, name = name, image = paste0(name, ".png"),
-    tilewidth = 64, tileheight = 64, imagewidth = 64, imageheight = 64,
-    columns = 1, tilecount = 1,
-    tiles = if (collides) list(list(
-      id = 0,
-      properties = list(list(name = "collides", type = "bool", value = TRUE))
-    )) else list()
-  )
-}
-level <- list(
-  type = "map", version = "1.10", orientation = "orthogonal",
-  renderorder = "right-down", infinite = FALSE,
-  width = 8, height = 6, tilewidth = 64, tileheight = 64,
-  layers = list(list(
-    id = 1, name = "terrain", type = "tilelayer",
-    width = 8, height = 6, x = 0, y = 0, opacity = 1, visible = TRUE,
-    data = as.list(as.vector(t(room)))
-  )),
-  tilesets = list(make_tileset(1, "floor"), make_tileset(2, "wall", TRUE))
-)
-jsonlite::write_json(level, "simple-map/www/room.json",
-                     auto_unbox = TRUE, pretty = TRUE)
+```{r eval=FALSE, purl=FALSE}
+shiny::runApp("inst/examples/simple-map")
 ```
 
-R stores matrices by column, but Tiled stores rows from left to right.
-`as.vector(t(room))` puts our matrix in the correct order. Each tileset contains
-one image, and only the wall tile has the Boolean property `collides = true`.
+The example contains:
 
-### Add the app
+```text
+inst/examples/simple-map/
+  app.R
+  www/
+    room.json
+    floor.png
+    wall.png
+    player.png
+```
 
-Save the following code as **`simple-map/app.R`**:
+`room.json` contains the 8-by-6 tile grid and two embedded tileset definitions.
+Each tileset contains one image, and only the wall tile has the Boolean
+property `collides = true`.
+
+### How the app loads the map
+
+The following code is the supplied **`inst/examples/simple-map/app.R`**:
 
 ```{r tiny-map-app, eval=FALSE}
 library(shiny)
@@ -122,20 +92,14 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-From the directory containing `simple-map`, launch it with:
-
-```{r eval=FALSE, purl=FALSE}
-shiny::runApp("simple-map")
-```
-
 Shiny serves the files in the app's `www/` folder, so the URLs above need no
 extra resource-path setup. The first loaded map becomes active automatically.
 The 512-by-384 canvas matches `8 * 64` by `6 * 64` pixels, and the player
 starts in the center of the first interior floor tile.
 
 Try moving across the floor and into both the border and the middle wall.
-To change the room, edit the `room` matrix, rerun the setup, and restart the
-app. You now have the same basic ingredients as a larger map: tile IDs,
+To change the room, edit the tile-data array in `www/room.json` (1 for floor,
+2 for wall), or open that JSON file in Tiled, then restart the app. You now have the same basic ingredients as a larger map: tile IDs,
 tileset images, a terrain layer, and an actor registered for terrain collision.
 Phaser still loads from jsDelivr, so the browser needs Internet access.
 
