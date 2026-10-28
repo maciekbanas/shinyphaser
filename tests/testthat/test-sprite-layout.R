@@ -1,0 +1,18 @@
+test_that("sprite layout methods serialize settings and validate arguments", {
+  messages <- character()
+  session <- list(sendCustomMessage = function(type, message) {
+    messages <<- c(messages, message$js)
+  })
+  hero <- Sprite$new("hero", "hero.png", 100, 100, 100, 100, 1, 4, session)
+  expect_identical(hero$set_body_size(32, 18, 34, 72), hero)
+  expect_identical(hero$set_depth_by_y(40), hero)
+  hero$set_depth_by_y(enabled = FALSE)
+  expect_true(any(grepl('setSpriteBodySize("hero", 32, 18, 34, 72);', messages, fixed = TRUE)))
+  expect_true(any(grepl('setSpriteDepthByY("hero", 40, true);', messages, fixed = TRUE)))
+  expect_true(any(grepl('setSpriteDepthByY("hero", 0, false);', messages, fixed = TRUE)))
+  expect_error(hero$set_body_size(0, 18), "positive")
+  expect_error(hero$set_body_size(32, NA), "finite")
+  expect_error(hero$set_body_size(32, 18, offset_x = c(1, 2)), "finite")
+  expect_error(hero$set_depth_by_y(Inf), "finite")
+  expect_error(hero$set_depth_by_y(enabled = NA), "TRUE or FALSE")
+})
