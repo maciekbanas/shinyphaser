@@ -72,6 +72,11 @@
 
 ## Updates in examples
 
+* Added cognitive task prototypes for GO / WAIT response inhibition, visual
+  search, and sequence memory, with session-local trial results and CSV export.
+  These examples are not validated clinical assessments or treatments, and
+  their server-observed timings are approximate.
+
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
 * Added the Swamps RPG game example (`swamps_rpg`).
