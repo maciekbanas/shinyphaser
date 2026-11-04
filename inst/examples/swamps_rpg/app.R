@@ -1,6 +1,6 @@
 library(shinyphaser)
 
-# Resolve paths from the sourced file, or Shiny's app working directory.
+# Resolve assets when Shiny runs the directory or app.R is sourced elsewhere.
 example_dir <- local({
   paths <- vapply(sys.frames(), function(frame) {
     if (is.null(frame$ofile)) "" else as.character(frame$ofile)[1]
@@ -9,36 +9,45 @@ example_dir <- local({
   if (length(paths)) dirname(normalizePath(tail(paths, 1), mustWork = TRUE)) else getwd()
 })
 shiny::addResourcePath("swamps-rpg-assets", file.path(example_dir, "www"))
+asset <- function(path) paste0("swamps-rpg-assets/", path)
+source(file.path(example_dir, "modules", "scenery_layout.R"), local = TRUE)
 
-game <- PhaserGame$new(width = 1600, height = 800)
-map_tile_size <- 100
-map_tile_width <- 32
-map_tile_height <- 64
-world_width <- map_tile_width * map_tile_size
-world_height <- map_tile_height * map_tile_size
-shinyphaser_version <- as.character(utils::packageVersion("shinyphaser"))
-
-# Each module is evaluated in the app or server environment so the example stays
-# easy to read while retaining the shared state expected by its Shiny callbacks.
-source(file.path(example_dir, "ui.R"), local = TRUE)
+ui_game <- PhaserGame$new(width = 960, height = 600)
+ui <- shiny::fluidPage(
+  shiny::tags$style("body {max-width:1000px;margin:auto;background:#f5f4ee;}
+    #phaser_game {width:100% !important;height:auto !important;}
+    canvas {max-width:100%;} #status {min-height:48px;}"),
+  shiny::h2("Swamp clearing"),
+  shiny::p("Move with the arrow keys. Find the gold key, avoid the mushroom,
+           then enter the blue doorway. Walk behind the trees to try the depth effect."),
+  shiny::fluidRow(
+    shiny::column(8, shiny::actionButton("restart", "New game"),
+      shiny::actionButton("save", "Save"), shiny::actionButton("load", "Load")),
+    shiny::column(4, shiny::checkboxInput("sound", "Sound", TRUE))
+  ),
+  shiny::textOutput("status"),
+  ui_game$use_phaser(),
+  shiny::p("A small feature demo: two maps, scenery footprints, enemy sight,
+           sound, and session-local saving. Contact resets your position; there is no combat.")
+)
 
 server <- function(input, output, session) {
-  server_env <- environment()
-  modules <- c(
-    "game_state.R",
-    "navigation_setup.R",
-    "hero.R",
-    file.path("realms", "mushroom_swamps_world.R"),
-    "scenery_layout.R",
-    "scenery.R",
-    "navigation.R",
-    "saving.R"
-  )
-  # These files intentionally live outside an R/ directory. Shiny automatically
-  # sources R/ before it evaluates app.R, when `game` does not exist yet.
-  for (module in file.path(example_dir, "modules", modules)) {
-    sys.source(module, envir = server_env)
-  }
+  # Keep each visitor's game and save slot independent.
+  game <- PhaserGame$new(width = 960, height = 600)
+  game$set_shiny_session(session)
+  save_directory <- tempfile("swamp-save-")
+  session$onSessionEnded(function() unlink(save_directory, recursive = TRUE))
+  realm <- "mushroom_swamps"
+  has_key <- FALSE
+  completed <- FALSE
+  notice <- shiny::reactiveVal("Find the gold key in the south-west of the clearing.")
+  output$status <- shiny::renderText(notice())
+
+  sys.source(file.path(example_dir, "modules", "navigation_setup.R"), environment())
+  sys.source(file.path(example_dir, "modules", "hero.R"), environment())
+  sys.source(file.path(example_dir, "modules", "scenery.R"), environment())
+  sys.source(file.path(example_dir, "modules", "navigation.R"), environment())
+  sys.source(file.path(example_dir, "modules", "saving.R"), environment())
 }
 
 shiny::shinyApp(ui, server)

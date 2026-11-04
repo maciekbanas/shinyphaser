@@ -84,7 +84,9 @@ Existing apps need to update their event handlers to use the explicit
 
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
-* Added the Swamps RPG game example (`swamps_rpg`).
+* Added a compact Swamps RPG exploration example (`swamps_rpg`) with a clearing
+  and hut, a key objective, one approaching enemy, scenery footprints and depth
+  ordering, sound, and session-local save/load.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
 

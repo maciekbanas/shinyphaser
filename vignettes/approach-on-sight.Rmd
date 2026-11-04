@@ -19,7 +19,8 @@ the browser, so you do not need an R timer or custom JavaScript.
 knitr::include_graphics("assets/approaching.gif")
 ```
 
-Swamps RPG uses this behavior for its mushroom enemies. With the current
+The compact Swamps RPG uses this behavior for one mushroom enemy. Contact
+sends the hero back to the clearing entrance, keeping any collected key. With the current
 development version of shinyphaser installed, run the game from the repository
 root:
 

@@ -1,55 +1,13 @@
-  # Bind the game to this Shiny session before creating the single realm.
-  game$set_shiny_session(session)
-  game$set_world_bounds(world_width, world_height)
-
+# Names and image URLs come from the same JSON entries.
+for (map_key in c("mushroom_swamps", "hut")) {
+  map <- jsonlite::fromJSON(file.path(example_dir, "www", "maps", paste0(map_key, ".json")),
+                            simplifyVector = FALSE)
   game$add_map(
-    map_key = "mushroom_swamps",
-    map_url = "swamps-rpg-assets/maps/mushroom_swamps.json",
-    tileset_urls = c(
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_grass_1.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_swamp_1.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_bottom.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_bottom_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_left.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_left_bottom.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_left_bottom_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_bottom_left_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_left.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_left_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_bottom.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_bottom_left.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_top_bottom_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/ms_bank_left_right.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_grass_2.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_grass_3.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_grass_4.png",
-      "swamps-rpg-assets/terrain/mushroom_swamps/mushroom_swamps_grass_5.png"
-    ),
-    tileset_names = c(
-      "mushroom_swamps_grass_1",
-      "mushroom_swamps_swamp_1",
-      "mushroom_swamps_swamp_bank_bottom",
-      "mushroom_swamps_swamp_bank_bottom_right",
-      "mushroom_swamps_swamp_bank_left",
-      "mushroom_swamps_swamp_bank_left_bottom",
-      "mushroom_swamps_swamp_bank_left_bottom_right",
-      "mushroom_swamps_swamp_bank_right",
-      "mushroom_swamps_swamp_bank_top_bottom_left_right",
-      "mushroom_swamps_swamp_bank_top_left",
-      "mushroom_swamps_swamp_bank_top_left_right",
-      "mushroom_swamps_swamp_bank_top_right",
-      "mushroom_swamps_swamp_bank_top",
-      "mushroom_swamps_swamp_bank_top_bottom",
-      "mushroom_swamps_swamp_bank_top_bottom_left",
-      "mushroom_swamps_swamp_bank_top_bottom_right",
-      "mushroom_swamps_swamp_bank_left_right",
-      "mushroom_swamps_grass_2",
-      "mushroom_swamps_grass_3",
-      "mushroom_swamps_grass_4",
-      "mushroom_swamps_grass_5"
-    ),
+    map_key, asset(paste0("maps/", map_key, ".json")),
+    tileset_urls = vapply(map$tilesets, function(tile) {
+      asset(sub("^../", "", tile$image))
+    }, character(1)),
+    tileset_names = vapply(map$tilesets, function(tile) tile$name, character(1)),
     layer_name = "terrain"
   )
+}
