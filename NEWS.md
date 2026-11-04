@@ -1,12 +1,22 @@
-# shinyphaser (development version)
+# shinyphaser 0.2.0
+
+This release makes games more responsive by separating browser actions from
+server logic and expands the R interface with sound, game saves, map switching,
+and richer sprite and collision controls. New game examples and tutorials show
+how to build runners, create tile maps, and add interactive scenery and enemies.
+Existing apps need to update their event handlers to use the explicit
+`browser_action` and `server_action` parameters.
+
+## Breaking changes
 
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
   while arbitrary R logic belongs in a server action.
-* Removed `action` and `notify_server` from controls, overlaps, overlap-end
-  handlers, and colliders.
-* Added a vignette explaining when to use browser actions, server actions, or
-  both together.
+* Replaced the `action` parameter in `add_control()` and the `callback_fun`
+  parameter in `add_collider()`, `add_overlap()`, and `add_overlap_end()` with
+  explicit action parameters. Move existing R callbacks to `server_action`.
+* Removed `run_sample_app()`. Launch the bundled examples with
+  `shiny::runApp()` instead.
 
 ## Performance improvements
 
@@ -77,6 +87,18 @@
 * Added the Swamps RPG game example (`swamps_rpg`).
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
+
+## Vignettes and articles
+
+* Added a step-by-step article on building a Geometry Dash-style runner.
+* Added a guide explaining when to use browser actions, server actions, or both
+  together.
+* Added a tile map tutorial, starting with a simple room and continuing with the
+  Swamps RPG map, terrain collision, and shoreline tiles.
+* Added guides on making enemies approach the hero on sight and letting the
+  hero walk behind scenery while blocking tree trunks and bush footprints.
+* Organized articles into "Simple game examples", "General", and "Advanced
+  features" sections.
 
 ## README
 
