@@ -24,7 +24,7 @@ ui <- shiny::tagList(
     #swamps_rpg_loader .skeleton_loader_sprite {
       width: 100px;
       height: 100px;
-      background-image: url('assets/swamps_rpg/sprites/enemies/skeleton/skeleton_idle.png');
+      background-image: url('swamps-rpg-assets/sprites/enemies/skeleton/skeleton_idle.png');
       background-repeat: no-repeat;
       animation: swamps_rpg-skeleton-loader 1s steps(8) infinite;
       image-rendering: pixelated;

@@ -1,0 +1,111 @@
+{
+  "type": "map",
+  "version": "1.10",
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "infinite": false,
+  "width": 8,
+  "height": 6,
+  "tilewidth": 64,
+  "tileheight": 64,
+  "layers": [
+    {
+      "id": 1,
+      "name": "terrain",
+      "type": "tilelayer",
+      "width": 8,
+      "height": 6,
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "floor",
+      "image": "floor.png",
+      "tilewidth": 64,
+      "tileheight": 64,
+      "imagewidth": 64,
+      "imageheight": 64,
+      "columns": 1,
+      "tilecount": 1,
+      "tiles": []
+    },
+    {
+      "firstgid": 2,
+      "name": "wall",
+      "image": "wall.png",
+      "tilewidth": 64,
+      "tileheight": 64,
+      "imagewidth": 64,
+      "imageheight": 64,
+      "columns": 1,
+      "tilecount": 1,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "collides",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

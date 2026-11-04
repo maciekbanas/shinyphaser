@@ -14,7 +14,7 @@ Description: An API to build and control 2D games using the 'Phaser'
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.0
+RoxygenNote: 7.3.2
 URL: https://github.com/maciekbanas/shinyphaser, https://maciekbanas.github.io/shinyphaser/
 BugReports: https://github.com/maciekbanas/shinyphaser/issues
 Imports:
@@ -28,6 +28,7 @@ Suggests:
   rmarkdown,
   shinyalert,
   testthat (>= 3.0.0),
-  shinytest2 (>= 0.5.1)
+  shinytest2 (>= 0.5.1),
+  withr
 VignetteBuilder: knitr
 Config/testthat/edition: 3

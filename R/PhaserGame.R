@@ -117,7 +117,6 @@ PhaserGame <- R6::R6Class(
     #' @examples
     #'  game$use_phaser()
     use_phaser = function() {
-      shiny::addResourcePath("assets", system.file("assets", package = "shinyphaser"))
       htmltools::tagList(
         phaser_dependency(),
         htmltools::tags$div(id = self$id, style = "width:100vw; height:100vh;"),

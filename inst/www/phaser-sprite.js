@@ -33,7 +33,39 @@ function withSprite(name, action, caller) {
 }
 
 function setSpriteDepth(name, depth) {
-  withSprite(name, (sprite) => sprite.setDepth(depth), "setSpriteDepth()");
+  withSprite(name, (sprite) => {
+    if (sprite.shinyphaserDepthCleanup) sprite.shinyphaserDepthCleanup();
+    sprite.setDepth(depth);
+  }, "setSpriteDepth()");
+}
+
+function setSpriteBodySize(name, width, height, offsetX, offsetY) {
+  withSprite(name, (sprite) => {
+    sprite.body.setSize(width, height, false);
+    sprite.body.setOffset(offsetX, offsetY);
+  }, "setSpriteBodySize()");
+}
+
+function setSpriteDepthByY(name, offset, enabled) {
+  withSprite(name, (sprite) => {
+    if (sprite.shinyphaserDepthCleanup) sprite.shinyphaserDepthCleanup();
+    if (!enabled) return;
+    const owner = sprite.scene;
+    const update = () => {
+      if (sprite.active) sprite.setDepth(sprite.y + offset);
+    };
+    const cleanup = () => {
+      owner.events.off("postupdate", update);
+      owner.events.off("shutdown", cleanup);
+      sprite.off("destroy", cleanup);
+      delete sprite.shinyphaserDepthCleanup;
+    };
+    sprite.shinyphaserDepthCleanup = cleanup;
+    owner.events.on("postupdate", update);
+    owner.events.once("shutdown", cleanup);
+    sprite.once("destroy", cleanup);
+    update();
+  }, "setSpriteDepthByY()");
 }
 
 function resolveFrameCount(textureKey, frameWidth, frameHeight, frameCount) {

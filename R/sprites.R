@@ -151,6 +151,44 @@ Sprite <- R6::R6Class(
       invisible(self)
     },
 
+    #' @description Set a collision body size and its offset within the unscaled
+    #'   sprite frame. Calls made before the sprite loads are queued.
+    #' @param width,height Positive numeric. Body size in frame pixels.
+    #' @param offset_x,offset_y Numeric. Offset from the frame's top-left corner.
+    #' @return This sprite, invisibly.
+    set_body_size = function(width, height, offset_x = 0, offset_y = 0) {
+      values <- list(width = width, height = height, offset_x = offset_x, offset_y = offset_y)
+      for (key in names(values)) {
+        value <- values[[key]]
+        if (!is.numeric(value) || length(value) != 1L || !is.finite(value)) {
+          stop(key, " must be a finite number.", call. = FALSE)
+        }
+      }
+      if (width <= 0 || height <= 0) stop("width and height must be positive.", call. = FALSE)
+      send_js(private, sprintf("setSpriteBodySize(%s, %s, %s, %s, %s);",
+        jsonlite::toJSON(private$name, auto_unbox = TRUE), width, height, offset_x, offset_y))
+      invisible(self)
+    },
+
+    #' @description Continuously set drawing depth to the sprite's y-coordinate
+    #'   plus an offset, in the browser. Disable to retain the current depth;
+    #'   set_depth() also disables automatic depth sorting.
+    #' @param offset Numeric. Vertical distance from the sprite origin to its
+    #'   ground point, in world pixels (40 for the example's centered Orc).
+    #' @param enabled Logical. Whether to update depth each frame.
+    #' @return This sprite, invisibly.
+    set_depth_by_y = function(offset = 0, enabled = TRUE) {
+      if (!is.numeric(offset) || length(offset) != 1L || !is.finite(offset)) {
+        stop("offset must be a finite number.", call. = FALSE)
+      }
+      if (!is.logical(enabled) || length(enabled) != 1L || is.na(enabled)) {
+        stop("enabled must be TRUE or FALSE.", call. = FALSE)
+      }
+      send_js(private, sprintf("setSpriteDepthByY(%s, %s, %s);",
+        jsonlite::toJSON(private$name, auto_unbox = TRUE), offset, tolower(enabled)))
+      invisible(self)
+    },
+
     #' @description Set the sprite's velocity in the x direction.
     #' @param x Numeric. Velocity in pixels/second (positive = right, negative =
     #' left).
