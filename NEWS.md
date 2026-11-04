@@ -12,10 +12,11 @@ Existing apps need to update their event handlers to use the explicit
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
   while arbitrary R logic belongs in a server action.
-* Removed `action` and `notify_server` from controls, overlaps, overlap-end
-  handlers, and colliders.
-* Removed `run_sample_app()` and `run_swamps_rpg()`. Launch the bundled
-  examples with `shiny::runApp()` instead.
+* Replaced the `action` parameter in `add_control()` and the `callback_fun`
+  parameter in `add_collider()`, `add_overlap()`, and `add_overlap_end()` with
+  explicit action parameters. Move existing R callbacks to `server_action`.
+* Removed `run_sample_app()`. Launch the bundled examples with
+  `shiny::runApp()` instead.
 
 ## Performance improvements
 
