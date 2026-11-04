@@ -76,7 +76,7 @@ handler. The handler allows one swing every 0.6 seconds, plays the attack
 animation and optional sound, and deals damage only when the enemy is in range
 and alive. Swinging out of range gives feedback but does not damage the enemy.
 
-Each hit briefly stops the mushroom and plays its damage animation. During
+Each hit interrupts pursuit, pushes the mushroom away, and plays its damage animation. During
 that reaction it cannot deal contact damage. The final hit plays the damage
 animation followed by the destruction animation, then hides the mushroom through
 `activate_map(..., hidden_objects = "mushroom")`. Map visibility also disables
@@ -88,6 +88,93 @@ loading, restarting, or switching maps cannot hide a revived enemy.
 When hero life reaches zero, hide and deactivate the hero through the same map
 activation mechanism. Ignore further attacks and damage until New game or Load.
 The overlaid menu remains available after defeat.
+
+## Apply damage and push the target away
+
+Receiving damage has three separate parts: subtract life points in R, play a
+reaction animation, and optionally move the target away from the attacker.
+The animation alone does not change health. For example, the contact callback
+reduces the hero's life and refreshes the display with:
+
+```{r eval=FALSE}
+life_points <<- max(0, life_points - 10)
+update_hud()
+```
+
+The attack handler does the equivalent for the mushroom:
+
+```{r eval=FALSE}
+enemy_hit_points <<- max(0, enemy_hit_points - 2)
+```
+
+### Load the damage animations
+
+Before using a reaction, register its spritesheet. The example has a three-frame
+reaction for each direction. Here `asset()` is the URL helper defined in
+`app.R`; use your own asset URL in another application.
+
+```{r eval=FALSE}
+for (direction in c("down", "up", "left", "right")) {
+  mushroom$add_animation(paste0("damage_", direction),
+    asset(sprintf("sprites/enemies/mushroom_man/mushroom_man_damage_%s.png", direction)),
+    frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+}
+# A default reaction is needed when no recent movement direction is available.
+mushroom$add_animation("damage",
+  asset("sprites/enemies/mushroom_man/mushroom_man_damage_down.png"),
+  frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+```
+
+### Choose a direction away from the attacker
+
+The overlap event contains `x1`, `y1` for the hero and `x2`, `y2` for the
+mushroom, because they were registered in that order. Subtract the hero's
+position from the mushroom's position and choose the dominant axis:
+
+```{r eval=FALSE}
+knockback_from_contact <- function(event) {
+  delta <- c(event$x2 - event$x1, event$y2 - event$y1)
+  if (length(delta) != 2L || any(!is.finite(delta)) || all(delta == 0)) {
+    return(c(x = 0, y = 1))
+  }
+  if (abs(delta[1]) >= abs(delta[2])) c(x = sign(delta[1]), y = 0) else
+    c(x = 0, y = sign(delta[2]))
+}
+```
+
+The contact callback stores this vector in `knockback_direction` before its
+damage-cooldown check. An attack uses the latest reported contact direction.
+If the positions coincide or are unavailable, the example pushes downwards.
+Using one axis gives the integer directions accepted by `set_in_motion()`.
+
+### Combine knockback and the reaction
+
+Inside the successful-hit branch, cancel pursuit before starting the push:
+
+```{r eval=FALSE}
+mushroom$stop_motion()
+enemy_hurt_until <<- now + 0.5
+mushroom$set_in_motion(
+  dir_x = knockback_direction[["x"]], dir_y = knockback_direction[["y"]],
+  speed = 130, distance = 52, lag = 0
+)
+mushroom$play_animation("mushroom_damage", duration = 500)
+update_hud()
+```
+
+`lag = 0` starts the push immediately instead of using the method's default
+delay. In clear terrain, 52 pixels at 130 pixels per second takes 0.4 seconds.
+Colliding terrain can shorten the displacement. The 0.5-second reaction keeps
+pursuit paused and contact damage disabled while the mushroom recoils. Its
+damage animation remains visible while it moves, rather than switching to a
+walking animation. Move closer again before the next attack if the push
+separates the bodies.
+
+On the final hit, the same push and reaction precede the destruction animation.
+The delayed destruction and hiding callbacks are cancelled by map transitions,
+loading, and restarting. You can use the same `stop_motion()`, `set_in_motion()`,
+and `play_animation()` combination for another Sprite, including a hero, after
+registering suitable damage artwork and adding its health and cooldown checks.
 
 ## Read the example's combat module
 

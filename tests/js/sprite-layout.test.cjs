@@ -97,3 +97,31 @@ test('an interrupted attack timer cannot cancel damage or destruction animation'
   assert.equal(context.GameBridge.forcedAnimations.mushroom, undefined);
   assert.equal(played.at(-1), 'mushroom_idle');
 });
+
+test('knockback moves a sprite without replacing its damage animation', () => {
+  const {context, scene, add} = runtime();
+  const enemy = add('mushroom');
+  enemy.x = 100;
+  enemy.name = 'mushroom';
+  const played = [];
+  enemy.play = key => played.push(key);
+  scene.children = {getChildren: () => [enemy]};
+  scene.time = {now: 0};
+  scene.anims = {exists: () => true};
+  let motion;
+  scene.tweens = {killTweensOf() {}, add: config => {motion = config;}};
+  context.Phaser = {Math: {Distance: {Between: (x1, y1, x2, y2) => Math.hypot(x2-x1, y2-y1)}}};
+  context.rememberMovementDirection = () => {};
+  context.playTypeAnim = () => played.push('idle');
+  context.GameBridge.forcedAnimations.mushroom = {key: 'mushroom_damage'};
+  context.setSpriteInMotion('mushroom', 1, 0, 130, 52);
+  assert.equal(motion.x, 152);
+  assert.equal(motion.duration, 400);
+  motion.onStart();
+  motion.onComplete();
+  assert.deepEqual(played, []);
+  delete context.GameBridge.forcedAnimations.mushroom;
+  motion.onStart();
+  motion.onComplete();
+  assert.deepEqual(played, ['mushroom_move_right', 'idle']);
+});

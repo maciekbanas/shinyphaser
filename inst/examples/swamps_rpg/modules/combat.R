@@ -11,11 +11,23 @@ output$hud <- shiny::renderUI({
   )
 })
 
+# Push along the dominant axis, away from the hero's latest contact position.
+knockback_from_contact <- function(event) {
+  delta <- c(event$x2 - event$x1, event$y2 - event$y1)
+  if (length(delta) != 2L || any(!is.finite(delta)) || all(delta == 0)) {
+    return(c(x = 0, y = 1))
+  }
+  if (abs(delta[1]) >= abs(delta[2])) c(x = sign(delta[1]), y = 0) else
+    c(x = 0, y = sign(delta[2]))
+}
+knockback_direction <- c(x = 0, y = 1)
+
 # Browser throttling reduces traffic; the R clock also guards damage and attacks.
 game$add_overlap("hero", "mushroom", input = input, mode = "stay", interval = 1000,
   server_action = function(event) {
     if (realm != "mushroom_swamps" || life_points <= 0 || enemy_hit_points <= 0) return()
     enemy_in_range <<- TRUE
+    knockback_direction <<- knockback_from_contact(event)
     now <- as.numeric(Sys.time())
     if (now < enemy_hurt_until || now - last_damage < 1) return()
     last_damage <<- now
@@ -45,6 +57,10 @@ attack <- function(event = NULL) {
   enemy_hit_points <<- max(0, enemy_hit_points - 2)
   mushroom$stop_motion()
   enemy_hurt_until <<- now + 0.5
+  mushroom$set_in_motion(
+    dir_x = knockback_direction[["x"]], dir_y = knockback_direction[["y"]],
+    speed = 130, distance = 52, lag = 0
+  )
   mushroom$play_animation("mushroom_damage", duration = 500)
   update_hud()
   if (enemy_hit_points == 0) {

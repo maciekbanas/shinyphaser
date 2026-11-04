@@ -476,6 +476,7 @@ function setSpriteInMotion(name, dirX, dirY, speed, distance) {
           ? (dirX < 0 ? "left" : "right")
           : (dirY < 0 ? "up" : "down");
         rememberMovementDirection(sprite, movementDirection, now);
+        if (GameBridge.forcedAnimations[name]) return;
         const directionalAnim = name + "_move_" + movementDirection;
 
         if (directionalAnim && scene.anims.exists(directionalAnim)) {
@@ -487,7 +488,7 @@ function setSpriteInMotion(name, dirX, dirY, speed, distance) {
         }
       },
       onComplete: () => {
-        if (!sprite || !sprite.active) return;
+        if (!sprite || !sprite.active || GameBridge.forcedAnimations[name]) return;
         playTypeAnim(sprite, name, "idle");
       }
     });

@@ -72,6 +72,10 @@ test_that("combat enforces range, cooldowns, defeat and restart", {
                 local = new.env())$value
   shiny::testServer(app$serverFuncSource(), {
     state <- environment(attack)
+    expect_equal(knockback_from_contact(list(x1 = 0, y1 = 0, x2 = 10, y2 = 2)), c(x = 1, y = 0))
+    expect_equal(knockback_from_contact(list(x1 = 10, y1 = 0, x2 = 0, y2 = 2)), c(x = -1, y = 0))
+    expect_equal(knockback_from_contact(list(x1 = 0, y1 = 10, x2 = 2, y2 = 0)), c(x = 0, y = -1))
+    expect_equal(knockback_from_contact(list()), c(x = 0, y = 1))
     session$flushReact()
     attack()
     expect_equal(state$enemy_hit_points, 6)
