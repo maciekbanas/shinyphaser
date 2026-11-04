@@ -20,7 +20,8 @@ knitr::include_graphics("assets/approaching.gif")
 ```
 
 The compact Swamps RPG uses this behavior for one mushroom enemy. Contact
-sends the hero back to the clearing entrance, keeping any collected key. With the current
+deals damage; press Space at close range to fight back. See the
+[combat article](combat.html) for health, attacks, and defeat. With the current
 development version of shinyphaser installed, run the game from the repository
 root:
 

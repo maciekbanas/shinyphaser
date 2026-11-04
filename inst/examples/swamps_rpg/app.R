@@ -13,23 +13,7 @@ asset <- function(path) paste0("swamps-rpg-assets/", path)
 source(file.path(example_dir, "modules", "scenery_layout.R"), local = TRUE)
 
 ui_game <- PhaserGame$new(width = 960, height = 600)
-ui <- shiny::fluidPage(
-  shiny::tags$style("body {max-width:1000px;margin:auto;background:#f5f4ee;}
-    #phaser_game {width:100% !important;height:auto !important;}
-    canvas {max-width:100%;} #status {min-height:48px;}"),
-  shiny::h2("Swamp clearing"),
-  shiny::p("Move with the arrow keys. Find the gold key, avoid the mushroom,
-           then enter the blue doorway. Walk behind the trees to try the depth effect."),
-  shiny::fluidRow(
-    shiny::column(8, shiny::actionButton("restart", "New game"),
-      shiny::actionButton("save", "Save"), shiny::actionButton("load", "Load")),
-    shiny::column(4, shiny::checkboxInput("sound", "Sound", TRUE))
-  ),
-  shiny::textOutput("status"),
-  ui_game$use_phaser(),
-  shiny::p("A small feature demo: two maps, scenery footprints, enemy sight,
-           sound, and session-local saving. Contact resets your position; there is no combat.")
-)
+source(file.path(example_dir, "ui.R"), local = TRUE)
 
 server <- function(input, output, session) {
   # Keep each visitor's game and save slot independent.
@@ -40,12 +24,18 @@ server <- function(input, output, session) {
   realm <- "mushroom_swamps"
   has_key <- FALSE
   completed <- FALSE
-  notice <- shiny::reactiveVal("Find the gold key in the south-west of the clearing.")
+  life_points <- 100
+  enemy_hit_points <- 6
+  enemy_in_range <- FALSE
+  last_attack <- -Inf
+  last_damage <- -Inf
+  notice <- shiny::reactiveVal("Find the gold key in the south of the clearing.")
   output$status <- shiny::renderText(notice())
 
   sys.source(file.path(example_dir, "modules", "navigation_setup.R"), environment())
   sys.source(file.path(example_dir, "modules", "hero.R"), environment())
   sys.source(file.path(example_dir, "modules", "scenery.R"), environment())
+  sys.source(file.path(example_dir, "modules", "combat.R"), environment())
   sys.source(file.path(example_dir, "modules", "navigation.R"), environment())
   sys.source(file.path(example_dir, "modules", "saving.R"), environment())
 }

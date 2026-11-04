@@ -85,8 +85,8 @@ Existing apps need to update their event handlers to use the explicit
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
 * Added a compact Swamps RPG exploration example (`swamps_rpg`) with a clearing
-  and hut, a key objective, one approaching enemy, scenery footprints and depth
-  ordering, sound, and session-local save/load.
+  and hut, a key objective, one approaching enemy, combat and an overlaid life bar,
+  scenery footprints and depth ordering, sound, and session-local save/load.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
 
@@ -99,6 +99,8 @@ Existing apps need to update their event handlers to use the explicit
   Swamps RPG map, terrain collision, and shoreline tiles.
 * Added guides on making enemies approach the hero on sight and letting the
   hero walk behind scenery while blocking tree trunks and bush footprints.
+* Added a combat tutorial covering close-range attacks, damage cooldowns,
+  life points, defeat, and saving combat state.
 * Organized articles into "Simple game examples", "General", and "Advanced
   features" sections.
 

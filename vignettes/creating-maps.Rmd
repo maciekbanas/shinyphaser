@@ -144,8 +144,8 @@ inst/examples/swamps_rpg/
       ...
 ```
 
-Its map is a **finite, orthogonal** grid with 12 columns and 8 rows. Each tile
-is 100 by 100 pixels, giving a world of **1200 by 800 pixels**. The visible
+Its map is a **finite, orthogonal** grid with 16 columns and 12 rows. Each tile
+is 100 by 100 pixels, giving a world of **1600 by 1200 pixels**. The visible
 canvas is 960 by 600 pixels: a following camera lets the hero explore the
 clearing. The hut uses a 10-by-6 grid of 100-pixel tiles. Collect the gold key
 and enter the blue doorway to see map switching in the running example.
@@ -169,7 +169,7 @@ JSON structure used by the examples. It has not yet been verified with an
 actual editor export; support for every Tiled feature is not implied.
 
 1. Create a finite **Orthogonal** map. For the supplied artwork, choose
-   100-pixel tile width and height, and a 12-by-8 map to match Swamps RPG.
+   100-pixel tile width and height, and a 16-by-12 map to match Swamps RPG.
 2. Add a tile layer named **`terrain`**.
 3. Create tilesets from the terrain PNGs. Swamps RPG uses one 100-by-100 image
    per tileset, with one tile in each. Embed the tilesets in the map so their

@@ -1,0 +1,129 @@
+---
+title: "Add close-range combat and life points"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Add close-range combat and life points}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+Combat combines contact detection, player input, animation, and application
+state. Swamps RPG demonstrates a small encounter using the shinyphaser R
+interface: a mushroom approaches the hero, contact costs life points, and
+Space attacks at close range. No custom JavaScript is needed.
+
+```{r, echo=FALSE}
+knitr::include_graphics("assets/combat_example.png")
+```
+
+With the current package installed, run this from the repository root:
+
+```{r eval=FALSE}
+shiny::runApp("inst/examples/swamps_rpg")
+```
+
+Move with the arrow keys and press Space while touching the mushroom. The
+hero starts with 100 life points and the mushroom with 6. Each successful
+attack removes 2 enemy life points; contact removes 10 hero life points at
+most once per second. Three attacks defeat the mushroom. Fighting is optional:
+you can also avoid it while collecting the key and reaching the hut.
+
+## Keep rules in session-local R state
+
+Create health, range, and cooldown state inside `server`, so visitors do not
+share a fight. The example starts with:
+
+```{r eval=FALSE}
+life_points <- 100
+enemy_hit_points <- 6
+enemy_in_range <- FALSE
+last_attack <- -Inf
+last_damage <- -Inf
+```
+
+These are ordinary R values. The callbacks below share their enclosing server
+environment and use `<<-` to update that state. A `reactiveVal()` holds a copy
+for the Shiny HUD, which displays life points over the map. The HTML HUD stays
+fixed while the Phaser camera follows the hero; an in-canvas Text object would
+instead need `set_scroll_factor(0)` and a high `set_depth()`.
+
+## Detect contact and limit damage
+
+`add_overlap()` detects overlapping physics bodies. This example deliberately
+uses body contact as its melee range, rather than the whole visible axe or
+sprite image. The foot-sized bodies are configured with `set_body_size()`.
+For a larger attack reach, you would need a separate hitbox or another range
+check; enlarging the hero's movement body would also change terrain collision.
+
+Use `mode = "stay"` and `interval = 1000` to receive contact events at most
+once per second while bodies overlap. The callback checks the active map,
+health, and an R cooldown before subtracting life points. Register
+`add_overlap_end()` to clear `enemy_in_range` when the actors separate.
+
+The browser interval limits event traffic. The R cooldown also protects the
+rule against rapid re-entry into contact. 
+## Register attacks and handle defeat
+
+`add_control("Space", input = input, server_action = attack)` calls the R attack
+handler. The handler allows one swing every 0.6 seconds, plays the attack
+animation and optional sound, and deals damage only when the enemy is in range
+and alive. Swinging out of range gives feedback but does not damage the enemy.
+
+When enemy life reaches zero, stop its movement and hide it through
+`activate_map(..., hidden_objects = "mushroom")`. Map visibility also disables
+its physics body and marks it inactive, so it cannot continue dealing damage
+or approaching the hero. Simply hiding artwork would not express all of those
+requirements.
+
+When hero life reaches zero, hide and deactivate the hero through the same map
+activation mechanism. Ignore further attacks and damage until New game or Load.
+The overlaid menu remains available after defeat.
+
+## Read the example's combat module
+
+The following is the actual `modules/combat.R` shipped with the game. It runs
+inside the server after creating `game`, `hero`, `mushroom`, and `attack_sound`.
+The navigation module provides `show_realm()` and the status callback `notice()`;
+those functions exist by the time a player event is processed.
+
+```{r combat-source, echo=FALSE, results='asis'}
+combat_file <- system.file("examples", "swamps_rpg", "modules", "combat.R",
+                           package = "shinyphaser")
+cat("```r\n", paste(readLines(combat_file), collapse = "\n"), "\n```\n", sep = "")
+```
+
+This implementation handles combat events in R, so animation commands arrive
+after a Shiny round trip. For immediate local visual feedback, the package also
+supports `browser_action = browser_actions(...)`; see
+[Choose between browser and server actions](browser-server-actions.html).
+Keep R health updates separate from cosmetic feedback so an attack cannot
+subtract health twice.
+
+## Save and reset the whole encounter
+
+Saving only sprite positions would lose combat progress. The example includes
+health in the application state and captures both actors:
+
+```{r eval=FALSE}
+game$save_game("progress", state = list(
+  realm = realm, has_key = has_key, completed = completed,
+  life_points = life_points, enemy_hit_points = enemy_hit_points
+), objects = c("hero", "mushroom"), directory = save_directory)
+```
+
+Load restores health, updates the HUD, and reapplies map visibility so a
+defeated enemy stays inactive. Clear the contact flag when switching maps and
+reset cooldowns when loading or restarting; old contact state must not damage an enemy in a
+different area. New game restores both actors, both health values, and the key.
+The example's save directory is private to its Shiny session and is deleted
+when that session ends.
+
+Enemy detection and pursuit are separate from these combat rules. Read
+[Make enemies approach the hero on sight](approach-on-sight.html) to configure
+how the encounter begins, and
+[Walk behind scenery and block its footprint](scenery-and-collision.html) for
+the surrounding trees and bushes.

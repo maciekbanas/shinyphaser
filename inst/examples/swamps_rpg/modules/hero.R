@@ -15,3 +15,8 @@ for (direction in c("down", "up", "left", "right")) {
 }
 hero$add_player_controls(speed = 220)
 game$enable_terrain_collision("hero")
+
+for (suffix in c("attack", paste0("attack_", c("down", "up", "left", "right")))) {
+  hero$add_animation(suffix, asset(paste0("sprites/hero/orc/hero_orc_", suffix, ".png")),
+    frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 6)
+}
