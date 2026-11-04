@@ -27,6 +27,8 @@ Existing apps need to update their event handlers to use the explicit
 * Overlaps are edge-triggered by default and notify Shiny only when a
   `server_action` is supplied; sustained handlers can use `mode = "stay"` and
   `interval` throttling.
+* Prevented older animation timers from interrupting newer damage or destruction
+  animations.
 * Moved sprite movement delays from blocking R sleeps to browser timers.
 * Queued sprite physics actions until sprites finish loading so setup calls such as `set_gravity()` are not lost during asynchronous asset initialization.
 
@@ -84,7 +86,10 @@ Existing apps need to update their event handlers to use the explicit
 
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
-* Added the Swamps RPG game example (`swamps_rpg`).
+* Added a compact Swamps RPG exploration example (`swamps_rpg`) with a clearing
+  and hut, a key objective, one approaching enemy, combat with hit reactions and
+  knockback, an overlaid life bar,
+  scenery footprints and depth ordering, sound, and session-local save/load.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
 
@@ -97,6 +102,8 @@ Existing apps need to update their event handlers to use the explicit
   Swamps RPG map, terrain collision, and shoreline tiles.
 * Added guides on making enemies approach the hero on sight and letting the
   hero walk behind scenery while blocking tree trunks and bush footprints.
+* Added a combat tutorial covering close-range attacks, damage cooldowns,
+  life points, defeat, and saving combat state.
 * Organized articles into "Simple game examples", "General", and "Advanced
   features" sections.
 

@@ -89,7 +89,8 @@ Three games are included in `inst/examples`, each with its own assets:
 - **Hedgehog**: collect apples, avoid enemies, and progress through three levels.
   [Play online](https://maciekbanas.shinyapps.io/hedgehog).
 - **Geometry Dash**: jump over spikes in a one-button runner and reach the finish.
-- **Swamps RPG**: explore the Mushroom Swamps, fight enemies, and save your game.
+- **Swamps RPG**: collect a key, fight a mushroom, and enter a hut;
+  try combat, scenery collision, map switching, sound, and saving.
 
 With the current development version of shinyphaser installed, run each game
 from the repository root:

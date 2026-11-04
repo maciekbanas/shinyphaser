@@ -1,6 +1,6 @@
 library(shinyphaser)
 
-# Resolve paths from the sourced file, or Shiny's app working directory.
+# Resolve assets when Shiny runs the directory or app.R is sourced elsewhere.
 example_dir <- local({
   paths <- vapply(sys.frames(), function(frame) {
     if (is.null(frame$ofile)) "" else as.character(frame$ofile)[1]
@@ -9,36 +9,37 @@ example_dir <- local({
   if (length(paths)) dirname(normalizePath(tail(paths, 1), mustWork = TRUE)) else getwd()
 })
 shiny::addResourcePath("swamps-rpg-assets", file.path(example_dir, "www"))
+asset <- function(path) paste0("swamps-rpg-assets/", path)
+source(file.path(example_dir, "modules", "scenery_layout.R"), local = TRUE)
 
-game <- PhaserGame$new(width = 1600, height = 800)
-map_tile_size <- 100
-map_tile_width <- 32
-map_tile_height <- 64
-world_width <- map_tile_width * map_tile_size
-world_height <- map_tile_height * map_tile_size
-shinyphaser_version <- as.character(utils::packageVersion("shinyphaser"))
-
-# Each module is evaluated in the app or server environment so the example stays
-# easy to read while retaining the shared state expected by its Shiny callbacks.
+ui_game <- PhaserGame$new(width = 960, height = 600)
 source(file.path(example_dir, "ui.R"), local = TRUE)
 
 server <- function(input, output, session) {
-  server_env <- environment()
-  modules <- c(
-    "game_state.R",
-    "navigation_setup.R",
-    "hero.R",
-    file.path("realms", "mushroom_swamps_world.R"),
-    "scenery_layout.R",
-    "scenery.R",
-    "navigation.R",
-    "saving.R"
-  )
-  # These files intentionally live outside an R/ directory. Shiny automatically
-  # sources R/ before it evaluates app.R, when `game` does not exist yet.
-  for (module in file.path(example_dir, "modules", modules)) {
-    sys.source(module, envir = server_env)
-  }
+  # Keep each visitor's game and save slot independent.
+  game <- PhaserGame$new(width = 960, height = 600)
+  game$set_shiny_session(session)
+  save_directory <- tempfile("swamp-save-")
+  session$onSessionEnded(function() unlink(save_directory, recursive = TRUE))
+  realm <- "mushroom_swamps"
+  has_key <- FALSE
+  completed <- FALSE
+  life_points <- 100
+  enemy_hit_points <- 6
+  enemy_in_range <- FALSE
+  last_attack <- -Inf
+  last_damage <- -Inf
+  enemy_hurt_until <- -Inf
+  combat_generation <- 0L
+  notice <- shiny::reactiveVal("Find the gold key in the south of the clearing.")
+  output$status <- shiny::renderText(notice())
+
+  sys.source(file.path(example_dir, "modules", "navigation_setup.R"), environment())
+  sys.source(file.path(example_dir, "modules", "hero.R"), environment())
+  sys.source(file.path(example_dir, "modules", "scenery.R"), environment())
+  sys.source(file.path(example_dir, "modules", "combat.R"), environment())
+  sys.source(file.path(example_dir, "modules", "navigation.R"), environment())
+  sys.source(file.path(example_dir, "modules", "saving.R"), environment())
 }
 
 shiny::shinyApp(ui, server)

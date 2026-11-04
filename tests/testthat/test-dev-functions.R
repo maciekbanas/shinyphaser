@@ -1,14 +1,8 @@
-test_that("Swamps RPG app and modules are packaged", {
-  app_file <- system.file(
-    "examples", "swamps_rpg", "app.R", package = "shinyphaser"
-  )
-  expect_true(file.exists(app_file))
-  expect_false(dir.exists(file.path(dirname(app_file), "R")))
-
-  app <- readLines(app_file, warn = FALSE)
-  expect_true(any(grepl("server_env <- environment()", app, fixed = TRUE)))
-  expect_true(any(grepl("sys.source(module, envir = server_env)", app, fixed = TRUE)))
-  expect_false(any(grepl(
-    'lapply(file.path("modules", modules), source', app, fixed = TRUE
-  )))
+test_that("Swamps RPG app and focused modules are packaged", {
+  example_dir <- system.file("examples", "swamps_rpg", package = "shinyphaser")
+  expect_true(file.exists(file.path(example_dir, "app.R")))
+  expect_false(dir.exists(file.path(example_dir, "R")))
+  for (module in c("hero", "navigation_setup", "navigation", "scenery", "scenery_layout", "combat", "saving")) {
+    expect_true(file.exists(file.path(example_dir, "modules", paste0(module, ".R"))))
+  }
 })

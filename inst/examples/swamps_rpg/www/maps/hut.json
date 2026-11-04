@@ -1,0 +1,123 @@
+{
+  "type": "map",
+  "version": "1.10",
+  "orientation": "orthogonal",
+  "renderorder": "right-down",
+  "infinite": false,
+  "width": 10,
+  "height": 6,
+  "tilewidth": 100,
+  "tileheight": 100,
+  "layers": [
+    {
+      "id": 1,
+      "name": "terrain",
+      "type": "tilelayer",
+      "width": 10,
+      "height": 6,
+      "x": 0,
+      "y": 0,
+      "opacity": 1,
+      "visible": true,
+      "data": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2
+      ]
+    }
+  ],
+  "tilesets": [
+    {
+      "firstgid": 1,
+      "name": "floor",
+      "image": "../terrain/hut/floor.png",
+      "tilewidth": 100,
+      "tileheight": 100,
+      "imagewidth": 100,
+      "imageheight": 100,
+      "columns": 1,
+      "tilecount": 1,
+      "tiles": []
+    },
+    {
+      "firstgid": 2,
+      "name": "wall",
+      "image": "../terrain/hut/wall.png",
+      "tilewidth": 100,
+      "tileheight": 100,
+      "imagewidth": 100,
+      "imageheight": 100,
+      "columns": 1,
+      "tilecount": 1,
+      "tiles": [
+        {
+          "id": 0,
+          "properties": [
+            {
+              "name": "collides",
+              "type": "bool",
+              "value": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
