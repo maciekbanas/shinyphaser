@@ -5,8 +5,6 @@
   while arbitrary R logic belongs in a server action.
 * Removed `action` and `notify_server` from controls, overlaps, overlap-end
   handlers, and colliders.
-* Added a vignette explaining when to use browser actions, server actions, or
-  both together.
 
 ## Performance improvements
 
@@ -77,6 +75,19 @@
 * Added the Swamps RPG game example (`swamps_rpg`).
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
+
+## Vignettes and articles
+
+* Added step-by-step articles on building a first game and a Geometry Dash-style
+  runner.
+* Added a guide explaining when to use browser actions, server actions, or both
+  together.
+* Added a tile map tutorial, starting with a simple room and continuing with the
+  Swamps RPG map, terrain collision, and shoreline tiles.
+* Added guides on making enemies approach the hero on sight and letting the
+  hero walk behind scenery while blocking tree trunks and bush footprints.
+* Organized articles into "Simple game examples", "General", and "Advanced
+  features" sections.
 
 ## README
 
