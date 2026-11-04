@@ -43,6 +43,8 @@ enemy_hit_points <- 6
 enemy_in_range <- FALSE
 last_attack <- -Inf
 last_damage <- -Inf
+enemy_hurt_until <- -Inf
+combat_generation <- 0L
 ```
 
 These are ordinary R values. The callbacks below share their enclosing server
@@ -65,7 +67,8 @@ health, and an R cooldown before subtracting life points. Register
 `add_overlap_end()` to clear `enemy_in_range` when the actors separate.
 
 The browser interval limits event traffic. The R cooldown also protects the
-rule against rapid re-entry into contact. 
+rule against rapid re-entry into contact.
+
 ## Register attacks and handle defeat
 
 `add_control("Space", input = input, server_action = attack)` calls the R attack
@@ -73,11 +76,14 @@ handler. The handler allows one swing every 0.6 seconds, plays the attack
 animation and optional sound, and deals damage only when the enemy is in range
 and alive. Swinging out of range gives feedback but does not damage the enemy.
 
-When enemy life reaches zero, stop its movement and hide it through
+Each hit briefly stops the mushroom and plays its damage animation. During
+that reaction it cannot deal contact damage. The final hit plays the damage
+animation followed by the destruction animation, then hides the mushroom through
 `activate_map(..., hidden_objects = "mushroom")`. Map visibility also disables
-its physics body and marks it inactive, so it cannot continue dealing damage
-or approaching the hero. Simply hiding artwork would not express all of those
-requirements.
+its physics body and marks it inactive. The health check rejects damage
+as soon as life reaches zero, including while the destruction animation plays. Simply hiding artwork would not express all of those
+requirements. Delayed animation callbacks check a generation counter so
+loading, restarting, or switching maps cannot hide a revived enemy.
 
 When hero life reaches zero, hide and deactivate the hero through the same map
 activation mechanism. Ignore further attacks and damage until New game or Load.

@@ -27,6 +27,8 @@ Existing apps need to update their event handlers to use the explicit
 * Overlaps are edge-triggered by default and notify Shiny only when a
   `server_action` is supplied; sustained handlers can use `mode = "stay"` and
   `interval` throttling.
+* Prevented older animation timers from interrupting newer damage or destruction
+  animations.
 * Moved sprite movement delays from blocking R sleeps to browser timers.
 * Queued sprite physics actions until sprites finish loading so setup calls such as `set_gravity()` are not lost during asynchronous asset initialization.
 

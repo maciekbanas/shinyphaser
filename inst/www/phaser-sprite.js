@@ -237,10 +237,12 @@ function playAnimationForDuration(name, animName, duration) {
     return;
   }
   const until = scene && scene.time ? scene.time.now + duration : null;
-  GameBridge.forcedAnimations[name] = { key: animName, until };
+  const forced = { key: animName, until };
+  GameBridge.forcedAnimations[name] = forced;
   const now = scene && scene.time ? scene.time.now : 0;
   sprite.play(recentDirectionalAnimation(sprite, animName, now), true);
   scene.time.delayedCall(duration, () => {
+    if (GameBridge.forcedAnimations[name] !== forced) return;
     delete GameBridge.forcedAnimations[name];
     if (!sprite || !sprite.active || !sprite.play || !sprite.anims) return;
     if (scene.anims.exists(name + "_idle")) {

@@ -1,4 +1,6 @@
 show_realm <- function(map_key, x, y) {
+  combat_generation <<- combat_generation + 1L
+  enemy_hurt_until <<- -Inf
   mushroom$stop_motion()
   enemy_in_range <<- FALSE
   realm <<- map_key

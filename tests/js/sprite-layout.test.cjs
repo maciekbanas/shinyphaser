@@ -75,3 +75,25 @@ test('destroying one actor preserves another; scene shutdown clears the rest', (
   assert.equal(scene.events.listenerCount('postupdate'), 0);
   assert.equal(enemy.listenerCount('destroy'), 0);
 });
+
+test('an interrupted attack timer cannot cancel damage or destruction animation', () => {
+  const {context, scene, add} = runtime();
+  const enemy = add('mushroom');
+  const timers = [], played = [];
+  scene.time = {now: 0, delayedCall: (_, callback) => timers.push(callback)};
+  scene.children = {getByName: name => scene[name]};
+  scene.anims = {exists: () => true};
+  enemy.anims = {stop() {}};
+  enemy.play = key => played.push(key);
+  context.recentDirectionalAnimation = (_, key) => key;
+  context.playAnimationForDuration('mushroom', 'attack', 700);
+  context.playAnimationForDuration('mushroom', 'damage', 500);
+  context.playAnimationForDuration('mushroom', 'destroy', 500);
+  timers[0]();
+  timers[1]();
+  assert.equal(context.GameBridge.forcedAnimations.mushroom.key, 'destroy');
+  assert.deepEqual(played, ['attack', 'damage', 'destroy']);
+  timers[2]();
+  assert.equal(context.GameBridge.forcedAnimations.mushroom, undefined);
+  assert.equal(played.at(-1), 'mushroom_idle');
+});

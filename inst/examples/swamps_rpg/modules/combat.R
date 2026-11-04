@@ -17,7 +17,7 @@ game$add_overlap("hero", "mushroom", input = input, mode = "stay", interval = 10
     if (realm != "mushroom_swamps" || life_points <= 0 || enemy_hit_points <= 0) return()
     enemy_in_range <<- TRUE
     now <- as.numeric(Sys.time())
-    if (now - last_damage < 1) return()
+    if (now < enemy_hurt_until || now - last_damage < 1) return()
     last_damage <<- now
     life_points <<- max(0, life_points - 10)
     mushroom$play_animation("mushroom_attack", duration = 700)
@@ -44,11 +44,22 @@ attack <- function(event = NULL) {
   }
   enemy_hit_points <<- max(0, enemy_hit_points - 2)
   mushroom$stop_motion()
+  enemy_hurt_until <<- now + 0.5
+  mushroom$play_animation("mushroom_damage", duration = 500)
   update_hud()
   if (enemy_hit_points == 0) {
     enemy_in_range <<- FALSE
-    # Map visibility also disables the defeated enemy's physics body.
-    game$activate_map(realm, hidden_objects = "mushroom")
+    # Health reaches zero immediately; show the fall before hiding the body.
+    # A map switch, load, or restart invalidates these delayed visual actions.
+    generation <- combat_generation
+    later::later(function() {
+      if (session$isClosed() || generation != combat_generation || enemy_hit_points > 0) return()
+      mushroom$play_animation("mushroom_destroy", duration = 500)
+    }, delay = 0.3)
+    later::later(function() {
+      if (session$isClosed() || generation != combat_generation || enemy_hit_points > 0) return()
+      game$activate_map(realm, hidden_objects = "mushroom")
+    }, delay = 0.95)
     notice("Mushroom defeated! Find the gold key and reach the hut.")
   } else notice("Hit! The mushroom loses 2 life points.")
 }

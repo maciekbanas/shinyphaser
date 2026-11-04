@@ -21,6 +21,8 @@ shiny::runApp("inst/examples/swamps_rpg")
 - Approach the mushroom to see its alert and pursuit; move away to let it wander.
 - Press Space to attack, with a 0.6-second cooldown. Life points and the
   enemy's remaining health stay visible over the map; the Menu opens over it.
+- Hits show a damage reaction; the final hit plays the destruction animation
+  before the mushroom disappears. Defeated enemies cannot deal damage.
 - Collect the key, enter the hut, and return. Map activation changes terrain,
   collisions, camera bounds, and the visibility and physics of scene objects.
 - Toggle Sound to enable or mute the short key/doorway chime.

@@ -29,6 +29,8 @@ server <- function(input, output, session) {
   enemy_in_range <- FALSE
   last_attack <- -Inf
   last_damage <- -Inf
+  enemy_hurt_until <- -Inf
+  combat_generation <- 0L
   notice <- shiny::reactiveVal("Find the gold key in the south of the clearing.")
   output$status <- shiny::renderText(notice())
 

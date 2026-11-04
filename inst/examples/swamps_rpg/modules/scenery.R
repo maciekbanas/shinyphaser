@@ -52,3 +52,15 @@ for (suffix in c("attack", paste0("attack_", c("left", "right")))) {
     frame_width = 100, frame_height = 100, frame_count = 4, frame_rate = 6)
 }
 attack_sound <- game$add_sound("attack", asset("sounds/attack.wav"), volume = 0.3)
+
+for (direction in c("down", "up", "left", "right")) {
+  mushroom$add_animation(paste0("damage_", direction),
+    asset(sprintf("sprites/enemies/mushroom_man/mushroom_man_damage_%s.png", direction)),
+    frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+}
+mushroom$add_animation("destroy",
+  asset("sprites/enemies/mushroom_man/mushroom_man_destroy.png"),
+  frame_width = 100, frame_height = 100, frame_count = 4, frame_rate = 8)
+mushroom$add_animation("damage",
+  asset("sprites/enemies/mushroom_man/mushroom_man_damage_down.png"),
+  frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
