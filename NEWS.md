@@ -7,11 +7,15 @@ how to build runners, create tile maps, and add interactive scenery and enemies.
 Existing apps need to update their event handlers to use the explicit
 `browser_action` and `server_action` parameters.
 
+## Breaking changes
+
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
   while arbitrary R logic belongs in a server action.
 * Removed `action` and `notify_server` from controls, overlaps, overlap-end
   handlers, and colliders.
+* Removed `run_sample_app()` and `run_swamps_rpg()`. Launch the bundled
+  examples with `shiny::runApp()` instead.
 
 ## Performance improvements
 
