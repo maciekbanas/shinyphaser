@@ -1,5 +1,12 @@
 # shinyphaser 0.2.0
 
+This release makes games more responsive by separating browser actions from
+server logic and expands the R interface with sound, game saves, map switching,
+and richer sprite and collision controls. New game examples and tutorials show
+how to build runners, create tile maps, and add interactive scenery and enemies.
+Existing apps need to update their event handlers to use the explicit
+`browser_action` and `server_action` parameters.
+
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
   while arbitrary R logic belongs in a server action.
@@ -78,8 +85,7 @@
 
 ## Vignettes and articles
 
-* Added step-by-step articles on building a first game and a Geometry Dash-style
-  runner.
+* Added a step-by-step article on building a Geometry Dash-style runner.
 * Added a guide explaining when to use browser actions, server actions, or both
   together.
 * Added a tile map tutorial, starting with a simple room and continuing with the

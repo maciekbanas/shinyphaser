@@ -12,9 +12,13 @@ knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
 A tile map describes which small terrain image belongs at each position in
-a grid. **shinyphaser** loads maps exported from [Tiled](https://www.mapeditor.org/)
-and displays them with Phaser. Start with a tiny room made from two tiles,
-then use the Mushroom Swamps map to explore shorelines and larger worlds.
+a grid. **shinyphaser** loads maps in [Tiled](https://www.mapeditor.org/) JSON
+format through Phaser. These files can be generated programmatically, including
+with LLM assistance, or exported from the Tiled editor using a compatible
+configuration. The Swamps RPG map was created with LLM assistance.
+
+Start with a tiny room made from two tiles, then use the Mushroom Swamps map to
+explore shorelines and larger worlds.
 
 ## Start with a tiny room
 
@@ -154,7 +158,11 @@ y <- (row + 0.5) * 100
 These are world coordinates, not screen coordinates. In R, the corresponding
 position in the flat tile-data vector is `row * map$width + column + 1`.
 
-## Create or edit the map in Tiled
+## Alternative workflow: create or edit the map in Tiled
+
+The following workflow describes a Tiled configuration intended to match the
+JSON structure used by the examples. It has not yet been verified with an
+actual editor export; support for every Tiled feature is not implied.
 
 1. Create a finite **Orthogonal** map. For the supplied artwork, choose
    100-pixel tile width and height, and a 32-by-64 map to match Swamps RPG.

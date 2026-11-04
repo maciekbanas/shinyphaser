@@ -112,3 +112,10 @@ shiny::runApp("inst/examples/hedgehog")
 shiny::runApp("inst/examples/geometry_dash")
 shiny::runApp("inst/examples/swamps_rpg")
 ```
+
+## Development
+
+shinyphaser is developed largely with the assistance of OpenAI Codex, under
+human direction and oversight. AI assists with implementation, documentation,
+and tests; the maintainer makes the final decisions and remains responsible
+for the package.
