@@ -120,10 +120,9 @@ can use `activate_map(..., hidden_objects = "tree_footprint")` to disable it.
 
 ## Where pursuit fits
 
-`Sprite$start_approach_on_sight()` remains a convenience for the specific
-wander-alert-pursue behaviour. It also uses distance checks, not occlusion.
-Keep it when that complete behaviour is useful; use proximity events when the
-reaction is revealing, transforming, prompting, playing sound, or changing
-application state. See [Make enemies approach the hero on sight](approach-on-sight.html)
-and [Add close-range combat and life points](combat.html) for those separate
-behaviours.
+`Sprite$set_movement()` provides generic following and wandering without any
+built-in detection radius or alert. Proximity enter and leave actions choose
+between those movement modes, and ordinary text actions display an alert.
+Read [Make enemies approach using proximity](approach-on-sight.html) for the
+complete composition and [Add close-range combat and life points](combat.html)
+for a separate layer of combat rules.

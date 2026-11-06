@@ -381,6 +381,7 @@ function runBrowserAction(action, overlapObjectOne, overlapObjectTwo) {
   }
 
   if (action.stop_motion) stopSpriteMotion(action.stop_motion);
+  if (action.sprite_movement) setSpriteMovement(action.sprite_movement.name, action.sprite_movement.config);
 
   if (action.destroy_sprite) destroySprite(action.destroy_sprite);
   if (action.set_in_motion) {
@@ -495,75 +496,48 @@ function setSpriteInMotion(name, dirX, dirY, speed, distance) {
   });
 }
 
-function startSpriteApproachOnSight(
-  name,
-  targetName,
-  sightRange,
-  speed,
-  distance,
-  checkInterval = 250,
-  alertDuration = 1200,
-  wanderInterval = 1500
-) {
-  if (!GameBridge.sightApproachIntervals) GameBridge.sightApproachIntervals = {};
-  if (GameBridge.sightApproachIntervals[name]) {
-    clearInterval(GameBridge.sightApproachIntervals[name]);
-  }
-
-  GameBridge.sightApproachIntervals[name] = setInterval(() => {
-    const sprite = scene.children.getByName(name);
-    const target = scene.children.getByName(targetName);
-    if (!sprite || !sprite.active || !target || !target.active) return;
-
-    const targetDistance = Phaser.Math.Distance.Between(sprite.x, sprite.y, target.x, target.y);
-    if (targetDistance <= 0 || targetDistance > sightRange) {
-      if (sprite.getData && sprite.getData("sightAlert")) {
-        sprite.setData("sightAlert", null);
+function setSpriteMovement(name, config) {
+  withSprite(name, sprite => {
+    if (sprite.shinyphaserMovementCleanup) sprite.shinyphaserMovementCleanup();
+    if (config.mode === "stop" || !GameBridge.forcedAnimations[name]) stopSpriteMotion(name);
+    if (config.mode === "stop") return;
+    const owner = sprite.scene;
+    let lastStep = -Infinity;
+    const step = () => {
+      if (sprite.shinyphaserMovementCleanup !== cleanup) return;
+      const target = config.mode === "follow" ? owner.children.getByName(config.target_name) : null;
+      if (!sprite.active || (config.mode === "follow" && (!target || !target.active))) {
+        stopSpriteMotion(name);
+        lastStep = -Infinity;
+        return;
       }
-      const lastWander = sprite.getData("lastWander") || 0;
-      if (performance.now() - lastWander >= wanderInterval) {
-        sprite.setData("lastWander", performance.now());
-        const direction = Phaser.Math.RND.pick([[1, 0], [-1, 0], [0, 1], [0, -1]]);
-        setSpriteInMotion(name, direction[0], direction[1], speed, distance);
+      if (GameBridge.forcedAnimations[name] || owner.tweens.isTweening(sprite)) return;
+      const now = owner.time.now;
+      if (now - lastStep < config.interval) return;
+      let dx, dy, distance = config.distance;
+      if (config.mode === "follow") {
+        const gap = Phaser.Math.Distance.Between(sprite.x, sprite.y, target.x, target.y);
+        if (gap <= 0) return;
+        dx = (target.x - sprite.x) / gap;
+        dy = (target.y - sprite.y) / gap;
+        distance = Math.min(distance, gap);
+      } else {
+        [dx, dy] = Phaser.Math.RND.pick([[1, 0], [-1, 0], [0, 1], [0, -1]]);
       }
-      return;
-    }
-
-    if (!sprite.getData("sightAlert")) {
-      sprite.setData("sightAlert", true);
-      scene.tweens.killTweensOf(sprite);
-      if (sprite.body && typeof sprite.body.stop === "function") sprite.body.stop();
-
-      const alertText = scene.add.text(sprite.x, sprite.y - sprite.displayHeight * 0.6, "!", {
-        fontSize: "28px",
-        color: "#ffeb3b",
-        stroke: "#000000",
-        strokeThickness: 4
-      }).setOrigin(0.5).setDepth(10000);
-      scene.tweens.add({
-        targets: alertText,
-        alpha: 0,
-        duration: alertDuration,
-        ease: "Cubic.easeOut",
-        onUpdate: () => {
-          if (!sprite || !sprite.active) return;
-          alertText.setPosition(sprite.x, sprite.y - sprite.displayHeight * 0.6);
-        },
-        onComplete: () => alertText.destroy()
-      });
-    }
-
-    if (GameBridge.forcedAnimations[name]) return;
-    if (scene.tweens.isTweening(sprite)) return;
-
-    setSpriteInMotion(
-      name,
-      (target.x - sprite.x) / targetDistance,
-      (target.y - sprite.y) / targetDistance,
-      speed,
-      Math.min(distance, targetDistance)
-    );
-  }, checkInterval);
+      lastStep = now;
+      setSpriteInMotion(name, dx, dy, config.speed, distance);
+    };
+    const cleanup = () => {
+      owner.events.off("postupdate", step);
+      owner.events.off("shutdown", cleanup);
+      sprite.off("destroy", cleanup);
+      if (sprite.shinyphaserMovementCleanup === cleanup) delete sprite.shinyphaserMovementCleanup;
+    };
+    sprite.shinyphaserMovementCleanup = cleanup;
+    owner.events.on("postupdate", step);
+    owner.events.once("shutdown", cleanup);
+    sprite.once("destroy", cleanup);
+  }, "set_movement()");
 }
 
 function constrainedTerrainMotionEnd(sprite, dirX, dirY, distance) {

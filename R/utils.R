@@ -150,6 +150,12 @@ compile_phaser_action_call <- function(expr, env) {
       actions = compile_phaser_action(arg_exprs[[2]], env)
     )))
   }
+  if (inherits(target, "Sprite") && method == "set_movement") {
+    matched <- as.list(match.call(definition = target$set_movement, call = expr))[-1]
+    matched <- lapply(matched, compile_phaser_value, env = env)
+    return(list(sprite_movement = list(name = target$.__enclos_env__$private$name,
+      config = do.call(sprite_movement_spec, matched))))
+  }
   args <- lapply(arg_exprs, compile_phaser_value, env = env)
   arg_names <- names(as.list(expr)[-1])
   if (is.null(arg_names)) arg_names <- rep("", length(args))
@@ -251,4 +257,28 @@ compile_phaser_action_call <- function(expr, env) {
             class(target)[[1]], method),
     call. = FALSE
   )
+}
+
+# Shared validation for direct R calls and compiled browser actions.
+sprite_movement_spec <- function(mode = NULL, target_name = NULL, speed = 100, distance = 45, interval = 250) {
+  if (!is.character(mode) || length(mode) != 1L || is.na(mode) ||
+      !mode %in% c("follow", "wander", "stop")) {
+    stop("mode must be follow, wander, or stop.", call. = FALSE)
+  }
+  if (mode == "follow") {
+    if (!is.character(target_name) || length(target_name) != 1L ||
+        is.na(target_name) || !nzchar(target_name)) {
+      stop("target_name is required for follow mode.", call. = FALSE)
+    }
+  } else if (!is.null(target_name)) {
+    stop("target_name is only used in follow mode.", call. = FALSE)
+  }
+  for (key in c("speed", "distance", "interval")) {
+    value <- get(key)
+    if (!is.numeric(value) || length(value) != 1L || !is.finite(value) || value <= 0) {
+      stop(key, " must be a finite positive number.", call. = FALSE)
+    }
+  }
+  list(mode = mode, target_name = target_name, speed = speed,
+       distance = distance, interval = interval)
 }

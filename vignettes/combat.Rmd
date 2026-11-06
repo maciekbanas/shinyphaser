@@ -216,7 +216,7 @@ The example's save directory is private to its Shiny session and is deleted
 when that session ends.
 
 Enemy detection and pursuit are separate from these combat rules. Read
-[Make enemies approach the hero on sight](approach-on-sight.html) to configure
+[Make enemies approach using proximity](approach-on-sight.html) to configure
 how the encounter begins, and
 [Walk behind scenery and block its footprint](scenery-and-collision.html) for
 the surrounding trees and bushes.

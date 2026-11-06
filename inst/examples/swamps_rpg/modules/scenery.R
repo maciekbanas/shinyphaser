@@ -30,10 +30,23 @@ for (direction in c("down", "up", "left", "right")) {
 }
 game$enable_terrain_collision("mushroom")
 for (name in scenery_layout$name) game$add_collider("mushroom", paste0(name, "_footprint"))
-mushroom$start_approach_on_sight(
-  "hero", sight_range = 240, speed = 85, distance = 45,
-  check_interval = 100, wander_interval = 1500
-)
+# Detection, movement, and alert presentation are independent.
+alert <- game$add_text("Mushroom noticed you!", "enemy_alert", 300, 20, visible = FALSE)
+alert$set_scroll_factor(0)
+alert$set_depth(10000)
+mushroom$set_movement("wander", speed = 85, distance = 45, interval = 1500)
+game$add_proximity_trigger("mushroom_enter", "mushroom", target_name = "hero",
+  radius = 240, context = "mushroom_swamps", event = "enter",
+  browser_action = browser_actions({
+    alert$show()
+    mushroom$set_movement("follow", target_name = "hero", speed = 85, distance = 45, interval = 100)
+  }))
+game$add_proximity_trigger("mushroom_leave", "mushroom", target_name = "hero",
+  radius = 240, context = "mushroom_swamps", event = "leave",
+  browser_action = browser_actions({
+    alert$hide()
+    mushroom$set_movement("wander", speed = 85, distance = 45, interval = 1500)
+  }))
 
 # Simple colored markers keep the objective visible without extra artwork.
 key <- game$add_rectangle("key", 650, 1090, 24, 32, "0xffd34e")

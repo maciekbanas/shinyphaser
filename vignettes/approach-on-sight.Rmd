@@ -1,8 +1,8 @@
 ---
-title: "Make enemies approach the hero on sight"
+title: "Make enemies approach using proximity"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Make enemies approach the hero on sight}
+  %\VignetteIndexEntry{Make enemies approach using proximity}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,14 +11,16 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-An enemy can wander until the hero gets close, show an alert, and then move
-toward the hero. `Sprite$start_approach_on_sight()` handles these reactions in
-the browser, so you do not need an R timer or custom JavaScript.
+An enemy can wander until the hero gets close, display an alert, and then
+follow the hero. Compose three independent parts: proximity events detect
+entering and leaving range, `Sprite$set_movement()` chooses following or
+wandering, and ordinary text actions display feedback. All run in the browser,
+without an R timer or custom JavaScript.
 
-This is a convenience for wandering, alerting, and pursuit. Detection uses
-distance, not visibility through walls. For other reactions, such as a tree
-becoming a monster or an interaction prompt appearing, use the composable
-[proximity events](proximity-events.html) instead.
+This is distance-based detection, not line of sight through walls. The same
+movement methods can drive animals, guides, vehicles, or simulation agents;
+the same proximity events can reveal a door or transform a tree into a monster.
+See [React to proximity](proximity-events.html) for those other reactions.
 
 ```{r, echo=FALSE}
 knitr::include_graphics("assets/approaching.gif")
@@ -38,7 +40,7 @@ shiny::runApp("inst/examples/swamps_rpg")
 
 Here is a complete small app using the artwork bundled with Swamps RPG. Save
 it as `app.R` in a Shiny app directory. Move with the arrow keys and approach
-the mushroom enemy. It shows a yellow `!` when it notices the hero.
+the mushroom enemy. It displays an alert when it notices the hero.
 
 ```{r approach-app, eval=FALSE}
 library(shiny)
@@ -91,10 +93,19 @@ server <- function(input, output, session) {
     status$set("Contact! Move away to escape.")
   }))
 
-  enemy$start_approach_on_sight(
-    target_name = "hero", sight_range = 300, speed = 100, distance = 60,
-    check_interval = 250, alert_duration = 1200, wander_interval = 1500
-  )
+  alert <- game$add_text("Enemy noticed you!", "alert", 24, 60, visible = FALSE)
+  enemy$set_movement("wander", speed = 100, distance = 60, interval = 1500)
+  game$add_proximity_trigger("enemy_enter", "mushroom", target_name = "hero",
+    radius = 300, event = "enter", browser_action = browser_actions({
+      alert$show()
+      enemy$set_movement("follow", target_name = "hero", speed = 100,
+                         distance = 60, interval = 100)
+    }))
+  game$add_proximity_trigger("enemy_leave", "mushroom", target_name = "hero",
+    radius = 300, event = "leave", browser_action = browser_actions({
+      alert$hide()
+      enemy$set_movement("wander", speed = 100, distance = 60, interval = 1500)
+    }))
 }
 
 shinyApp(ui, server)
@@ -106,44 +117,46 @@ Directional animations use the suffixes `move_left`, `move_right`, `move_up`,
 and `move_down`. The runtime selects an available movement animation, falling
 back to `move` or `idle` when directional animations are absent.
 
-## Configure the approach
+## Configure detection and movement independently
 
-Call the method once during enemy setup, after binding the game to its Shiny
-session. Its sight checks wait until both sprites exist and are active.
+The proximity radius belongs to the triggers; the movement controller has no
+range or alert rules. Use the same radius on enter and leave triggers. Give
+triggers unique IDs and use `context` in a multi-map game to restrict detection
+to the appropriate map.
 
-| Argument | Meaning |
+| Setting | Meaning |
 |---|---|
-| `target_name` | Name passed to `add_sprite()` for the target |
-| `sight_range` | Detection radius in pixels, measured between sprite positions |
-| `speed` | Movement speed in pixels per second, for approach and wandering |
+| Trigger `radius` | Distance between object centers that counts as near |
+| Movement `mode` | `"follow"`, `"wander"`, or `"stop"` |
+| `target_name` | Active scene object to follow; used only in follow mode |
+| `speed` | Pixels per second |
 | `distance` | Maximum length of each movement step in pixels |
-| `check_interval` | Milliseconds between detection checks |
-| `alert_duration` | Milliseconds over which the yellow `!` fades |
-| `wander_interval` | Minimum milliseconds between attempts to wander while out of range |
+| `interval` | Minimum milliseconds between the starts of movement steps |
 
-Use positive values for distances, speed, and timing. A smaller `distance`
-produces shorter steps, allowing the enemy to adjust direction more often.
-A lower `check_interval` makes detection more responsive, but does not restart
-an approach step that is already running. Calling the method again for the
-same enemy replaces its sight-check timer with the new settings.
+Following recomputes the direction towards the target between steps and caps
+the step at the remaining distance. Wandering chooses a random cardinal
+direction. Neither mode performs pathfinding: colliding terrain can shorten or
+prevent a step. Smaller steps adjust direction more frequently.
 
-## Understand the behavior
+The controller waits for its sprite to load. Inactive actors and missing or
+inactive targets pause movement. Forced animations pause new steps without
+cancelling a knockback tween, so the combat module can interrupt pursuit and
+let it resume after the reaction.
 
-- **Outside the radius:** the enemy periodically chooses a random horizontal
-  or vertical direction and wanders using the configured speed and step size.
-- **Entering the radius:** the enemy interrupts its wandering movement and
-  displays a yellow `!` above its head.
-- **While approaching:** the enemy moves toward the hero in steps, choosing
-  a new direction between steps. A step is capped at the current distance to
-  the hero. Forced animations, such as an attack or damage reaction, postpone
-  new approach steps until they finish.
-- **Leaving the radius:** the enemy returns to wandering. Re-entering the
-  radius can trigger another alert.
+## Stop, replace, and clean up movement
 
-Here, “sight” means a distance check. It does not check the enemy's facing
-direction or test whether a wall or tree hides the hero. Movement is a direct
-approach, not pathfinding around obstacles. Configure terrain and collision
-separately, and do not assume that this method will find a route through a maze.
+```{r eval=FALSE}
+enemy$stop_motion()          # Interrupt the current step; its controller remains.
+enemy$set_movement("stop")   # Stop the controller and current movement.
+```
+
+Calling `set_movement()` replaces the actor's previous controller. Destroying
+the sprite or shutting down its scene removes the controller. You do not need
+an R timer or manual browser interval cleanup.
+
+The alert is independent: use text visibility, sound, or another browser action
+on proximity entry and departure. The example shows its message while the hero
+is nearby; it does not build alert presentation into movement.
 
 ## Keep contact and combat separate
 
