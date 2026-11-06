@@ -30,7 +30,7 @@ with PhaserGame$add_sprite() method.
 \item \href{#method-Sprite-set_bounce}{\code{Sprite$set_bounce()}}
 \item \href{#method-Sprite-destroy}{\code{Sprite$destroy()}}
 \item \href{#method-Sprite-set_in_motion}{\code{Sprite$set_in_motion()}}
-\item \href{#method-Sprite-start_approach_on_sight}{\code{Sprite$start_approach_on_sight()}}
+\item \href{#method-Sprite-set_movement}{\code{Sprite$set_movement()}}
 \item \href{#method-Sprite-clone}{\code{Sprite$clone()}}
 }
 }
@@ -444,44 +444,47 @@ Move sprite along a vector for a set distance.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-Sprite-start_approach_on_sight"></a>}}
-\if{latex}{\out{\hypertarget{method-Sprite-start_approach_on_sight}{}}}
-\subsection{Method \code{start_approach_on_sight()}}{
-Start client-side sight checks that make this sprite alert,
-wander while the target is out of range, and approach the target when
-it is in range. This is a reusable browser-side behaviour rather than
-an RPG-specific rule.
+\if{html}{\out{<a id="method-Sprite-set_movement"></a>}}
+\if{latex}{\out{\hypertarget{method-Sprite-set_movement}{}}}
+\subsection{Method \code{set_movement()}}{
+Configure browser-side movement independently of detection.
+Follow a moving target, wander randomly, or stop autonomous movement.
+Also supported in \code{\link[=browser_actions]{browser_actions()}}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{Sprite$start_approach_on_sight(
-  target_name,
-  sight_range,
-  speed,
-  distance,
-  check_interval = 250,
-  alert_duration = 1200,
-  wander_interval = 1500
+\if{html}{\out{<div class="r">}}\preformatted{Sprite$set_movement(
+  mode,
+  target_name = NULL,
+  speed = 100,
+  distance = 45,
+  interval = 250
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{target_name}}{Character. Name of the target sprite to approach.}
+\item{\code{mode}}{Character. \code{"follow"}, \code{"wander"}, or \code{"stop"}.}
 
-\item{\code{sight_range}}{Numeric. Maximum distance in pixels at which the target is noticed.}
+\item{\code{target_name}}{Character or \code{NULL}. Active scene object to follow;
+required for \code{"follow"} and omitted for other modes.}
 
-\item{\code{speed}}{Numeric. Approach speed in pixels/second.}
+\item{\code{speed}}{Numeric. Positive speed in pixels per second.}
 
-\item{\code{distance}}{Numeric. Distance in pixels to travel for each approach step.}
+\item{\code{distance}}{Numeric. Positive maximum distance per movement step.}
 
-\item{\code{check_interval}}{Numeric. Milliseconds between sight checks.}
-
-\item{\code{alert_duration}}{Numeric. Milliseconds to show the alert while approaching.}
-
-\item{\code{wander_interval}}{Numeric. Milliseconds between random movements while the target is out of sight.}
+\item{\code{interval}}{Numeric. Positive minimum milliseconds between step starts.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+Steps respect colliding terrain, but do not find paths around
+obstacles. Forced animations pause new steps without cancelling knockback.
+Inactive actors and unavailable targets pause movement. \code{stop_motion()}
+interrupts only the current step; \code{set_movement("stop")} also removes
+the automatic controller. Controllers are cleaned up on replacement,
+destruction, and scene shutdown.
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-Sprite-clone"></a>}}

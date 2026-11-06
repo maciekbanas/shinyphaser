@@ -114,7 +114,7 @@ test_that("Sprite utility methods send expected JS", {
   s$set_gravity(1, 2)
   s$set_bounce(0.5)
   s$set_in_motion(1, 0, 90, 45, lag = 0)
-  s$start_approach_on_sight("mushroom_man", 500, 120, 80, 250, 1200)
+  s$set_movement("follow", "mushroom_man", speed = 120, distance = 80, interval = 250)
   s$destroy()
 
   msgs <- vapply(session$get_messages(), function(m) m$message$js, character(1))
@@ -131,7 +131,7 @@ test_that("Sprite utility methods send expected JS", {
   expect_true(any(grepl("setGravity\\('hero', 1, 2\\);", msgs)))
   expect_true(any(grepl("setBounce\\('hero', 0.500000\\);", msgs)))
   expect_true(any(grepl("setSpriteInMotion\\('hero', 1, 0, 90, 45\\);", msgs)))
-  expect_true(any(grepl('startSpriteApproachOnSight("hero", "mushroom_man", 500.000000, 120.000000, 80.000000, 250.000000, 1200.000000, 1500.000000);', msgs, fixed = TRUE)))
+  expect_true(any(grepl('setSpriteMovement("hero", {"mode":"follow","target_name":"mushroom_man","speed":120,"distance":80,"interval":250});', msgs, fixed = TRUE)))
   expect_true(any(grepl("destroySprite\\('hero'\\);", msgs)))
 })
 
@@ -271,8 +271,8 @@ test_that("add_proximity_trigger sends generic trigger configuration", {
   msgs <- vapply(session$get_messages(), function(m) m$message$js, character(1))
   expect_true(any(grepl(
     paste0(
-      'addProximityTrigger("checkpoint", "vehicle", 120.000000, 240.000000, ',
-      '75.000000, "checkpoint_prompt", null, "checkpoint_state");'
+      'addProximityTrigger("checkpoint", "vehicle", 120, 240, ',
+      '75, "checkpoint_prompt", null, "checkpoint_state", null, "both", false, null);'
     ),
     msgs, fixed = TRUE
   )))
@@ -497,30 +497,6 @@ test_that("image visibility waits for asynchronously loaded images", {
   )
 })
 
-test_that("sight approach does not restart active movement or hide alerts", {
-  sprite_js <- readLines(
-    system.file("www", "phaser-sprite.js", package = "shinyphaser"),
-    warn = FALSE
-  )
-  sight_start <- grep("function startSpriteApproachOnSight", sprite_js, fixed = TRUE)
-  sight_end <- grep("function constrainedTerrainMotionEnd", sprite_js, fixed = TRUE)
-  sight_code <- sprite_js[sight_start:(sight_end - 1)]
-
-  forced_guard <- grep("if (GameBridge.forcedAnimations[name]) return;", sight_code, fixed = TRUE)
-  alert_creation <- grep('scene.add.text(sprite.x, sprite.y - sprite.displayHeight * 0.6, "!"', sight_code, fixed = TRUE)
-  movement_guard <- grep("if (scene.tweens.isTweening(sprite)) return;", sight_code, fixed = TRUE)
-  approach_move <- grep("setSpriteInMotion(", sight_code, fixed = TRUE)
-  delayed_approach <- grep('setData("sightAlertUntil", now + alertDuration)', sight_code, fixed = TRUE)
-
-  expect_length(forced_guard, 1)
-  expect_length(alert_creation, 1)
-  expect_length(movement_guard, 1)
-  expect_length(delayed_approach, 0)
-  expect_lt(alert_creation, forced_guard)
-  expect_lt(forced_guard, movement_guard)
-  expect_lt(movement_guard, approach_move[[length(approach_move)]])
-})
-
 test_that("recent movement selects four-way directional attack animations", {
   game_js <- readLines(system.file("www", "phaser-game.js", package = "shinyphaser"), warn = FALSE)
   sprite_js <- readLines(system.file("www", "phaser-sprite.js", package = "shinyphaser"), warn = FALSE)
@@ -549,8 +525,6 @@ test_that("browser feedback is configured for immediate visibility and audio", {
 
   expect_true(any(grepl('context.state === "suspended"', game_js, fixed = TRUE)))
   expect_true(any(grepl("context.resume().then", game_js, fixed = TRUE)))
-  expect_true(any(grepl("setDepth(10000)", sprite_js, fixed = TRUE)))
-  expect_true(any(grepl("alertText.setPosition(sprite.x", sprite_js, fixed = TRUE)))
   expect_true(any(grepl("filecomplete-audio-${name}", game_js, fixed = TRUE)))
   expect_true(any(grepl("if (!scene.load.isLoading()) scene.load.start()", game_js, fixed = TRUE)))
   expect_true(any(grepl("() => addCollider(objectOneName", game_js, fixed = TRUE)))

@@ -252,31 +252,27 @@ Sprite <- R6::R6Class(
       send_js(private, js)
     },
 
-    #' @description Start client-side sight checks that make this sprite alert,
-    #'   wander while the target is out of range, and approach the target when
-    #'   it is in range. This is a reusable browser-side behaviour rather than
-    #'   an RPG-specific rule.
-    #' @param target_name Character. Name of the target sprite to approach.
-    #' @param sight_range Numeric. Maximum distance in pixels at which the target is noticed.
-    #' @param speed Numeric. Approach speed in pixels/second.
-    #' @param distance Numeric. Distance in pixels to travel for each approach step.
-    #' @param check_interval Numeric. Milliseconds between sight checks.
-    #' @param alert_duration Numeric. Milliseconds to show the alert while approaching.
-    #' @param wander_interval Numeric. Milliseconds between random movements while the target is out of sight.
-    start_approach_on_sight = function(target_name,
-                                       sight_range,
-                                       speed,
-                                       distance,
-                                       check_interval = 250,
-                                       alert_duration = 1200,
-                                       wander_interval = 1500) {
-      js <- sprintf(
-        "startSpriteApproachOnSight(%s, %s, %f, %f, %f, %f, %f, %f);",
+    #' @description Configure browser-side movement independently of detection.
+    #'   Follow a moving target, wander randomly, or stop autonomous movement.
+    #'   Also supported in [browser_actions()].
+    #' @param mode Character. `"follow"`, `"wander"`, or `"stop"`.
+    #' @param target_name Character or `NULL`. Active scene object to follow;
+    #'   required for `"follow"` and omitted for other modes.
+    #' @param speed Numeric. Positive speed in pixels per second.
+    #' @param distance Numeric. Positive maximum distance per movement step.
+    #' @param interval Numeric. Positive minimum milliseconds between step starts.
+    #' @details Steps respect colliding terrain, but do not find paths around
+    #'   obstacles. Forced animations pause new steps without cancelling knockback.
+    #'   Inactive actors and unavailable targets pause movement. `stop_motion()`
+    #'   interrupts only the current step; `set_movement("stop")` also removes
+    #'   the automatic controller. Controllers are cleaned up on replacement,
+    #'   destruction, and scene shutdown.
+    set_movement = function(mode, target_name = NULL, speed = 100,
+                            distance = 45, interval = 250) {
+      config <- sprite_movement_spec(mode, target_name, speed, distance, interval)
+      send_js(private, sprintf("setSpriteMovement(%s, %s);",
         jsonlite::toJSON(private$name, auto_unbox = TRUE),
-        jsonlite::toJSON(target_name, auto_unbox = TRUE),
-        sight_range, speed, distance, check_interval, alert_duration, wander_interval
-      )
-      send_js(private, js)
+        jsonlite::toJSON(config, auto_unbox = TRUE, null = "null")))
     }
   ),
   private = list(

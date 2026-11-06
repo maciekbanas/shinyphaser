@@ -520,9 +520,11 @@ function applyRealmObjectVisibility(name) {
   if (object.body) object.body.enable = visible;
 }
 
-function addProximityTrigger(id, objectName, x, y, radius, elementId, context, inputId) {
+function addProximityTrigger(id, objectName, x, y, radius, elementId, context, inputId,
+                             targetName = null, event = "both", once = false, browserActions = []) {
   GameBridge.proximityTriggers[id] = {
-    objectName, x, y, radius, elementId, context, inputId, active: false
+    objectName, x, y, radius, elementId, context, inputId, targetName, event, once,
+    browserActions, active: false, fired: false
   };
   updateProximityTriggers();
 }
@@ -536,9 +538,13 @@ function updateProximityTriggers() {
     const contextActive = trigger.context === null ||
       trigger.context === GameBridge.activeMapKey;
     const object = contextActive && scene && scene.children.getByName(trigger.objectName);
-    const active = Boolean(object && Phaser.Math.Distance.Between(
-      object.x, object.y, trigger.x, trigger.y
-    ) <= trigger.radius);
+    const target = trigger.targetName == null ? null :
+      scene && scene.children.getByName(trigger.targetName);
+    const targetX = target ? target.x : trigger.x;
+    const targetY = target ? target.y : trigger.y;
+    const targetReady = trigger.targetName == null || (target && target.active !== false);
+    const active = Boolean(object && object.active !== false && targetReady &&
+      Phaser.Math.Distance.Between(object.x, object.y, targetX, targetY) <= trigger.radius);
 
     if (trigger.elementId) {
       elementVisibility[trigger.elementId] = Boolean(
@@ -548,11 +554,18 @@ function updateProximityTriggers() {
 
     if (active !== trigger.active) {
       trigger.active = active;
-      sendPhaserEvent(trigger.inputId, {
-        id, active, objectName: trigger.objectName,
+      const event = active ? "enter" : "leave";
+      if ((trigger.event !== "both" && trigger.event !== event) ||
+          (trigger.once && trigger.fired)) return;
+      trigger.fired = true;
+      const payload = {
+        id, active, event, objectName: trigger.objectName,
+        targetName: trigger.targetName, targetX, targetY,
         x: object?.x, y: object?.y,
         evt_nonce: Date.now() + Math.random()
-      });
+      };
+      runBrowserActionList(trigger.browserActions, object, target);
+      sendPhaserEvent(trigger.inputId, payload);
     }
   });
 

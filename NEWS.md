@@ -54,16 +54,18 @@ Existing apps need to update their event handlers to use the explicit
   maps registered with `PhaserGame$add_map()` are loaded in sequence, and map
   activation updates terrain collision, camera and world bounds, the player
   position, and map-specific scene-object visibility.
-* Added `PhaserGame$add_proximity_trigger()` for monitoring when a scene object
-  is near a point, optionally showing an HTML element or notifying a Shiny input.
+* Added `PhaserGame$add_proximity_trigger()` for distance-based entry and leave
+  events around points or moving scene objects, with one-time reactions, browser
+  actions, R callbacks, and optional HTML prompts.
 
 ### Sprite
 
 * Added `Sprite$set_body_size()` for frame-relative collision bodies and
   `Sprite$set_depth_by_y()` for automatic browser-side depth ordering.
 
-* Added `Sprite$start_approach_on_sight()` for browser-side wandering, sight
-  checks, alerts, and movement toward a target sprite.
+* Added `Sprite$set_movement()` for browser-side following, wandering, and
+  stopping. Proximity events independently select movement and display alerts;
+  forced hit animations pause new steps while allowing knockback.
 * Added `Sprite$set_player_animation_prefix()` for switching the idle and directional movement animation set used by player controls at runtime.
 * Added `Sprite$stop_motion()` for immediately cancelling scripted sprite
   movement, including from `browser_actions()`.
@@ -100,10 +102,12 @@ Existing apps need to update their event handlers to use the explicit
   together.
 * Added a tile map tutorial, starting with a simple room and continuing with the
   Swamps RPG map, terrain collision, and shoreline tiles.
-* Added guides on making enemies approach the hero on sight and letting the
+* Added guides on making enemies approach the hero using proximity and letting the
   hero walk behind scenery while blocking tree trunks and bush footprints.
 * Added a combat tutorial covering close-range attacks, damage cooldowns,
   life points, defeat, and saving combat state.
+* Added a proximity events article and a small tree-to-monster transformation
+  example (`proximity-transformation`) using the R interface.
 * Organized articles into "Simple game examples", "General", and "Advanced
   features" sections.
 

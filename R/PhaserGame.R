@@ -243,30 +243,71 @@ PhaserGame <- R6::R6Class(
       send_js(private, js)
     },
 
-    #' @description Add a trigger that monitors when a scene object is near a point.
-    #' @param id Character. Unique trigger identifier.
-    #' @param object_name Character. Scene object whose position is monitored.
-    #' @param x Numeric. Target x-coordinate.
-    #' @param y Numeric. Target y-coordinate.
-    #' @param radius Numeric. Maximum distance at which the trigger is active.
-    #' @param element_id Character or `NULL`. ID of an HTML element to show while
-    #'   the trigger is active.
-    #' @param context Character or `NULL`. Optional map key that must be active for
-    #'   the trigger to be evaluated.
-    #' @param input_id Character or `NULL`. Optional Shiny input that receives a
-    #'   payload whenever the trigger is entered or exited.
+    #' @description React when an active scene object enters or leaves a radius
+    #'   around a point or another active scene object. This detects distance,
+    #'   not line of sight through obstacles.
+    #' @param id Character. Unique trigger identifier. Reusing it replaces the trigger.
+    #' @param object_name Character. Name of the monitored scene object.
+    #' @param x,y Numeric or `NULL`. Fixed target coordinates; omit when using
+    #'   `target_name`.
+    #' @param radius Numeric. Non-negative detection radius in pixels.
+    #' @param element_id Character or `NULL`. HTML element to show while near,
+    #'   independently of the event filter and `once`.
+    #' @param context Character or `NULL`. Map key required for detection.
+    #' @param input_id Character or `NULL`. Optional Shiny input receiving matching
+    #'   transitions. Existing point triggers continue to report both transitions.
+    #' @param target_name Character or `NULL`. Scene object whose current position
+    #'   is the target. Use this instead of `x` and `y` for moving targets.
+    #' @param event Character. `"both"` (default), `"enter"`, or `"leave"`.
+    #' @param once Logical. Fire only the first matching transition. Re-registering
+    #'   the trigger resets it. Detection and HTML visibility continue afterwards.
+    #' @param browser_action Actions created with [browser_actions()] to run locally
+    #'   on matching transitions.
+    #' @param input Shiny input list, required with `server_action`.
+    #' @param server_action Optional R callback receiving `active`, `event`, object
+    #'   and target names, and coordinates. Uses `input_id` or `proximity_<id>`.
     #' @return Invisible; sends a custom message to the client.
-    add_proximity_trigger = function(id, object_name, x, y, radius = 180,
+    add_proximity_trigger = function(id, object_name, x = NULL, y = NULL, radius = 180,
                                      element_id = NULL, context = NULL,
-                                     input_id = NULL) {
+                                     input_id = NULL, target_name = NULL,
+                                     event = c("both", "enter", "leave"), once = FALSE,
+                                     browser_action = browser_actions(), input = NULL,
+                                     server_action = NULL) {
+      event <- match.arg(event)
+      name_value <- function(value, label, optional = FALSE) {
+        if (optional && is.null(value)) return(invisible(NULL))
+        if (!is.character(value) || length(value) != 1L || is.na(value) || !nzchar(value)) {
+          stop(label, " must be a non-empty character scalar.", call. = FALSE)
+        }
+      }
+      finite_number <- function(value) is.numeric(value) && length(value) == 1L && is.finite(value)
+      name_value(id, "id")
+      name_value(object_name, "object_name")
+      name_value(target_name, "target_name", TRUE)
+      name_value(input_id, "input_id", TRUE)
+      name_value(context, "context", TRUE)
+      name_value(element_id, "element_id", TRUE)
+      if (is.null(target_name)) {
+        if (!finite_number(x) || !finite_number(y)) {
+          stop("Supply finite x and y coordinates or target_name.", call. = FALSE)
+        }
+      } else if (!is.null(x) || !is.null(y)) {
+        stop("Use target_name or x and y, not both.", call. = FALSE)
+      }
+      if (!finite_number(radius) || radius < 0) stop("radius must be finite and non-negative.", call. = FALSE)
+      if (!is.logical(once) || length(once) != 1L || is.na(once)) stop("once must be TRUE or FALSE.", call. = FALSE)
+      browser_spec <- compile_browser_actions(substitute(browser_action), parent.frame())
+      endpoint <- input_id
+      if (!is.null(server_action) && is.null(endpoint)) endpoint <- paste0("proximity_", id)
+      observer <- register_server_action(input, endpoint, server_action)
+      previous <- private$proximity_observers[[id]]
+      if (!is.null(previous)) previous$destroy()
+      private$proximity_observers[[id]] <- observer
+      json <- function(value) jsonlite::toJSON(value, auto_unbox = TRUE, null = "null")
       js <- sprintf(
-        "addProximityTrigger(%s, %s, %f, %f, %f, %s, %s, %s);",
-        jsonlite::toJSON(id, auto_unbox = TRUE),
-        jsonlite::toJSON(object_name, auto_unbox = TRUE),
-        x, y, radius,
-        jsonlite::toJSON(element_id, auto_unbox = TRUE, null = "null"),
-        jsonlite::toJSON(context, auto_unbox = TRUE, null = "null"),
-        jsonlite::toJSON(input_id, auto_unbox = TRUE, null = "null")
+        "addProximityTrigger(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+        json(id), json(object_name), json(x), json(y), json(radius), json(element_id),
+        json(context), json(endpoint), json(target_name), json(event), json(once), json(browser_spec)
       )
       send_js(private, js)
     },
@@ -514,6 +555,7 @@ PhaserGame <- R6::R6Class(
    }
   ),
   private = list(
+    proximity_observers = list(),
     config = list(),
     input = NULL,
     session = NULL,

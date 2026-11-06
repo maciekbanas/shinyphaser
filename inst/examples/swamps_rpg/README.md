@@ -45,6 +45,8 @@ Its server sources these focused modules in order:
 - `hero.R`: movement animations, controls, foot-sized body, and depth sorting.
 - `scenery_layout.R`: the small, deliberate scenery layout (loaded by `app.R`).
 - `scenery.R`: scenery art and footprints, one enemy, markers, and sound.
+  Proximity entry/leave events independently select follow/wander movement and
+  show/hide an alert.
 - `combat.R`: attacks, contact damage, cooldowns, health display, and defeat.
 - `navigation.R`: proximity triggers, key/door objective, and restart.
 - `saving.R`: save/load using the package's R interface.

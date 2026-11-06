@@ -56,7 +56,7 @@ pak::pak("maciekbanas/shinyphaser")
 Phaser API. Alongside wrappers for scene objects and physics operations, it
 includes reusable, browser-side behaviours when they remove substantial Shiny
 round trips and are useful across game genres. For example,
-`Sprite$start_approach_on_sight()` can drive guards, animals, vehicles, or
+`Sprite$set_movement()` can drive guards, animals, vehicles, or
 simulation agents.
 
 Higher-level helpers belong in the package when they:
