@@ -271,8 +271,8 @@ test_that("add_proximity_trigger sends generic trigger configuration", {
   msgs <- vapply(session$get_messages(), function(m) m$message$js, character(1))
   expect_true(any(grepl(
     paste0(
-      'addProximityTrigger("checkpoint", "vehicle", 120.000000, 240.000000, ',
-      '75.000000, "checkpoint_prompt", null, "checkpoint_state");'
+      'addProximityTrigger("checkpoint", "vehicle", 120, 240, ',
+      '75, "checkpoint_prompt", null, "checkpoint_state", null, "both", false, null);'
     ),
     msgs, fixed = TRUE
   )))

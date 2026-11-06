@@ -1,0 +1,129 @@
+---
+title: "React to proximity"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{React to proximity}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+Detection and reaction can be separate. A hero entering an area might reveal a
+door, play a sound, display an interaction prompt, or turn a tree into a monster.
+`PhaserGame$add_proximity_trigger()` detects a distance transition; ordinary
+browser or server actions decide what happens next.
+
+This is **proximity**, not line of sight: it compares object centers and does
+not check facing direction, artwork bounds, walls, or other obstructions.
+
+## Try a one-time transformation
+
+With the current package installed, run from the repository root:
+
+```{r eval=FALSE}
+shiny::runApp("inst/examples/proximity-transformation")
+```
+
+Move towards the tree with the arrow keys. Entering its 180-pixel radius hides
+the tree and shows a prepared monster, entirely in the browser. Leaving and
+returning does not repeat the reaction. Reload the app to reset it.
+
+The complete example is:
+
+```{r transformation-source, echo=FALSE, results='asis'}
+app_file <- system.file("examples", "proximity-transformation", "app.R",
+                        package = "shinyphaser")
+cat("```r\n", paste(readLines(app_file), collapse = "\n"), "\n```\n", sep = "")
+```
+
+`once = TRUE` fires only the first matching event. The tree and monster are
+created ahead of time; the reaction changes visibility rather than dynamically
+constructing a new actor. The monster stays in place. Pursuit and combat are
+independent behaviours you can add afterwards.
+
+## Choose a point or a moving target
+
+Use `x` and `y` for a fixed point, as existing Swamps RPG doorway and key
+triggers do:
+
+```{r eval=FALSE}
+game$add_proximity_trigger("door", "hero", x = 1450, y = 150,
+  radius = 45, context = "mushroom_swamps", input_id = "near_door")
+```
+
+Use `target_name` instead of `x` and `y` to follow another scene object's
+current position. Both the monitored object and target must exist and be
+active. A hidden object can still be active: `hide()` changes visibility,
+whereas map activation can also deactivate its body and scene activity.
+A missing or inactive target is out of range. Objects that load asynchronously
+are detected once they become available.
+
+## React on entry and departure
+
+The default `event = "both"` reports entering and leaving. Use `"enter"` or
+`"leave"` for separate reactions. For example, after creating a guide and hint:
+
+```{r eval=FALSE}
+game$add_proximity_trigger("guide_enter", "hero", target_name = "guide",
+  radius = 120, event = "enter",
+  browser_action = browser_actions({hint$show()}))
+game$add_proximity_trigger("guide_leave", "hero", target_name = "guide",
+  radius = 120, event = "leave",
+  browser_action = browser_actions({hint$hide()}))
+```
+
+These are edge events: staying within the radius does not repeatedly execute
+the action. An object initially inside counts as an entry. An initial outside
+state does not count as a departure. Leaving the configured map, or deactivating
+an object, also ends proximity and can produce a leave event.
+
+The optional `element_id` maintains an HTML element's visibility while near,
+independently of `event` and `once`. If several triggers use the same element,
+it remains visible while any of them is near.
+
+## Run R logic when needed
+
+Supply `input` and `server_action` for application state or Shiny UI updates:
+
+```{r eval=FALSE}
+game$add_proximity_trigger("guide", "hero", target_name = "guide",
+  radius = 120, event = "enter", input = input,
+  server_action = function(event) {
+    shiny::showNotification("The guide is nearby.")
+  })
+```
+
+The callback receives `id`, `active`, `event`, `objectName`, `targetName`, the
+monitored object's `x` and `y`, and `targetX` and `targetY`. It uses a Shiny input
+named `proximity_<id>` unless you specify `input_id`. Existing `input_id`
+observers remain supported; no server input is sent when neither `input_id`
+nor `server_action` is supplied. You may combine browser and server actions.
+
+For a transformation that changes gameplay state, record that state in R as
+well, and restore it when loading a game. `once` is browser-session trigger
+state; it is not automatically persisted by `save_game()`.
+
+## Replace or rearm a trigger
+
+Calling `add_proximity_trigger()` with the same `id` replaces its configuration,
+resets its detection and one-time state, and replaces its R callback. If the
+object is already inside, re-registering can immediately produce an entry.
+Use distinct IDs for separate enter and leave reactions.
+
+The transformation demo has no tree collision body. If your tree has a separate
+solid footprint, hiding its artwork does not remove that footprint. Update the
+physics as part of the transformation too; for a map-based game, an R callback
+can use `activate_map(..., hidden_objects = "tree_footprint")` to disable it.
+
+## Where pursuit fits
+
+`Sprite$start_approach_on_sight()` remains a convenience for the specific
+wander-alert-pursue behaviour. It also uses distance checks, not occlusion.
+Keep it when that complete behaviour is useful; use proximity events when the
+reaction is revealing, transforming, prompting, playing sound, or changing
+application state. See [Make enemies approach the hero on sight](approach-on-sight.html)
+and [Add close-range combat and life points](combat.html) for those separate
+behaviours.

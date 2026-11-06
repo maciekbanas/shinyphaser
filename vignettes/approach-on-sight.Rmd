@@ -15,6 +15,11 @@ An enemy can wander until the hero gets close, show an alert, and then move
 toward the hero. `Sprite$start_approach_on_sight()` handles these reactions in
 the browser, so you do not need an R timer or custom JavaScript.
 
+This is a convenience for wandering, alerting, and pursuit. Detection uses
+distance, not visibility through walls. For other reactions, such as a tree
+becoming a monster or an interaction prompt appearing, use the composable
+[proximity events](proximity-events.html) instead.
+
 ```{r, echo=FALSE}
 knitr::include_graphics("assets/approaching.gif")
 ```

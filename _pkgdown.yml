@@ -35,6 +35,7 @@ articles:
     navbar: Advanced features
     contents:
       - creating-maps
+      - proximity-events
       - approach-on-sight
       - scenery-and-collision
       - combat

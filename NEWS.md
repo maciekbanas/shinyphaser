@@ -54,8 +54,9 @@ Existing apps need to update their event handlers to use the explicit
   maps registered with `PhaserGame$add_map()` are loaded in sequence, and map
   activation updates terrain collision, camera and world bounds, the player
   position, and map-specific scene-object visibility.
-* Added `PhaserGame$add_proximity_trigger()` for monitoring when a scene object
-  is near a point, optionally showing an HTML element or notifying a Shiny input.
+* Added `PhaserGame$add_proximity_trigger()` for distance-based entry and leave
+  events around points or moving scene objects, with one-time reactions, browser
+  actions, R callbacks, and optional HTML prompts.
 
 ### Sprite
 
@@ -104,6 +105,8 @@ Existing apps need to update their event handlers to use the explicit
   hero walk behind scenery while blocking tree trunks and bush footprints.
 * Added a combat tutorial covering close-range attacks, damage cooldowns,
   life points, defeat, and saving combat state.
+* Added a proximity events article and a small tree-to-monster transformation
+  example (`proximity-transformation`) using the R interface.
 * Organized articles into "Simple game examples", "General", and "Advanced
   features" sections.
 

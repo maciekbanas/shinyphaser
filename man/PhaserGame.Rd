@@ -456,41 +456,63 @@ Invisible; sends a custom message to the client.
 \if{html}{\out{<a id="method-PhaserGame-add_proximity_trigger"></a>}}
 \if{latex}{\out{\hypertarget{method-PhaserGame-add_proximity_trigger}{}}}
 \subsection{Method \code{add_proximity_trigger()}}{
-Add a trigger that monitors when a scene object is near a point.
+React when an active scene object enters or leaves a radius
+around a point or another active scene object. This detects distance,
+not line of sight through obstacles.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{PhaserGame$add_proximity_trigger(
   id,
   object_name,
-  x,
-  y,
+  x = NULL,
+  y = NULL,
   radius = 180,
   element_id = NULL,
   context = NULL,
-  input_id = NULL
+  input_id = NULL,
+  target_name = NULL,
+  event = c("both", "enter", "leave"),
+  once = FALSE,
+  browser_action = browser_actions(),
+  input = NULL,
+  server_action = NULL
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{Character. Unique trigger identifier.}
+\item{\code{id}}{Character. Unique trigger identifier. Reusing it replaces the trigger.}
 
-\item{\code{object_name}}{Character. Scene object whose position is monitored.}
+\item{\code{object_name}}{Character. Name of the monitored scene object.}
 
-\item{\code{x}}{Numeric. Target x-coordinate.}
+\item{\code{x, y}}{Numeric or \code{NULL}. Fixed target coordinates; omit when using
+\code{target_name}.}
 
-\item{\code{y}}{Numeric. Target y-coordinate.}
+\item{\code{radius}}{Numeric. Non-negative detection radius in pixels.}
 
-\item{\code{radius}}{Numeric. Maximum distance at which the trigger is active.}
+\item{\code{element_id}}{Character or \code{NULL}. HTML element to show while near,
+independently of the event filter and \code{once}.}
 
-\item{\code{element_id}}{Character or \code{NULL}. ID of an HTML element to show while
-the trigger is active.}
+\item{\code{context}}{Character or \code{NULL}. Map key required for detection.}
 
-\item{\code{context}}{Character or \code{NULL}. Optional map key that must be active for
-the trigger to be evaluated.}
+\item{\code{input_id}}{Character or \code{NULL}. Optional Shiny input receiving matching
+transitions. Existing point triggers continue to report both transitions.}
 
-\item{\code{input_id}}{Character or \code{NULL}. Optional Shiny input that receives a
-payload whenever the trigger is entered or exited.}
+\item{\code{target_name}}{Character or \code{NULL}. Scene object whose current position
+is the target. Use this instead of \code{x} and \code{y} for moving targets.}
+
+\item{\code{event}}{Character. \code{"both"} (default), \code{"enter"}, or \code{"leave"}.}
+
+\item{\code{once}}{Logical. Fire only the first matching transition. Re-registering
+the trigger resets it. Detection and HTML visibility continue afterwards.}
+
+\item{\code{browser_action}}{Actions created with \code{\link[=browser_actions]{browser_actions()}} to run locally
+on matching transitions.}
+
+\item{\code{input}}{Shiny input list, required with \code{server_action}.}
+
+\item{\code{server_action}}{Optional R callback receiving \code{active}, \code{event}, object
+and target names, and coordinates. Uses \code{input_id} or \verb{proximity_<id>}.}
 }
 \if{html}{\out{</div>}}
 }
