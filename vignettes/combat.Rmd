@@ -27,11 +27,11 @@ shiny::runApp("inst/examples/swamps_rpg")
 ```
 
 Move with the arrow keys and press Space while touching the mushroom. The
-hero starts with 100 life points, the mushroom with 6, and the skeleton with 8.
+hero starts with 100 life points, the mushroom with 6, and each of the four skeletons with 8.
 Each successful attack removes 2 enemy life points; contact removes 10
 (mushroom) or 12 (skeleton) hero life points, with a shared one-second cooldown.
-Three attacks defeat the mushroom and four defeat the skeleton. Fighting is optional:
-you can also avoid it while collecting the key and reaching the hut.
+Three attacks defeat the mushroom and four defeat each skeleton. Fighting is optional:
+you can also avoid it while rescuing the spirit and reaching the crypt.
 
 ## Keep rules in session-local R state
 
@@ -40,12 +40,15 @@ share a fight. The example starts with:
 
 ```{r eval=FALSE}
 life_points <- 100
-enemy_max_hit_points <- c(mushroom = 6, skeleton = 8)
+enemy_max_hit_points <- c(mushroom = 6, skeleton = 8, skeleton_2 = 8,
+                          skeleton_3 = 8, skeleton_4 = 8)
 enemy_hit_points <- enemy_max_hit_points
-enemy_in_range <- c(mushroom = FALSE, skeleton = FALSE)
+enemy_in_range <- stats::setNames(rep(FALSE, length(enemy_max_hit_points)),
+                                 names(enemy_max_hit_points))
 last_attack <- -Inf
 last_damage <- -Inf
-enemy_hurt_until <- c(mushroom = -Inf, skeleton = -Inf)
+enemy_hurt_until <- stats::setNames(rep(-Inf, length(enemy_max_hit_points)),
+                                   names(enemy_max_hit_points))
 combat_generation <- 0L
 ```
 
@@ -185,16 +188,16 @@ registering suitable damage artwork and adding its health and cooldown checks.
 
 The game registers separate overlap and overlap-end callbacks for each enemy.
 Health, contact range, reaction cooldown, and push direction are stored by name.
-A swing selects one living enemy in range; if both touch the hero, stable list
-order selects the mushroom first. The hero's damage cooldown is shared, so two
+A swing selects one living enemy in range; if several touch the hero, stable list
+order selects the mushroom first. The hero's damage cooldown is shared, so several
 enemies cannot apply damage at the same instant.
 
 The skeleton sheets contain ten idle frames and two frames for movement,
 attacks, and damage. Only left/right attack and movement artwork is available;
 generic right-facing animations provide the fallback for vertical movement.
 There is no skeleton destruction sheet. It shows its hit reaction and then
-hides, whereas the mushroom plays its destruction animation. Both stop dealing
-damage immediately at zero health. Save/load and restart manage both enemies.
+hides, whereas the mushroom plays its destruction animation. All enemies stop dealing
+damage immediately at zero health. Save/load and restart manage all five enemies.
 
 ## Read the example's combat module
 
@@ -219,11 +222,11 @@ subtract health twice.
 ## Save and reset the whole encounter
 
 Saving only sprite positions would lose combat progress. The example includes
-health in the application state and captures all three actors:
+health in the application state and captures the hero and all enemies:
 
 ```{r eval=FALSE}
 game$save_game("progress", state = list(
-  realm = realm, has_key = has_key, completed = completed,
+  realm = realm, spirit_rescued = spirit_rescued, completed = completed,
   life_points = life_points, enemy_hit_points = as.list(enemy_hit_points)
 ), objects = c("hero", names(enemies)), directory = save_directory)
 ```
@@ -231,7 +234,7 @@ game$save_game("progress", state = list(
 Load restores health, updates the HUD, and reapplies map visibility so a
 defeated enemy stays inactive. Clear the contact flag when switching maps and
 reset cooldowns when loading or restarting; old contact state must not damage an enemy in a
-different area. New game restores all three actors, their health values, and the key.
+different area. New game restores the hero and all enemies, their health values, and the spirit.
 The example's save directory is private to its Shiny session and is deleted
 when that session ends.
 

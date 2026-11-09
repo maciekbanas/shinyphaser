@@ -1,5 +1,5 @@
 # Names and image URLs come from the same JSON entries.
-for (map_key in c("mushroom_swamps", "hut")) {
+for (map_key in c("mushroom_swamps", "crypt")) {
   map <- jsonlite::fromJSON(file.path(example_dir, "www", "maps", paste0(map_key, ".json")),
                             simplifyVector = FALSE)
   game$add_map(

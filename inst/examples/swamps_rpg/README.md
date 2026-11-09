@@ -1,11 +1,10 @@
 # Swamp clearing (Swamps RPG example)
 
-A short exploration demo: collect the gold key in the south, fight a mushroom
-and skeleton warrior, and reach the blue doorway in the north-east. It leads
-to a small hut. Walk to its blue exit to return. Arrow keys move the hero;
+A short exploration demo: rescue the good spirit in the south, face a mushroom
+and four skeleton warriors, and reach the blue crypt doorway in the north-east. Walk to its blue exit to return. Arrow keys move the hero;
 press Space at close range to attack. The hero starts with 100 life points;
-the mushroom has 6 and the skeleton 8. Three hits defeat the mushroom and
-four defeat the skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life
+the mushroom has 6 and each skeleton has 8. Three hits defeat the mushroom and
+four defeat each skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life
 points, with one shared one-second damage cooldown. At zero life, use the menu
 to restart or load a save.
 
@@ -27,22 +26,27 @@ shiny::runApp("inst/examples/swamps_rpg")
   final hit plays the destruction animation
   before the mushroom disappears. The skeleton has no destruction sheet and
   disappears after its damage reaction. Defeated enemies cannot deal damage.
-- Collect the key, enter the hut, and return. Map activation changes terrain,
+- Approach the spirit to rescue it, enter the crypt, and return. The doorway
+  stays sealed until the spirit is safe. Map activation changes terrain,
   collisions, camera bounds, and the visibility and physics of scene objects.
-- Toggle Sound to enable or mute the short key/doorway chime.
+- Toggle Sound to enable or mute the short spirit/doorway chime.
 - Save, move somewhere else, then Load. One save slot stores the current map,
-  objective progress, life points, enemy health, and hero and both enemy positions for
+  objective progress, life points, enemy health, and hero and all enemy positions for
   this browser session.
   Saves are deleted when the Shiny session ends; they are not shared with visitors.
-- New game resets the objective and all three actors, leaving the save slot available.
+- New game resets the objective and the hero and all five enemies, leaving the save slot available.
 
-The encounter stays small: two enemies, one key, and one hut. The clearing
-is 16 by 12 tiles (1600 by 1200 pixels); the hut is 10 by 6 tiles (1000 by 600 pixels).
+The encounter stays small: five enemies, one spirit rescue, and one crypt. The clearing
+is 16 by 12 tiles (1600 by 1200 pixels); the crypt is 10 by 6 tiles (1000 by 600 pixels).
 
 A swing hits one living enemy in contact. If both are touching the hero, the
-mushroom is targeted first. The skeleton starts at `(1450, 750)` on grass in
-the eastern clearing; it uses left/right movement and attack sheets, with a
+mushroom is targeted first. The four skeletons start on grass at `(1450, 750)`,
+`(450, 750)`, `(1150, 150)`, and `(850, 1050)`; they use left/right movement and attack sheets, with a
 generic fallback for vertical movement.
+
+The spirit sheet uses 14 frames of 32 by 32 pixels; the two empty cells are
+excluded. Rescuing it changes the objective state and hides the spirit. Saving
+and loading preserves that state; New game brings the spirit back.
 
 ## Code layout
 
@@ -53,9 +57,9 @@ Its server sources these focused modules in order:
 - `navigation_setup.R`: load the two maps and their embedded tilesets.
 - `hero.R`: movement animations, controls, foot-sized body, and depth sorting.
 - `scenery_layout.R`: the small, deliberate scenery layout (loaded by `app.R`).
-- `scenery.R`: scenery art and footprints, two enemies, markers, and sound.
+- `scenery.R`: scenery art and footprints, five enemies, the animated spirit, markers, and sound.
 - `combat.R`: attacks, contact damage, cooldowns, health display, and defeat.
-- `navigation.R`: proximity triggers, key/door objective, and restart.
+- `navigation.R`: proximity triggers, spirit/crypt objective, and restart.
 - `saving.R`: save/load using the package's R interface.
 
 All assets live in `www/`. The example registers `swamps-rpg-assets` explicitly.

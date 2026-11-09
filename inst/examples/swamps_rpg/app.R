@@ -22,18 +22,24 @@ server <- function(input, output, session) {
   save_directory <- tempfile("swamp-save-")
   session$onSessionEnded(function() unlink(save_directory, recursive = TRUE))
   realm <- "mushroom_swamps"
-  has_key <- FALSE
+  spirit_rescued <- FALSE
   completed <- FALSE
   life_points <- 100
-  enemy_max_hit_points <- c(mushroom = 6, skeleton = 8)
-  enemy_labels <- c(mushroom = "Mushroom", skeleton = "Skeleton")
+  skeleton_spawns <- data.frame(
+    id = c("skeleton", "skeleton_2", "skeleton_3", "skeleton_4"),
+    x = c(1450, 450, 1150, 850), y = c(750, 750, 150, 1050)
+  )
+  enemy_max_hit_points <- c(mushroom = 6,
+    stats::setNames(rep(8, nrow(skeleton_spawns)), skeleton_spawns$id))
+  enemy_labels <- c(mushroom = "Mushroom",
+    stats::setNames(paste("Skeleton", seq_len(nrow(skeleton_spawns))), skeleton_spawns$id))
   enemy_hit_points <- enemy_max_hit_points
-  enemy_in_range <- stats::setNames(rep(FALSE, 2), names(enemy_max_hit_points))
+  enemy_in_range <- stats::setNames(rep(FALSE, length(enemy_max_hit_points)), names(enemy_max_hit_points))
   last_attack <- -Inf
   last_damage <- -Inf
-  enemy_hurt_until <- stats::setNames(rep(-Inf, 2), names(enemy_max_hit_points))
+  enemy_hurt_until <- stats::setNames(rep(-Inf, length(enemy_max_hit_points)), names(enemy_max_hit_points))
   combat_generation <- 0L
-  notice <- shiny::reactiveVal("Find the gold key in the south of the clearing.")
+  notice <- shiny::reactiveVal("Rescue the good spirit in the south to unlock the crypt.")
   output$status <- shiny::renderText(notice())
 
   sys.source(file.path(example_dir, "modules", "navigation_setup.R"), environment())

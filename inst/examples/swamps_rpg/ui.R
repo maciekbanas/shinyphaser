@@ -36,6 +36,6 @@ ui <- shiny::fluidPage(
     shiny::textOutput("status")
   ),
   shiny::p(class = "controls", "Arrow keys: move · Space: attack at close range.
-    Find the gold key in the south, then enter the blue doorway in the north-east.
+    Rescue the good spirit in the south, then enter the blue crypt doorway in the north-east.
     Walk behind trees; their trunks block movement. Menu: restart, save, load, sound.")
 )

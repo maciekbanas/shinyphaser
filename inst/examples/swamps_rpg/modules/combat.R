@@ -1,11 +1,12 @@
 # Health and scoring belong to R; Phaser handles animation and movement.
-hud <- shiny::reactiveVal(list(life = life_points, enemies = enemy_hit_points))
-update_hud <- function() hud(list(life = life_points, enemies = enemy_hit_points))
+hud <- shiny::reactiveVal(list(life = life_points, enemies = enemy_hit_points, spirit = spirit_rescued))
+update_hud <- function() hud(list(life = life_points, enemies = enemy_hit_points, spirit = spirit_rescued))
 output$hud <- shiny::renderUI({
   state <- hud()
   shiny::tagList(
     shiny::tags$span(sprintf("Life: %d / 100", state$life)),
     shiny::tags$progress(value = state$life, max = 100),
+    shiny::tags$div(shiny::tags$small(if (state$spirit) "Spirit: rescued" else "Spirit: needs help")),
     lapply(names(state$enemies), function(id) shiny::tags$div(shiny::tags$small(
       if (state$enemies[[id]] > 0) sprintf("%s: %d / %d", enemy_labels[[id]],
         state$enemies[[id]], enemy_max_hit_points[[id]]) else paste(enemy_labels[[id]], "defeated")
@@ -37,9 +38,9 @@ for (enemy_name in names(enemies)) local({
       # One shared hero cooldown prevents simultaneous enemies stacking damage.
       if (now < enemy_hurt_until[[id]] || now - last_damage < 1) return()
       last_damage <<- now
-      damage <- if (id == "skeleton") 12 else 10
+      damage <- if (startsWith(id, "skeleton")) 12 else 10
       life_points <<- max(0, life_points - damage)
-      actor$play_animation(paste0(id, "_attack"), duration = if (id == "skeleton") 400 else 700)
+      actor$play_animation(paste0(id, "_attack"), duration = if (startsWith(id, "skeleton")) 400 else 700)
       update_hud()
       if (life_points == 0) {
         show_realm("mushroom_swamps", 150, 150)
@@ -89,7 +90,7 @@ attack <- function(event = NULL) {
       if (session$isClosed() || generation != combat_generation || enemy_hit_points[[id]] > 0) return()
       game$activate_map(realm, hidden_objects = id)
     }, delay = if (id == "mushroom") 0.95 else 0.65)
-    notice(paste(enemy_labels[[id]], "defeated! Find the gold key and reach the hut."))
+    notice(paste(enemy_labels[[id]], "defeated! Rescue the good spirit and reach the crypt."))
   } else notice(sprintf("Hit! %s loses 2 life points.", enemy_labels[[id]]))
 }
 game$add_control("Space", input = input, server_action = attack)

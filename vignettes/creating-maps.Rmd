@@ -119,7 +119,7 @@ knitr::include_graphics("assets/simple_map_example.gif")
 ## Organize the Swamps RPG map and artwork
 
 Swamps RPG uses the same map-loading API, with more terrain variants, a compact
-clearing, a hut interior, and separate scenery. With the current development
+clearing, a crypt interior, and separate scenery. With the current development
 version installed,
 run the full example from the repository root:
 
@@ -135,7 +135,7 @@ inst/examples/swamps_rpg/
   modules/navigation_setup.R
   www/
     maps/mushroom_swamps.json
-    maps/hut.json
+    maps/crypt.json
     terrain/mushroom_swamps/
       mushroom_swamps_grass_1.png
       mushroom_swamps_swamp_1.png
@@ -147,7 +147,7 @@ inst/examples/swamps_rpg/
 Its map is a **finite, orthogonal** grid with 16 columns and 12 rows. Each tile
 is 100 by 100 pixels, giving a world of **1600 by 1200 pixels**. The visible
 canvas is 960 by 600 pixels: a following camera lets the hero explore the
-clearing. The hut uses a 10-by-6 grid of 100-pixel tiles. Collect the gold key
+clearing. The crypt uses a 10-by-6 grid of 100-pixel tiles. Rescue the good spirit
 and enter the blue doorway to see map switching in the running example.
 
 The map's `terrain` layer contains tile IDs in row order, left to right and
@@ -356,9 +356,8 @@ shinyApp(ui, server)
 
 `add_map()` loads the named layer asynchronously; the first map is activated
 automatically. `activate_map()` explicitly selects a map and can reposition
-an existing hero. In Swamps RPG, entering the unlocked doorway activates the
-hut; its exit
-reactivates the clearing. Each activation also hides the other map's scenery
+an existing hero. In Swamps RPG, rescuing the good spirit unlocks the crypt
+doorway. Entering it activates the crypt; its exit reactivates the clearing. Each activation also hides the other map's scenery
 and physics bodies. The New game action returns to the clearing.
 Register terrain collision for each enemy as well if it should respect the map.
 

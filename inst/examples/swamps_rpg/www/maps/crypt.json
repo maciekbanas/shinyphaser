@@ -87,7 +87,7 @@
     {
       "firstgid": 1,
       "name": "floor",
-      "image": "../terrain/hut/floor.png",
+      "image": "../terrain/crypt/floor.png",
       "tilewidth": 100,
       "tileheight": 100,
       "imagewidth": 100,
@@ -99,7 +99,7 @@
     {
       "firstgid": 2,
       "name": "wall",
-      "image": "../terrain/hut/wall.png",
+      "image": "../terrain/crypt/wall.png",
       "tilewidth": 100,
       "tileheight": 100,
       "imagewidth": 100,

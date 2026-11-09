@@ -35,15 +35,17 @@ mushroom$start_approach_on_sight(
   check_interval = 100, wander_interval = 1500
 )
 
-# Simple colored markers keep the objective visible without extra artwork.
-key <- game$add_rectangle("key", 650, 1090, 24, 32, "0xffd34e")
-key$set_depth(1100)
+# Rescue the animated spirit by approaching it.
+good_spirit <- game$add_sprite("good_spirit", asset("sprites/npc/good_spirit/good_spirit.png"),
+  x = 650, y = 1090, frame_width = 32, frame_height = 32,
+  frame_count = 14, frame_rate = 6)
+good_spirit$set_depth(1100)
 door <- game$add_rectangle("door", 1450, 150, 70, 70, "0x397bb5")
 door$set_depth(100)
 exit <- game$add_rectangle("exit", 150, 550, 80, 70, "0x397bb5", visible = FALSE)
 exit$set_depth(100)
 clearing_objects <- c(scenery_layout$name, paste0(scenery_layout$name, "_footprint"),
-                      "mushroom", "key", "door")
+                      "mushroom", "good_spirit", "door")
 chime <- game$add_sound("chime", asset("sounds/chime.wav"), volume = 0.3)
 
 for (suffix in c("attack", paste0("attack_", c("left", "right")))) {
@@ -65,30 +67,35 @@ mushroom$add_animation("damage",
   asset("sprites/enemies/mushroom_man/mushroom_man_damage_down.png"),
   frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
 
-# Skeleton sheets use 100px frames: ten idle frames and two per other sheet.
-skeleton <- game$add_sprite("skeleton", asset("sprites/enemies/skeleton/skeleton_idle.png"),
-  x = 1450, y = 750, frame_width = 100, frame_height = 100,
-  frame_count = 10, frame_rate = 6)
-skeleton$set_body_size(32, 18, offset_x = 34, offset_y = 72)
-skeleton$set_depth_by_y(offset = 40)
-for (direction in c("left", "right")) {
+# All four warriors share their artwork but have unique names and combat state.
+enemies <- list(mushroom = mushroom)
+for (i in seq_len(nrow(skeleton_spawns))) {
+  spawn <- skeleton_spawns[i, ]
+  id <- spawn$id
+  actor <- game$add_sprite(id, asset("sprites/enemies/skeleton/skeleton_idle.png"),
+    x = spawn$x, y = spawn$y, frame_width = 100, frame_height = 100,
+    frame_count = 10, frame_rate = 6)
+  actor$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+  actor$set_depth_by_y(offset = 40)
+  for (direction in c("left", "right")) {
+    for (kind in c("move", "attack")) {
+      actor$add_animation(paste0(kind, "_", direction),
+        asset(sprintf("sprites/enemies/skeleton/skeleton_%s_%s.png", kind, direction)),
+        frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+    }
+  }
+  # Generic right-facing animations are the fallback for vertical movement.
   for (kind in c("move", "attack")) {
-    skeleton$add_animation(paste0(kind, "_", direction),
-      asset(sprintf("sprites/enemies/skeleton/skeleton_%s_%s.png", kind, direction)),
+    actor$add_animation(kind,
+      asset(sprintf("sprites/enemies/skeleton/skeleton_%s_right.png", kind)),
       frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
   }
-}
-# No vertical sheets are supplied: generic animations are the fallback.
-for (kind in c("move", "attack")) {
-  skeleton$add_animation(kind,
-    asset(sprintf("sprites/enemies/skeleton/skeleton_%s_right.png", kind)),
+  actor$add_animation("damage", asset("sprites/enemies/skeleton/skeleton_damage.png"),
     frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+  game$enable_terrain_collision(id)
+  for (name in scenery_layout$name) game$add_collider(id, paste0(name, "_footprint"))
+  actor$start_approach_on_sight("hero", sight_range = 240, speed = 75, distance = 45,
+    check_interval = 100, wander_interval = 1700)
+  enemies[[id]] <- actor
 }
-skeleton$add_animation("damage", asset("sprites/enemies/skeleton/skeleton_damage.png"),
-  frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
-game$enable_terrain_collision("skeleton")
-for (name in scenery_layout$name) game$add_collider("skeleton", paste0(name, "_footprint"))
-skeleton$start_approach_on_sight("hero", sight_range = 240, speed = 75, distance = 45,
-  check_interval = 100, wander_interval = 1700)
-enemies <- list(mushroom = mushroom, skeleton = skeleton)
-clearing_objects <- c(clearing_objects, "skeleton")
+clearing_objects <- union(clearing_objects, names(enemies))
