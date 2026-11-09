@@ -1,13 +1,15 @@
 # Health and scoring belong to R; Phaser handles animation and movement.
-hud <- shiny::reactiveVal(list(life = life_points, enemy = enemy_hit_points))
-update_hud <- function() hud(list(life = life_points, enemy = enemy_hit_points))
+hud <- shiny::reactiveVal(list(life = life_points, enemies = enemy_hit_points))
+update_hud <- function() hud(list(life = life_points, enemies = enemy_hit_points))
 output$hud <- shiny::renderUI({
   state <- hud()
   shiny::tagList(
     shiny::tags$span(sprintf("Life: %d / 100", state$life)),
     shiny::tags$progress(value = state$life, max = 100),
-    shiny::tags$small(if (state$enemy > 0) sprintf("Mushroom: %d / 6", state$enemy) else
-      "Mushroom defeated")
+    lapply(names(state$enemies), function(id) shiny::tags$div(shiny::tags$small(
+      if (state$enemies[[id]] > 0) sprintf("%s: %d / %d", enemy_labels[[id]],
+        state$enemies[[id]], enemy_max_hit_points[[id]]) else paste(enemy_labels[[id]], "defeated")
+    )))
   )
 })
 
@@ -20,28 +22,35 @@ knockback_from_contact <- function(event) {
   if (abs(delta[1]) >= abs(delta[2])) c(x = sign(delta[1]), y = 0) else
     c(x = 0, y = sign(delta[2]))
 }
-knockback_direction <- c(x = 0, y = 1)
+knockback_direction <- lapply(enemies, function(actor) c(x = 0, y = 1))
 
-# Browser throttling reduces traffic; the R clock also guards damage and attacks.
-game$add_overlap("hero", "mushroom", input = input, mode = "stay", interval = 1000,
-  server_action = function(event) {
-    if (realm != "mushroom_swamps" || life_points <= 0 || enemy_hit_points <= 0) return()
-    enemy_in_range <<- TRUE
-    knockback_direction <<- knockback_from_contact(event)
-    now <- as.numeric(Sys.time())
-    if (now < enemy_hurt_until || now - last_damage < 1) return()
-    last_damage <<- now
-    life_points <<- max(0, life_points - 10)
-    mushroom$play_animation("mushroom_attack", duration = 700)
-    update_hud()
-    if (life_points == 0) {
-      show_realm("mushroom_swamps", 150, 150)
-      notice("Game over. Open Menu to start a new game or load your save.")
-    } else notice("The mushroom hits for 10. Press Space at close range to fight back!")
-  }
-)
-game$add_overlap_end("hero", "mushroom", input = input,
-  server_action = function(event) enemy_in_range <<- FALSE)
+# Each enemy has independent range, health, hurt state, and knockback direction.
+for (enemy_name in names(enemies)) local({
+  id <- enemy_name
+  actor <- enemies[[id]]
+  game$add_overlap("hero", id, input = input, mode = "stay", interval = 1000,
+    server_action = function(event) {
+      if (realm != "mushroom_swamps" || life_points <= 0 || enemy_hit_points[[id]] <= 0) return()
+      enemy_in_range[[id]] <<- TRUE
+      knockback_direction[[id]] <<- knockback_from_contact(event)
+      now <- as.numeric(Sys.time())
+      # One shared hero cooldown prevents simultaneous enemies stacking damage.
+      if (now < enemy_hurt_until[[id]] || now - last_damage < 1) return()
+      last_damage <<- now
+      damage <- if (id == "skeleton") 12 else 10
+      life_points <<- max(0, life_points - damage)
+      actor$play_animation(paste0(id, "_attack"), duration = if (id == "skeleton") 400 else 700)
+      update_hud()
+      if (life_points == 0) {
+        show_realm("mushroom_swamps", 150, 150)
+        notice("Game over. Open Menu to start a new game or load your save.")
+      } else notice(sprintf("%s hits for %d. Press Space at close range to fight back!",
+                            enemy_labels[[id]], damage))
+    }
+  )
+  game$add_overlap_end("hero", id, input = input,
+    server_action = function(event) enemy_in_range[[id]] <<- FALSE)
+})
 
 attack <- function(event = NULL) {
   if (life_points <= 0 || realm != "mushroom_swamps") return()
@@ -50,33 +59,37 @@ attack <- function(event = NULL) {
   last_attack <<- now
   hero$play_animation("hero_attack", duration = 500)
   if (isTRUE(input$sound)) attack_sound$play()
-  if (!enemy_in_range || enemy_hit_points <= 0) {
-    notice("Move closer to the mushroom to land a hit.")
+  targets <- names(enemy_in_range)[enemy_in_range & enemy_hit_points > 0]
+  if (!length(targets)) {
+    notice("Move closer to an enemy to land a hit.")
     return()
   }
-  enemy_hit_points <<- max(0, enemy_hit_points - 2)
-  mushroom$stop_motion()
-  enemy_hurt_until <<- now + 0.5
-  mushroom$set_in_motion(
-    dir_x = knockback_direction[["x"]], dir_y = knockback_direction[["y"]],
+  # A swing hits one enemy, in stable list order if both are touching the hero.
+  id <- targets[[1]]
+  actor <- enemies[[id]]
+  enemy_hit_points[[id]] <<- max(0, enemy_hit_points[[id]] - 2)
+  actor$stop_motion()
+  enemy_hurt_until[[id]] <<- now + 0.5
+  actor$set_in_motion(
+    dir_x = knockback_direction[[id]][["x"]], dir_y = knockback_direction[[id]][["y"]],
     speed = 130, distance = 52, lag = 0
   )
-  mushroom$play_animation("mushroom_damage", duration = 500)
+  actor$play_animation(paste0(id, "_damage"),
+    duration = if (enemy_hit_points[[id]] == 0) 1000 else 500)
   update_hud()
-  if (enemy_hit_points == 0) {
-    enemy_in_range <<- FALSE
-    # Health reaches zero immediately; show the fall before hiding the body.
-    # A map switch, load, or restart invalidates these delayed visual actions.
+  if (enemy_hit_points[[id]] == 0) {
+    enemy_in_range[[id]] <<- FALSE
     generation <- combat_generation
-    later::later(function() {
-      if (session$isClosed() || generation != combat_generation || enemy_hit_points > 0) return()
-      mushroom$play_animation("mushroom_destroy", duration = 500)
+    # Only the mushroom has destruction artwork. Skeleton uses its hit reaction.
+    if (id == "mushroom") later::later(function() {
+      if (session$isClosed() || generation != combat_generation || enemy_hit_points[[id]] > 0) return()
+      actor$play_animation("mushroom_destroy", duration = 500)
     }, delay = 0.3)
     later::later(function() {
-      if (session$isClosed() || generation != combat_generation || enemy_hit_points > 0) return()
-      game$activate_map(realm, hidden_objects = "mushroom")
-    }, delay = 0.95)
-    notice("Mushroom defeated! Find the gold key and reach the hut.")
-  } else notice("Hit! The mushroom loses 2 life points.")
+      if (session$isClosed() || generation != combat_generation || enemy_hit_points[[id]] > 0) return()
+      game$activate_map(realm, hidden_objects = id)
+    }, delay = if (id == "mushroom") 0.95 else 0.65)
+    notice(paste(enemy_labels[[id]], "defeated! Find the gold key and reach the hut."))
+  } else notice(sprintf("Hit! %s loses 2 life points.", enemy_labels[[id]]))
 }
 game$add_control("Space", input = input, server_action = attack)

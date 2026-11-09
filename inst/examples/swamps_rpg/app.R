@@ -25,11 +25,13 @@ server <- function(input, output, session) {
   has_key <- FALSE
   completed <- FALSE
   life_points <- 100
-  enemy_hit_points <- 6
-  enemy_in_range <- FALSE
+  enemy_max_hit_points <- c(mushroom = 6, skeleton = 8)
+  enemy_labels <- c(mushroom = "Mushroom", skeleton = "Skeleton")
+  enemy_hit_points <- enemy_max_hit_points
+  enemy_in_range <- stats::setNames(rep(FALSE, 2), names(enemy_max_hit_points))
   last_attack <- -Inf
   last_damage <- -Inf
-  enemy_hurt_until <- -Inf
+  enemy_hurt_until <- stats::setNames(rep(-Inf, 2), names(enemy_max_hit_points))
   combat_generation <- 0L
   notice <- shiny::reactiveVal("Find the gold key in the south of the clearing.")
   output$status <- shiny::renderText(notice())

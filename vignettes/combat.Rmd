@@ -27,9 +27,10 @@ shiny::runApp("inst/examples/swamps_rpg")
 ```
 
 Move with the arrow keys and press Space while touching the mushroom. The
-hero starts with 100 life points and the mushroom with 6. Each successful
-attack removes 2 enemy life points; contact removes 10 hero life points at
-most once per second. Three attacks defeat the mushroom. Fighting is optional:
+hero starts with 100 life points, the mushroom with 6, and the skeleton with 8.
+Each successful attack removes 2 enemy life points; contact removes 10
+(mushroom) or 12 (skeleton) hero life points, with a shared one-second cooldown.
+Three attacks defeat the mushroom and four defeat the skeleton. Fighting is optional:
 you can also avoid it while collecting the key and reaching the hut.
 
 ## Keep rules in session-local R state
@@ -39,11 +40,12 @@ share a fight. The example starts with:
 
 ```{r eval=FALSE}
 life_points <- 100
-enemy_hit_points <- 6
-enemy_in_range <- FALSE
+enemy_max_hit_points <- c(mushroom = 6, skeleton = 8)
+enemy_hit_points <- enemy_max_hit_points
+enemy_in_range <- c(mushroom = FALSE, skeleton = FALSE)
 last_attack <- -Inf
 last_damage <- -Inf
-enemy_hurt_until <- -Inf
+enemy_hurt_until <- c(mushroom = -Inf, skeleton = -Inf)
 combat_generation <- 0L
 ```
 
@@ -104,7 +106,7 @@ update_hud()
 The attack handler does the equivalent for the mushroom:
 
 ```{r eval=FALSE}
-enemy_hit_points <<- max(0, enemy_hit_points - 2)
+enemy_hit_points[["mushroom"]] <<- max(0, enemy_hit_points[["mushroom"]] - 2)
 ```
 
 ### Load the damage animations
@@ -142,23 +144,26 @@ knockback_from_contact <- function(event) {
 }
 ```
 
-The contact callback stores this vector in `knockback_direction` before its
+Each contact callback stores this vector in `knockback_direction[[id]]` before its
 damage-cooldown check. An attack uses the latest reported contact direction.
 If the positions coincide or are unavailable, the example pushes downwards.
 Using one axis gives the integer directions accepted by `set_in_motion()`.
 
 ### Combine knockback and the reaction
 
-Inside the successful-hit branch, cancel pursuit before starting the push:
+The full game keeps an `enemies` list of Sprite objects. Inside the successful-hit
+branch, `id` identifies the selected enemy. Cancel its pursuit before the push:
 
 ```{r eval=FALSE}
-mushroom$stop_motion()
-enemy_hurt_until <<- now + 0.5
-mushroom$set_in_motion(
-  dir_x = knockback_direction[["x"]], dir_y = knockback_direction[["y"]],
+actor <- enemies[[id]]
+direction <- knockback_direction[[id]]
+actor$stop_motion()
+enemy_hurt_until[[id]] <<- now + 0.5
+actor$set_in_motion(
+  dir_x = direction[["x"]], dir_y = direction[["y"]],
   speed = 130, distance = 52, lag = 0
 )
-mushroom$play_animation("mushroom_damage", duration = 500)
+actor$play_animation(paste0(id, "_damage"), duration = 500)
 update_hud()
 ```
 
@@ -176,10 +181,25 @@ loading, and restarting. You can use the same `stop_motion()`, `set_in_motion()`
 and `play_animation()` combination for another Sprite, including a hero, after
 registering suitable damage artwork and adding its health and cooldown checks.
 
+## Handle more than one enemy
+
+The game registers separate overlap and overlap-end callbacks for each enemy.
+Health, contact range, reaction cooldown, and push direction are stored by name.
+A swing selects one living enemy in range; if both touch the hero, stable list
+order selects the mushroom first. The hero's damage cooldown is shared, so two
+enemies cannot apply damage at the same instant.
+
+The skeleton sheets contain ten idle frames and two frames for movement,
+attacks, and damage. Only left/right attack and movement artwork is available;
+generic right-facing animations provide the fallback for vertical movement.
+There is no skeleton destruction sheet. It shows its hit reaction and then
+hides, whereas the mushroom plays its destruction animation. Both stop dealing
+damage immediately at zero health. Save/load and restart manage both enemies.
+
 ## Read the example's combat module
 
 The following is the actual `modules/combat.R` shipped with the game. It runs
-inside the server after creating `game`, `hero`, `mushroom`, and `attack_sound`.
+inside the server after creating `game`, `hero`, the `enemies` list, and `attack_sound`.
 The navigation module provides `show_realm()` and the status callback `notice()`;
 those functions exist by the time a player event is processed.
 
@@ -199,19 +219,19 @@ subtract health twice.
 ## Save and reset the whole encounter
 
 Saving only sprite positions would lose combat progress. The example includes
-health in the application state and captures both actors:
+health in the application state and captures all three actors:
 
 ```{r eval=FALSE}
 game$save_game("progress", state = list(
   realm = realm, has_key = has_key, completed = completed,
-  life_points = life_points, enemy_hit_points = enemy_hit_points
-), objects = c("hero", "mushroom"), directory = save_directory)
+  life_points = life_points, enemy_hit_points = as.list(enemy_hit_points)
+), objects = c("hero", names(enemies)), directory = save_directory)
 ```
 
 Load restores health, updates the HUD, and reapplies map visibility so a
 defeated enemy stays inactive. Clear the contact flag when switching maps and
 reset cooldowns when loading or restarting; old contact state must not damage an enemy in a
-different area. New game restores both actors, both health values, and the key.
+different area. New game restores all three actors, their health values, and the key.
 The example's save directory is private to its Shiny session and is deleted
 when that session ends.
 

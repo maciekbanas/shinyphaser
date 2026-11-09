@@ -64,3 +64,31 @@ mushroom$add_animation("destroy",
 mushroom$add_animation("damage",
   asset("sprites/enemies/mushroom_man/mushroom_man_damage_down.png"),
   frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+
+# Skeleton sheets use 100px frames: ten idle frames and two per other sheet.
+skeleton <- game$add_sprite("skeleton", asset("sprites/enemies/skeleton/skeleton_idle.png"),
+  x = 1450, y = 750, frame_width = 100, frame_height = 100,
+  frame_count = 10, frame_rate = 6)
+skeleton$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+skeleton$set_depth_by_y(offset = 40)
+for (direction in c("left", "right")) {
+  for (kind in c("move", "attack")) {
+    skeleton$add_animation(paste0(kind, "_", direction),
+      asset(sprintf("sprites/enemies/skeleton/skeleton_%s_%s.png", kind, direction)),
+      frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+  }
+}
+# No vertical sheets are supplied: generic animations are the fallback.
+for (kind in c("move", "attack")) {
+  skeleton$add_animation(kind,
+    asset(sprintf("sprites/enemies/skeleton/skeleton_%s_right.png", kind)),
+    frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+}
+skeleton$add_animation("damage", asset("sprites/enemies/skeleton/skeleton_damage.png"),
+  frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+game$enable_terrain_collision("skeleton")
+for (name in scenery_layout$name) game$add_collider("skeleton", paste0(name, "_footprint"))
+skeleton$start_approach_on_sight("hero", sight_range = 240, speed = 75, distance = 45,
+  check_interval = 100, wander_interval = 1700)
+enemies <- list(mushroom = mushroom, skeleton = skeleton)
+clearing_objects <- c(clearing_objects, "skeleton")

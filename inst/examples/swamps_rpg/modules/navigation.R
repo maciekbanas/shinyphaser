@@ -1,17 +1,16 @@
 show_realm <- function(map_key, x, y) {
   combat_generation <<- combat_generation + 1L
-  enemy_hurt_until <<- -Inf
-  mushroom$stop_motion()
-  enemy_in_range <<- FALSE
+  enemy_hurt_until[] <<- -Inf
+  lapply(enemies, function(actor) actor$stop_motion())
+  enemy_in_range[] <<- FALSE
   realm <<- map_key
   outside <- identical(map_key, "mushroom_swamps")
   visible <- if (outside) clearing_objects else "exit"
   hidden <- if (outside) "exit" else clearing_objects
   if (life_points <= 0) hidden <- union(hidden, "hero") else visible <- union(visible, "hero")
-  if (enemy_hit_points <= 0) {
-    visible <- setdiff(visible, "mushroom")
-    hidden <- union(hidden, "mushroom")
-  }
+  defeated <- names(enemy_hit_points)[enemy_hit_points <= 0]
+  visible <- setdiff(visible, defeated)
+  hidden <- union(hidden, defeated)
   if (has_key) {
     visible <- setdiff(visible, "key")
     hidden <- union(hidden, "key")
@@ -60,7 +59,7 @@ shiny::observeEvent(input$restart, {
   has_key <<- FALSE
   completed <<- FALSE
   life_points <<- 100
-  enemy_hit_points <<- 6
+  enemy_hit_points <<- enemy_max_hit_points
   last_attack <<- -Inf
   last_damage <<- -Inf
   update_hud()
@@ -71,6 +70,7 @@ shiny::observeEvent(input$restart, {
 })
 # Explicit snapshot avoids depending on asynchronous asset loading at startup.
 game$save_game("initial", snapshot = list(
-  mushroom = list(x = 650, y = 350, visible = TRUE, active = TRUE)
+  mushroom = list(x = 650, y = 350, visible = TRUE, active = TRUE),
+  skeleton = list(x = 1450, y = 750, visible = TRUE, active = TRUE)
 ), directory = save_directory)
 show_realm("mushroom_swamps", 150, 150)
