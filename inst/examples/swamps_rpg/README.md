@@ -34,8 +34,9 @@ Combat and save/load feedback stays in the HUD rather than along the bottom.
   before the mushroom disappears. The skeleton has no destruction sheet and
   disappears after its damage reaction. Defeated enemies cannot deal damage.
 - Approach the spirit to rescue it, enter the crypt, and return. The entrance
-  artwork sits at `(1450, 350)`, below the HUD, and sorts by its ground-level
-  base. The 200 by 200 pixel doorway stays sealed until the spirit is safe;
+  artwork sits at `(1450, 350)`, below the HUD, and is drawn behind actors so
+  the hero remains visible. The 200 by 200 pixel doorway stays sealed until
+  the spirit is safe;
   approaching it beforehand opens a reminder popup. Map activation changes terrain,
   collisions, camera bounds, and the visibility and physics of scene objects.
 - Toggle Sound to enable or mute the short spirit/doorway chime.
