@@ -1,17 +1,11 @@
 # Health and scoring belong to R; Phaser handles animation and movement.
-hud <- shiny::reactiveVal(list(life = life_points, enemies = enemy_hit_points, spirit = spirit_rescued))
-update_hud <- function() hud(list(life = life_points, enemies = enemy_hit_points, spirit = spirit_rescued))
+hud <- shiny::reactiveVal(life_points)
+update_hud <- function() hud(life_points)
 output$hud <- shiny::renderUI({
-  state <- hud()
+  life <- hud()
   shiny::tagList(
-    shiny::tags$span(sprintf("Life: %d / 100", state$life)),
-    shiny::tags$progress(value = state$life, max = 100),
-    shiny::tags$div(shiny::tags$small(if (state$spirit) "Spirit: rescued" else "Spirit: needs help")),
-    lapply(names(state$enemies), function(id) shiny::tags$div(shiny::tags$small(
-      if (state$enemies[[id]] > 0) sprintf("%s: %d / %d", enemy_labels[[id]],
-        state$enemies[[id]], enemy_max_hit_points[[id]]) else paste(enemy_labels[[id]], "defeated")
-    ))),
-    shiny::tags$div(class = "hud_feedback", notice())
+    shiny::tags$span(sprintf("Life: %d / 100", life)),
+    shiny::tags$progress(value = life, max = 100)
   )
 })
 
@@ -46,6 +40,7 @@ for (enemy_name in names(enemies)) local({
       if (life_points == 0) {
         show_realm("mushroom_swamps", 150, 150)
         notice("Game over. Open Menu to start a new game or load your save.")
+        show_dialog("Game over", "Open Menu to start a new game or load your save.", "error")
       } else notice(sprintf("%s hits for %d. Press Space at close range to fight back!",
                             enemy_labels[[id]], damage))
     }

@@ -42,9 +42,11 @@ good_spirit <- game$add_sprite("good_spirit", asset("sprites/npc/good_spirit/goo
 good_spirit$set_depth(1100)
 door <- game$add_image("door",
   asset("terrain/mushroom_swamps/crypt_entrance.png"), 1450, 350)
-door$set_depth(0) # Keep the hero visible in front of the entrance.
+door$set_depth(450) # Sort by its ground-level base, like trees and bushes.
+game$add_collision_rectangle("crypt_footprint", 1450, 438, 160, 24)
+game$add_collider("hero", "crypt_footprint")
 clearing_objects <- c(scenery_layout$name, paste0(scenery_layout$name, "_footprint"),
-                      "mushroom", "good_spirit", "door")
+                      "mushroom", "good_spirit", "door", "crypt_footprint")
 chime <- game$add_sound("chime", asset("sounds/chime.wav"), volume = 0.3)
 
 for (suffix in c("attack", paste0("attack_", c("left", "right")))) {
@@ -98,3 +100,5 @@ for (i in seq_len(nrow(skeleton_spawns))) {
   enemies[[id]] <- actor
 }
 clearing_objects <- union(clearing_objects, names(enemies))
+
+for (id in names(enemies)) game$add_collider(id, "crypt_footprint")

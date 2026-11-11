@@ -19,7 +19,8 @@ shiny::runApp("inst/examples/swamps_rpg")
 Objective instructions appear in `shinyalert` popups: first rescue the spirit,
 then enter the crypt. The game pauses while you read and resumes on Continue.
 New game and loading unfinished progress show the appropriate objective again.
-Combat and save/load feedback stays in the HUD rather than along the bottom.
+Only the hero's life points and bar remain in the top-right HUD. Hit and defeat
+animations provide combat feedback; game-over and missing-save messages use popups.
 
 ## Features to try
 
@@ -27,16 +28,19 @@ Combat and save/load feedback stays in the HUD rather than along the bottom.
   separate invisible footprint blocks only its base. All seven scenery objects
   have fixed placements on grass.
 - Approach either enemy to see its alert and pursuit; move away to let it wander.
-- Press Space to attack, with a 0.6-second cooldown. Life points and the
-  enemy's remaining health stay visible over the map; the Menu opens over it.
+- Press Space to attack, with a 0.6-second cooldown. Only the hero's life
+  points and bar appear over the map; enemies show hit reactions rather than
+  health labels. The Menu opens over the map.
 - Hits push enemies away by up to 52 pixels and show a damage reaction; the
   final hit plays the destruction animation
   before the mushroom disappears. The skeleton has no destruction sheet and
   disappears after its damage reaction. Defeated enemies cannot deal damage.
 - Approach the spirit to rescue it, enter the crypt, and return. The entrance
-  artwork sits at `(1450, 350)`, below the HUD, and is drawn behind actors so
-  the hero remains visible. The 200 by 200 pixel doorway stays sealed until
-  the spirit is safe;
+  artwork sits at `(1450, 350)`, with depth set to its base at `y = 450`.
+  An invisible 160 by 24 pixel footprint blocks that base, like the tree and
+  bush footprints. The hero can walk behind the upper art, but stays visible
+  when approaching the solid base from the front. The entry trigger is in front
+  at `(1450, 450)`. The doorway stays sealed until the spirit is safe;
   approaching it beforehand opens a reminder popup. Map activation changes terrain,
   collisions, camera bounds, and the visibility and physics of scene objects.
 - Toggle Sound to enable or mute the short spirit/doorway chime.

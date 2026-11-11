@@ -203,8 +203,10 @@ damage immediately at zero health. Save/load and restart manage all five enemies
 
 The following is the actual `modules/combat.R` shipped with the game. It runs
 inside the server after creating `game`, `hero`, the `enemies` list, and `attack_sound`.
-The navigation module provides `show_realm()` and the status callback `notice()`;
-those functions exist by the time a player event is processed.
+`app.R` provides `show_dialog()` and `notice()`; navigation provides
+`show_realm()`. These exist by the time a player event is processed. The HUD
+shows only the hero's life points and bar; enemy reactions are shown through
+animations. Critical messages, such as game over, use dialogs.
 
 ```{r combat-source, echo=FALSE, results='asis'}
 combat_file <- system.file("examples", "swamps_rpg", "modules", "combat.R",

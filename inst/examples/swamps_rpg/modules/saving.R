@@ -10,6 +10,7 @@ shiny::observeEvent(input$load, {
   saves <- game$list_saved_games(directory = save_directory)
   if (!any(vapply(saves, function(save) identical(save$name, "progress"), logical(1)))) {
     notice("No saved progress yet. Press Save first.")
+    show_dialog("No saved game", "Press Save game before trying to load progress.")
     return()
   }
   lapply(enemies, function(actor) actor$stop_motion())
@@ -35,5 +36,6 @@ shiny::observeEvent(input$load, {
     if (completed) "Loaded: crypt reached; explore or start a new game." else
     if (spirit_rescued) "Loaded: spirit rescued. Head to the crypt entrance." else
       "Loaded: rescue the good spirit in the south.")
-  if (life_points > 0 && !completed) show_objective()
+  if (life_points <= 0) show_dialog("Game over", "Start a new game or load another checkpoint.", "error")
+  else if (!completed) show_objective()
 })
