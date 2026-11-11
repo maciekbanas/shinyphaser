@@ -40,7 +40,37 @@ server <- function(input, output, session) {
   enemy_hurt_until <- stats::setNames(rep(-Inf, length(enemy_max_hit_points)), names(enemy_max_hit_points))
   combat_generation <- 0L
   notice <- shiny::reactiveVal("Rescue the good spirit in the south to unlock the crypt.")
-  output$status <- shiny::renderText(notice())
+  show_objective <- function() {
+    # Let the initial loader finish before pausing its scene.
+    session$sendCustomMessage("phaser", list(js = paste0(
+      "window.swampsObjectiveOpen = true;",
+      "(function pauseWhenReady() {",
+      "if (!window.swampsObjectiveOpen) return;",
+      "if (typeof scene !== 'undefined' && scene && scene.hero && scene.skeleton_4 &&",
+      "GameBridge.maps.crypt && !scene.load.isLoading()) scene.scene.pause();",
+      "else window.setTimeout(pauseWhenReady, 50);",
+      "})();"
+    )))
+    shinyalert::shinyalert(
+      title = if (spirit_rescued) "Enter the crypt" else "Rescue the good spirit",
+      text = if (spirit_rescued) {
+        "The spirit is safe! Enter the blue crypt doorway in the north-east of the clearing."
+      } else {
+        "Find and rescue the good spirit in the south of the clearing. Move with the arrow keys and press Space to fight enemies at close range."
+      },
+      type = if (spirit_rescued) "success" else "info",
+      confirmButtonText = "Continue", closeOnEsc = FALSE,
+      closeOnClickOutside = FALSE,
+      callbackJS = "function() {
+        window.swampsObjectiveOpen = false;
+        if (typeof scene !== 'undefined' && scene && scene.scene) {
+          scene.input.keyboard.resetKeys();
+          scene.scene.resume();
+        }
+      }", session = session
+    )
+  }
+  session$onFlushed(function() show_objective(), once = TRUE)
 
   sys.source(file.path(example_dir, "modules", "navigation_setup.R"), environment())
   sys.source(file.path(example_dir, "modules", "hero.R"), environment())

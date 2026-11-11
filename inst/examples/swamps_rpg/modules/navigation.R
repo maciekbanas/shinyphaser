@@ -38,6 +38,7 @@ shiny::observeEvent(input$near_good_spirit, {
     update_hud()
     play_chime()
     notice("Spirit rescued! Enter the blue crypt doorway in the north-east.")
+    show_objective()
   }
 })
 shiny::observeEvent(input$near_door, {
@@ -68,6 +69,7 @@ shiny::observeEvent(input$restart, {
   game$load_game("initial", directory = save_directory)
   show_realm("mushroom_swamps", 150, 150)
   notice("New game. Rescue the good spirit in the south to unlock the crypt.")
+  show_objective()
 })
 # Explicit snapshot avoids depending on asynchronous asset loading at startup.
 initial_positions <- list(mushroom = list(x = 650, y = 350, visible = TRUE, active = TRUE))

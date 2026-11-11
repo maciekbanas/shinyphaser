@@ -10,7 +10,8 @@ output$hud <- shiny::renderUI({
     lapply(names(state$enemies), function(id) shiny::tags$div(shiny::tags$small(
       if (state$enemies[[id]] > 0) sprintf("%s: %d / %d", enemy_labels[[id]],
         state$enemies[[id]], enemy_max_hit_points[[id]]) else paste(enemy_labels[[id]], "defeated")
-    )))
+    ))),
+    shiny::tags$div(class = "hud_feedback", notice())
   )
 })
 

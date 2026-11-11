@@ -8,11 +8,17 @@ four defeat each skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life
 points, with one shared one-second damage cooldown. At zero life, use the menu
 to restart or load a save.
 
-From the repository root, after installing the current shinyphaser version:
+From the repository root, with the current shinyphaser version and its suggested
+`shinyalert` package installed:
 
 ```r
 shiny::runApp("inst/examples/swamps_rpg")
 ```
+
+Objective instructions appear in `shinyalert` popups: first rescue the spirit,
+then enter the crypt. The game pauses while you read and resumes on Continue.
+New game and loading unfinished progress show the appropriate objective again.
+Combat and save/load feedback stays in the HUD rather than along the bottom.
 
 ## Features to try
 

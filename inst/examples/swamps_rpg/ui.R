@@ -1,4 +1,4 @@
-# Menus and status stay over the map, independently of the following camera.
+# Menus, life points, and combat feedback stay fixed over the map.
 ui <- shiny::fluidPage(
   shiny::tags$style("
     body {margin:0;background:#080d0b;color:#f6e7bd;font-family:Georgia,serif;}
@@ -16,8 +16,7 @@ ui <- shiny::fluidPage(
     #hud {position:absolute;right:16px;top:16px;z-index:10;padding:12px;
       background:rgba(15,22,18,.88);border:2px solid #8f7140;border-radius:6px;}
     #hud progress {display:block;width:180px;height:18px;accent-color:#79b74a;}
-    #status {position:absolute;bottom:12px;left:12px;right:12px;z-index:10;
-      padding:12px;background:rgba(15,22,18,.88);pointer-events:none;}
+    .hud_feedback {max-width:180px;margin-top:8px;font-size:12px;line-height:1.3;}
     .controls {max-width:960px;margin:auto;padding:0 12px;color:#bcb59e;}
   "),
   shiny::tags$div(id = "game_shell",
@@ -32,8 +31,7 @@ ui <- shiny::fluidPage(
         shiny::checkboxInput("sound", "Sound", TRUE)
       )
     ),
-    shiny::uiOutput("hud"),
-    shiny::textOutput("status")
+    shiny::uiOutput("hud")
   ),
   shiny::p(class = "controls", "Arrow keys: move · Space: attack at close range.
     Rescue the good spirit in the south, then enter the blue crypt doorway in the north-east.
