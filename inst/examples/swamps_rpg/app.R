@@ -40,7 +40,7 @@ server <- function(input, output, session) {
   enemy_hurt_until <- stats::setNames(rep(-Inf, length(enemy_max_hit_points)), names(enemy_max_hit_points))
   combat_generation <- 0L
   notice <- shiny::reactiveVal("Rescue the good spirit in the south to unlock the crypt.")
-  show_objective <- function() {
+  show_objective <- function(locked = FALSE) {
     # Let the initial loader finish before pausing its scene.
     session$sendCustomMessage("phaser", list(js = paste0(
       "window.swampsObjectiveOpen = true;",
@@ -52,13 +52,15 @@ server <- function(input, output, session) {
       "})();"
     )))
     shinyalert::shinyalert(
-      title = if (spirit_rescued) "Enter the crypt" else "Rescue the good spirit",
-      text = if (spirit_rescued) {
+      title = if (locked) "Crypt sealed" else if (spirit_rescued) "Enter the crypt" else "Rescue the good spirit",
+      text = if (locked) {
+        "You must first find and rescue the good spirit in the south before you can enter the crypt."
+      } else if (spirit_rescued) {
         "The spirit is safe! Use the stone entrance in the north-east to enter the crypt."
       } else {
         "Find and rescue the good spirit in the south of the clearing. Move with the arrow keys and press Space to fight enemies at close range."
       },
-      type = if (spirit_rescued) "success" else "info",
+      type = if (locked) "warning" else if (spirit_rescued) "success" else "info",
       confirmButtonText = "Continue", closeOnEsc = FALSE,
       closeOnClickOutside = FALSE,
       callbackJS = "function() {

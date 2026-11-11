@@ -42,7 +42,7 @@ good_spirit <- game$add_sprite("good_spirit", asset("sprites/npc/good_spirit/goo
 good_spirit$set_depth(1100)
 door <- game$add_image("door",
   asset("terrain/mushroom_swamps/crypt_entrance.png"), 1450, 350)
-door$set_depth(400) # Sort the arch by its base, like other scenery.
+door$set_depth(450) # Sort the arch by its base, like other scenery.
 clearing_objects <- c(scenery_layout$name, paste0(scenery_layout$name, "_footprint"),
                       "mushroom", "good_spirit", "door")
 chime <- game$add_sound("chime", asset("sounds/chime.wav"), volume = 0.3)

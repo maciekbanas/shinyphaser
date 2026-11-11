@@ -42,13 +42,16 @@ shiny::observeEvent(input$near_good_spirit, {
   }
 })
 shiny::observeEvent(input$near_door, {
-  if (isTRUE(input$near_door$active) && realm == "mushroom_swamps") {
+  if (isTRUE(input$near_door$active) && realm == "mushroom_swamps" && life_points > 0) {
     if (spirit_rescued && life_points > 0) {
       completed <<- TRUE
       show_realm("crypt", 150, 350)
       play_chime()
       notice("You reached the crypt! Walk through the opening in the south wall to revisit the clearing, or start a new game.")
-    } else notice("The crypt is sealed. Rescue the good spirit in the south first.")
+    } else {
+      notice("The crypt is sealed. Rescue the good spirit in the south first.")
+      show_objective(locked = TRUE)
+    }
   }
 })
 shiny::observeEvent(input$near_exit, {
