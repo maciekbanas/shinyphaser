@@ -2,7 +2,7 @@
 
 A short exploration demo: rescue the good spirit in the south, face a mushroom
 and four skeleton warriors, and reach the crypt entrance in the north-east.
-Walk to its blue exit to return. Arrow keys move the hero;
+Walk through the opening in its south wall to return. Arrow keys move the hero;
 press Space at close range to attack. The hero starts with 100 life points;
 the mushroom has 6 and each skeleton has 8. Three hits defeat the mushroom and
 four defeat each skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life

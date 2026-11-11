@@ -43,8 +43,6 @@ good_spirit$set_depth(1100)
 door <- game$add_image("door",
   asset("terrain/mushroom_swamps/crypt_entrance.png"), 1450, 350)
 door$set_depth(400) # Sort the arch by its base, like other scenery.
-exit <- game$add_rectangle("exit", 150, 550, 80, 70, "0x397bb5", visible = FALSE)
-exit$set_depth(100)
 clearing_objects <- c(scenery_layout$name, paste0(scenery_layout$name, "_footprint"),
                       "mushroom", "good_spirit", "door")
 chime <- game$add_sound("chime", asset("sounds/chime.wav"), volume = 0.3)

@@ -5,8 +5,8 @@ show_realm <- function(map_key, x, y) {
   enemy_in_range[] <<- FALSE
   realm <<- map_key
   outside <- identical(map_key, "mushroom_swamps")
-  visible <- if (outside) clearing_objects else "exit"
-  hidden <- if (outside) "exit" else clearing_objects
+  visible <- if (outside) clearing_objects else character()
+  hidden <- if (outside) character() else clearing_objects
   if (life_points <= 0) hidden <- union(hidden, "hero") else visible <- union(visible, "hero")
   defeated <- names(enemy_hit_points)[enemy_hit_points <= 0]
   visible <- setdiff(visible, defeated)
@@ -47,7 +47,7 @@ shiny::observeEvent(input$near_door, {
       completed <<- TRUE
       show_realm("crypt", 150, 350)
       play_chime()
-      notice("You reached the crypt! Walk to the blue exit to revisit the clearing, or start a new game.")
+      notice("You reached the crypt! Walk through the opening in the south wall to revisit the clearing, or start a new game.")
     } else notice("The crypt is sealed. Rescue the good spirit in the south first.")
   }
 })
