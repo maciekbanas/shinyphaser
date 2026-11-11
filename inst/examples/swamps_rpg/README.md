@@ -1,7 +1,8 @@
 # Swamp clearing (Swamps RPG example)
 
 A short exploration demo: rescue the good spirit in the south, face a mushroom
-and four skeleton warriors, and reach the blue crypt doorway in the north-east. Walk to its blue exit to return. Arrow keys move the hero;
+and four skeleton warriors, and reach the crypt entrance in the north-east.
+Walk to its blue exit to return. Arrow keys move the hero;
 press Space at close range to attack. The hero starts with 100 life points;
 the mushroom has 6 and each skeleton has 8. Three hits defeat the mushroom and
 four defeat each skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life
@@ -32,7 +33,9 @@ Combat and save/load feedback stays in the HUD rather than along the bottom.
   final hit plays the destruction animation
   before the mushroom disappears. The skeleton has no destruction sheet and
   disappears after its damage reaction. Defeated enemies cannot deal damage.
-- Approach the spirit to rescue it, enter the crypt, and return. The doorway
+- Approach the spirit to rescue it, enter the crypt, and return. The entrance
+  artwork sits at `(1450, 350)`, below the HUD, and sorts by its ground-level
+  base. The doorway
   stays sealed until the spirit is safe. Map activation changes terrain,
   collisions, camera bounds, and the visibility and physics of scene objects.
 - Toggle Sound to enable or mute the short spirit/doorway chime.

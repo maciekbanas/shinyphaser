@@ -25,7 +25,7 @@ play_chime <- function() {
 # Context limits point triggers to their own map. Only entries cause actions.
 for (spec in list(
   list(id = "good_spirit", x = 650, y = 1090, context = "mushroom_swamps"),
-  list(id = "door", x = 1450, y = 150, context = "mushroom_swamps"),
+  list(id = "door", x = 1450, y = 350, context = "mushroom_swamps"),
   list(id = "exit", x = 150, y = 500, context = "crypt")
 )) {
   game$add_proximity_trigger(spec$id, "hero", spec$x, spec$y, radius = 45,
@@ -37,7 +37,7 @@ shiny::observeEvent(input$near_good_spirit, {
     good_spirit$hide()
     update_hud()
     play_chime()
-    notice("Spirit rescued! Enter the blue crypt doorway in the north-east.")
+    notice("Spirit rescued! Head to the stone crypt entrance in the north-east.")
     show_objective()
   }
 })
@@ -53,7 +53,7 @@ shiny::observeEvent(input$near_door, {
 })
 shiny::observeEvent(input$near_exit, {
   if (isTRUE(input$near_exit$active) && realm == "crypt") {
-    show_realm("mushroom_swamps", 1450, 250)
+    show_realm("mushroom_swamps", 1450, 450)
     notice("Back in the clearing. The spirit is safe; the crypt remains unlocked.")
   }
 })

@@ -34,6 +34,6 @@ ui <- shiny::fluidPage(
     shiny::uiOutput("hud")
   ),
   shiny::p(class = "controls", "Arrow keys: move · Space: attack at close range.
-    Rescue the good spirit in the south, then enter the blue crypt doorway in the north-east.
+    Rescue the good spirit in the south, then enter the crypt entrance in the north-east.
     Walk behind trees; their trunks block movement. Menu: restart, save, load, sound.")
 )

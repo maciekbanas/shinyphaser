@@ -54,7 +54,7 @@ server <- function(input, output, session) {
     shinyalert::shinyalert(
       title = if (spirit_rescued) "Enter the crypt" else "Rescue the good spirit",
       text = if (spirit_rescued) {
-        "The spirit is safe! Enter the blue crypt doorway in the north-east of the clearing."
+        "The spirit is safe! Use the stone entrance in the north-east to enter the crypt."
       } else {
         "Find and rescue the good spirit in the south of the clearing. Move with the arrow keys and press Space to fight enemies at close range."
       },

@@ -148,7 +148,7 @@ Its map is a **finite, orthogonal** grid with 16 columns and 12 rows. Each tile
 is 100 by 100 pixels, giving a world of **1600 by 1200 pixels**. The visible
 canvas is 960 by 600 pixels: a following camera lets the hero explore the
 clearing. The crypt uses a 10-by-6 grid of 100-pixel tiles. Rescue the good spirit
-and enter the blue doorway to see map switching in the running example.
+and enter the crypt entrance to see map switching in the running example.
 
 The map's `terrain` layer contains tile IDs in row order, left to right and
 then top to bottom. Tiled uses zero-based cell coordinates. Cell `(column, row)`

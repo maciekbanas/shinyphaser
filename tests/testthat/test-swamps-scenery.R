@@ -11,7 +11,7 @@ test_that("compact swamp scenery stays on grass without covering objectives", {
   tiles <- matrix(unlist(terrain$data), nrow = map$height, byrow = TRUE)
   grass <- vapply(Filter(function(tile) grepl("^mushroom_swamps_grass_", tile$name),
                          map$tilesets), function(tile) tile$firstgid, numeric(1))
-  reserved <- rbind(c(150, 150), c(650, 350), c(650, 1090), c(1450, 150), c(1450, 750), c(450, 750), c(1150, 150), c(850, 1050))
+  reserved <- rbind(c(150, 150), c(650, 350), c(650, 1090), c(1450, 350), c(1450, 750), c(450, 750), c(1150, 150), c(850, 1050))
   for (i in seq_len(nrow(reserved))) {
     column <- floor(reserved[i, 1] / map$tilewidth) + 1
     row <- floor(reserved[i, 2] / map$tileheight) + 1
