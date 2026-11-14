@@ -1,8 +1,8 @@
 ---
-title: "Create tile maps for a Shiny game"
+title: "Create maps for Swamps RPG"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Create tile maps for a Shiny game}
+  %\VignetteIndexEntry{Create maps for Swamps RPG}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,115 +11,26 @@ vignette: >
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-A tile map describes which small terrain image belongs at each position in
-a grid. **shinyphaser** loads maps in [Tiled](https://www.mapeditor.org/) JSON
-format through Phaser. These files can be generated programmatically, including
-with LLM assistance, or exported from the Tiled editor using a compatible
-configuration. The Swamps RPG map was created with LLM assistance.
+Swamps RPG uses a clearing and a crypt to demonstrate terrain, shorelines,
+collisions, and map switching. For the basic map-loading API, start with
+[Create a simple tile map](simple-map.html).
 
-Start with a tiny room made from two tiles, then use the Mushroom Swamps map to
-explore shorelines and larger worlds.
+## The whole Swamps map
 
-## Start with a tiny room
+This overview shows the entire 16-by-12 clearing, including its terrain,
+trees and bushes, four mushroom enemies, and two skeleton guards. The crypt
+entrance is at the bottom right; its interior is a separate map. During play,
+the camera shows only part of this world and follows the hero.
 
-Before working with Swamps RPG, create an **8-by-6 room** with only two tile
-IDs: **1 is floor** and **2 is wall**. Each tile is 64 pixels square. The room
-has a border and two wall tiles in the middle:
-
-```text
-########
-#......#
-#..##..#
-#......#
-#......#
-########
-```
-
-Here `.` means floor and `#` means wall. A small orange square will be the
-player. The complete app, images, and JSON map are already provided in
-`inst/examples/simple-map`, so no file-generation step or Tiled installation
-is needed.
-
-### Run the example
-
-With shinyphaser installed, run this from the repository root:
-
-```{r eval=FALSE, purl=FALSE}
-shiny::runApp("inst/examples/simple-map")
-```
-
-The example contains:
-
-```text
-inst/examples/simple-map/
-  app.R
-  www/
-    room.json
-    floor.png
-    wall.png
-    player.png
-```
-
-`room.json` contains the 8-by-6 tile grid and two embedded tileset definitions.
-Each tileset contains one image, and only the wall tile has the Boolean
-property `collides = true`.
-
-### How the app loads the map
-
-The following code is the supplied **`inst/examples/simple-map/app.R`**:
-
-```{r tiny-map-app, eval=FALSE}
-library(shiny)
-library(shinyphaser)
-
-game <- PhaserGame$new(width = 512, height = 384)
-ui <- tagList(tags$p("Arrow keys: move the orange square. Walls block movement."),
-              game$use_phaser())
-
-server <- function(input, output, session) {
-  game <- PhaserGame$new(width = 512, height = 384)
-  game$set_shiny_session(session)
-  game$set_world_bounds(512, 384)
-  game$add_map(
-    map_key = "room", map_url = "room.json",
-    tileset_urls = c("floor.png", "wall.png"),
-    tileset_names = c("floor", "wall"), layer_name = "terrain"
-  )
-  player <- game$add_sprite(
-    "player", "player.png", x = 96, y = 96,
-    frame_width = 32, frame_height = 32, frame_count = 1, frame_rate = 1
-  )
-  player$add_player_controls(speed = 140)
-  game$enable_terrain_collision("player")
-}
-
-shinyApp(ui, server)
-```
-
-Shiny serves the files in the app's `www/` folder, so the URLs above need no
-extra resource-path setup. The first loaded map becomes active automatically.
-The 512-by-384 canvas matches `8 * 64` by `6 * 64` pixels, and the player
-starts in the center of the first interior floor tile.
-
-Try moving across the floor and into both the border and the middle wall.
-To change the room, edit the tile-data array in `www/room.json` (1 for floor,
-2 for wall), or open that JSON file in Tiled, then restart the app. You now have the same basic ingredients as a larger map: tile IDs,
-tileset images, a terrain layer, and an actor registered for terrain collision.
-Phaser still loads from jsDelivr, so the browser needs Internet access.
-
-### See the example in action
-
-The orange square moves across the floor and stops at the room's border and
-the wall in the middle:
-
-```{r, echo=FALSE, out.width="512px", fig.alt="Orange player moving through a small tile map and colliding with walls"}
-knitr::include_graphics("assets/simple_map_example.gif")
+```{r swamps-map-overview, echo=FALSE, out.width="100%", fig.cap="The complete Swamps clearing (1600 by 1200 pixels), with the crypt entrance at the bottom right.", fig.alt="Full Swamps clearing with the hero at the top left, trees and bushes, two swamp pools, four mushroom enemies, and two skeletons guarding the crypt at the bottom right"}
+knitr::include_graphics("assets/swamps-map-overview.png")
 ```
 
 ## Organize the Swamps RPG map and artwork
 
-Swamps RPG uses the same map-loading API, with more terrain variants, a larger
-world, and separate scenery. With the current development version installed,
+Swamps RPG uses the same map-loading API, with more terrain variants, a compact
+clearing, a crypt interior, and separate scenery. With the current development
+version installed,
 run the full example from the repository root:
 
 ```{r eval=FALSE, purl=FALSE}
@@ -134,6 +45,7 @@ inst/examples/swamps_rpg/
   modules/navigation_setup.R
   www/
     maps/mushroom_swamps.json
+    maps/crypt.json
     terrain/mushroom_swamps/
       mushroom_swamps_grass_1.png
       mushroom_swamps_swamp_1.png
@@ -142,9 +54,11 @@ inst/examples/swamps_rpg/
       ...
 ```
 
-Its map is a **finite, orthogonal** grid with 32 columns and 64 rows. Each tile
-is 100 by 100 pixels, giving a world of **3200 by 6400 pixels**. The visible
-canvas can be smaller: a following camera lets the hero explore the world.
+Its map is a **finite, orthogonal** grid with 16 columns and 12 rows. Each tile
+is 100 by 100 pixels, giving a world of **1600 by 1200 pixels**. The visible
+canvas is 960 by 600 pixels: a following camera lets the hero explore the
+clearing. The crypt uses a 10-by-6 grid of 100-pixel tiles. Enter the crypt at the bottom of the clearing, then rescue the mushroom spirit
+inside to win. Two skeletons guard the entrance and two more wait inside.
 
 The map's `terrain` layer contains tile IDs in row order, left to right and
 then top to bottom. Tiled uses zero-based cell coordinates. Cell `(column, row)`
@@ -165,7 +79,7 @@ JSON structure used by the examples. It has not yet been verified with an
 actual editor export; support for every Tiled feature is not implied.
 
 1. Create a finite **Orthogonal** map. For the supplied artwork, choose
-   100-pixel tile width and height, and a 32-by-64 map to match Swamps RPG.
+   100-pixel tile width and height, and a 16-by-12 map to match Swamps RPG.
 2. Add a tile layer named **`terrain`**.
 3. Create tilesets from the terrain PNGs. Swamps RPG uses one 100-by-100 image
    per tileset, with one tile in each. Embed the tilesets in the map so their
@@ -352,7 +266,8 @@ shinyApp(ui, server)
 
 `add_map()` loads the named layer asynchronously; the first map is activated
 automatically. `activate_map()` explicitly selects a map and can reposition
-an existing hero. In Swamps RPG, the New game action calls it after setup.
+an existing hero. In Swamps RPG, entering the doorway at the bottom of the clearing activates the crypt; its exit reactivates the clearing. Each activation also hides the other map's scenery
+and physics bodies. The New game action returns to the clearing.
 Register terrain collision for each enemy as well if it should respect the map.
 
 The supplied loader renders the layer selected by `layer_name`. A Tiled map

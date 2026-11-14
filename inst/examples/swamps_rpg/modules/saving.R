@@ -1,54 +1,41 @@
-  send_saved_games <- function() {
-    summaries <- lapply(game$list_saved_games(), function(save) {
-      list(name = save$name, savedAt = save$savedAt)
-    })
-    session$sendCustomMessage("phaser", list(js = sprintf(
-      "renderSwampsRpgSaves(%s);",
-      jsonlite::toJSON(summaries, auto_unbox = TRUE, null = "null")
-    )))
+# One named slot per Shiny session. Saves disappear when the session closes.
+shiny::observeEvent(input$save, {
+  game$save_game("progress", state = list(
+    realm = realm, spirit_rescued = spirit_rescued, completed = completed,
+    life_points = life_points, enemy_hit_points = as.list(enemy_hit_points)
+  ), objects = c("hero", names(enemies)), directory = save_directory)
+  notice("Save requested. Load restores this session's latest completed save.")
+})
+shiny::observeEvent(input$load, {
+  saves <- game$list_saved_games(directory = save_directory)
+  if (!any(vapply(saves, function(save) identical(save$name, "progress"), logical(1)))) {
+    notice("No saved progress yet. Press Save first.")
+    show_dialog("No saved game", "Press Save game before trying to load progress.")
+    return()
   }
-
-  shiny::observeEvent(input$list_saved_games, send_saved_games(), ignoreInit = TRUE)
-
-  shiny::observeEvent(input$save_game_requested, {
-    request <- input$save_game_requested
-    game$save_game(
-      name = as.character(request$name),
-      snapshot = request$objects,
-      state = list(
-        lifePoints = life_points,
-        enemyHitPoints = as.list(enemy_hit_points),
-        enemyIsAlive = as.list(enemy_is_alive),
-        berriesAvailable = as.list(berry_is_available)
-      )
-    )
-  }, ignoreInit = TRUE)
-
-  shiny::observeEvent(input$load_game, {
-    save <- game$load_game(input$load_game$name, restore = FALSE)
-    life_points <<- max(0, min(max_life_points, as.numeric(save$lifePoints %||% max_life_points)))
-    update_life_points()
-
-    saved_enemy_hp <- unlist(save$enemyHitPoints)
-    common_enemies <- intersect(enemy_names, names(saved_enemy_hp))
-    enemy_hit_points[common_enemies] <<- as.numeric(saved_enemy_hp[common_enemies])
-    saved_enemy_alive <- unlist(save$enemyIsAlive)
-    common_alive <- intersect(enemy_names, names(saved_enemy_alive))
-    enemy_is_alive[common_alive] <<- as.logical(saved_enemy_alive[common_alive])
-    saved_berries <- unlist(save$berriesAvailable)
-    common_berries <- intersect(names(berries), names(saved_berries))
-    berry_is_available[common_berries] <<- as.logical(saved_berries[common_berries])
-    update_enemy_status()
-
-    saved_hero <- save$phaser$objects$hero %||% list()
-    x <- as.numeric(saved_hero$x %||% 100)
-    y <- as.numeric(saved_hero$y %||% 100)
-    unavailable <- c(enemy_names[!enemy_is_alive], names(berries)[!berry_is_available])
-    start_game(x, y)
-    lapply(unavailable, function(object_name) {
-      session$sendCustomMessage("phaser", list(js = sprintf(
-        "setRealmObjectVisibility(%s, false);",
-        jsonlite::toJSON(object_name, auto_unbox = TRUE)
-      )))
-    })
-  }, ignoreInit = TRUE)
+  lapply(enemies, function(actor) actor$stop_motion())
+  state <- game$load_game("progress", directory = save_directory)
+  spirit_rescued <<- isTRUE(state$spirit_rescued)
+  completed <<- isTRUE(state$completed)
+  life_points <<- state$life_points
+  saved_health <- unlist(state$enemy_hit_points)
+  # Earlier single-enemy checkpoints stored a scalar mushroom health value.
+  enemy_hit_points <<- enemy_max_hit_points
+  if (is.null(names(saved_health)) && length(saved_health) == 1L) {
+    enemy_hit_points[["mushroom"]] <<- saved_health[[1]]
+  } else {
+    common <- intersect(names(saved_health), names(enemy_hit_points))
+    enemy_hit_points[common] <<- saved_health[common]
+  }
+  last_attack <<- -Inf
+  last_damage <<- -Inf
+  update_hud()
+  position <- state$phaser$objects$hero
+  show_realm(state$realm, position$x, position$y)
+  notice(if (life_points <= 0) "Loaded: game over. Start a new game or load another checkpoint." else
+    if (completed) "Loaded: you won! Explore or start a new game." else
+    if (spirit_rescued) "Loaded: spirit rescued." else
+      "Loaded: rescue the mushroom spirit inside the crypt.")
+  if (life_points <= 0) show_dialog("Game over", "Start a new game or load another checkpoint.", "error")
+  else if (!completed) show_objective()
+})
