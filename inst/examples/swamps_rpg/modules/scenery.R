@@ -1,33 +1,116 @@
-  scenery_map <- jsonlite::fromJSON(
-    file.path(example_dir, "www", "maps", "mushroom_swamps.json"),
-    simplifyVector = FALSE
+scenery_layout <- swamp_scenery()
+for (i in seq_len(nrow(scenery_layout))) {
+  item <- scenery_layout[i, ]
+  art <- game$add_image(
+    item$name, asset(paste0("terrain/mushroom_swamps/", item$asset, ".png")),
+    item$x, item$base_y - item$height / 2
   )
-  reserved_positions <- rbind(
-    c(100, 140), c(1600, 840), c(2850, 5890),
-    do.call(rbind, lapply(enemy_specs, function(spec) c(spec$x, spec$y))),
-    do.call(rbind, berry_specs)
+  art$set_depth(item$base_y)
+  footprint <- paste0(item$name, "_footprint")
+  game$add_collision_rectangle(
+    footprint, item$x, item$base_y - item$footprint_height / 2,
+    item$footprint_width, item$footprint_height
   )
-  scenery_layout <- make_swamp_scenery(scenery_map, reserved_positions)
-  for (i in seq_len(nrow(scenery_layout))) {
-    item <- scenery_layout[i, ]
-    art <- game$add_image(
-      item$name,
-      paste0("swamps-rpg-assets/terrain/mushroom_swamps/", item$asset, ".png"),
-      item$x, item$y
+  game$add_collider("hero", footprint)
+}
+
+enemies <- list()
+for (i in seq_len(nrow(mushroom_spawns))) {
+  spawn <- mushroom_spawns[i, ]
+  id <- spawn$id
+  mushroom <- game$add_sprite(
+    id, asset("sprites/enemies/mushroom_man/mushroom_man_idle.png"),
+    x = spawn$x, y = spawn$y, frame_width = 100, frame_height = 100,
+    frame_count = 8, frame_rate = 8
+  )
+  mushroom$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+  mushroom$set_depth_by_y(offset = 40)
+  for (direction in c("down", "up", "left", "right")) {
+    mushroom$add_animation(
+      paste0("move_", direction),
+      asset(sprintf("sprites/enemies/mushroom_man/mushroom_man_walk_%s.png", direction)),
+      frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 8
     )
-    art$set_depth(item$base_y)
-    footprint <- paste0(item$name, "_footprint")
-    game$add_collision_rectangle(
-      footprint, item$x, item$base_y - item$footprint_height / 2,
-      item$footprint_width, item$footprint_height
-    )
-    game$add_collider("hero", footprint)
   }
-  mushroom_swamps_objects <- c(
-    mushroom_swamps_objects, scenery_layout$name,
-    paste0(scenery_layout$name, "_footprint")
+  game$enable_terrain_collision(id)
+  for (name in scenery_layout$name) game$add_collider(id, paste0(name, "_footprint"))
+  mushroom$start_approach_on_sight(
+    "hero", sight_range = 240, speed = 85, distance = 45,
+    check_interval = 100, wander_interval = 1500
   )
-  # All actors have centered 100px frames, with their feet 40px below the origin.
-  lapply(c(enemies, list(wizard, mushroom_spirit)), function(actor) {
-    actor$set_depth_by_y(offset = 40)
-  })
+
+  enemies[[id]] <- mushroom
+}
+
+# Rescue the animated spirit by approaching it.
+good_spirit <- game$add_sprite("good_spirit", asset("sprites/npc/good_spirit/good_spirit.png"),
+  x = 850, y = 150, frame_width = 32, frame_height = 32,
+  frame_count = 14, frame_rate = 6)
+good_spirit$set_depth(190)
+door <- game$add_image("door",
+  asset("terrain/mushroom_swamps/crypt_entrance.png"), 1450, 950)
+door$set_depth(1050) # Sort by its ground-level base, like trees and bushes.
+game$add_collision_rectangle("crypt_footprint", 1450, 1038, 160, 24)
+game$add_collider("hero", "crypt_footprint")
+clearing_objects <- c(scenery_layout$name, paste0(scenery_layout$name, "_footprint"),
+                      mushroom_spawns$id, "door", "crypt_footprint")
+chime <- game$add_sound("chime", asset("sounds/chime.wav"), volume = 0.3)
+
+for (id in mushroom_spawns$id) {
+  mushroom <- enemies[[id]]
+  for (suffix in c("attack", paste0("attack_", c("left", "right")))) {
+    mushroom$add_animation(suffix,
+      asset(paste0("sprites/enemies/mushroom_man/mushroom_man_", suffix, ".png")),
+      frame_width = 100, frame_height = 100, frame_count = 4, frame_rate = 6)
+  }
+
+  for (direction in c("down", "up", "left", "right")) {
+    mushroom$add_animation(paste0("damage_", direction),
+      asset(sprintf("sprites/enemies/mushroom_man/mushroom_man_damage_%s.png", direction)),
+      frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+  }
+  mushroom$add_animation("destroy",
+    asset("sprites/enemies/mushroom_man/mushroom_man_destroy.png"),
+    frame_width = 100, frame_height = 100, frame_count = 4, frame_rate = 8)
+  mushroom$add_animation("damage",
+    asset("sprites/enemies/mushroom_man/mushroom_man_damage_down.png"),
+    frame_width = 100, frame_height = 100, frame_count = 3, frame_rate = 8)
+
+}
+
+attack_sound <- game$add_sound("attack", asset("sounds/attack.wav"), volume = 0.3)
+
+# All four warriors share their artwork but have unique names and combat state.
+for (i in seq_len(nrow(skeleton_spawns))) {
+  spawn <- skeleton_spawns[i, ]
+  id <- spawn$id
+  actor <- game$add_sprite(id, asset("sprites/enemies/skeleton/skeleton_idle.png"),
+    x = spawn$x, y = spawn$y, frame_width = 100, frame_height = 100,
+    frame_count = 10, frame_rate = 6)
+  actor$set_body_size(32, 18, offset_x = 34, offset_y = 72)
+  actor$set_depth_by_y(offset = 40)
+  for (direction in c("left", "right")) {
+    for (kind in c("move", "attack")) {
+      actor$add_animation(paste0(kind, "_", direction),
+        asset(sprintf("sprites/enemies/skeleton/skeleton_%s_%s.png", kind, direction)),
+        frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+    }
+  }
+  # Generic right-facing animations are the fallback for vertical movement.
+  for (kind in c("move", "attack")) {
+    actor$add_animation(kind,
+      asset(sprintf("sprites/enemies/skeleton/skeleton_%s_right.png", kind)),
+      frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+  }
+  actor$add_animation("damage", asset("sprites/enemies/skeleton/skeleton_damage.png"),
+    frame_width = 100, frame_height = 100, frame_count = 2, frame_rate = 6)
+  game$enable_terrain_collision(id)
+  for (name in scenery_layout$name) game$add_collider(id, paste0(name, "_footprint"))
+  actor$start_approach_on_sight("hero", sight_range = 240, speed = 75, distance = 45,
+    check_interval = 100, wander_interval = 1700)
+  enemies[[id]] <- actor
+}
+clearing_objects <- union(clearing_objects, names(enemy_realm)[enemy_realm == "mushroom_swamps"])
+crypt_objects <- c("good_spirit", names(enemy_realm)[enemy_realm == "crypt"])
+
+for (id in names(enemies)) game$add_collider(id, "crypt_footprint")

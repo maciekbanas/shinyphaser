@@ -1,12 +1,22 @@
-# shinyphaser (development version)
+# shinyphaser 0.2.0
+
+This release makes games more responsive by separating browser actions from
+server logic and expands the R interface with sound, game saves, map switching,
+and richer sprite and collision controls. New game examples and tutorials show
+how to build runners, create tile maps, and add interactive scenery and enemies.
+Existing apps need to update their event handlers to use the explicit
+`browser_action` and `server_action` parameters.
+
+## Breaking changes
 
 * Split event handling into explicit `browser_action` and `server_action`
   parameters. Browser-side calls must now be declared with `browser_actions()`,
   while arbitrary R logic belongs in a server action.
-* Removed `action` and `notify_server` from controls, overlaps, overlap-end
-  handlers, and colliders.
-* Added a vignette explaining when to use browser actions, server actions, or
-  both together.
+* Replaced the `action` parameter in `add_control()` and the `callback_fun`
+  parameter in `add_collider()`, `add_overlap()`, and `add_overlap_end()` with
+  explicit action parameters. Move existing R callbacks to `server_action`.
+* Removed `run_sample_app()`. Launch the bundled examples with
+  `shiny::runApp()` instead.
 
 ## Performance improvements
 
@@ -17,6 +27,8 @@
 * Overlaps are edge-triggered by default and notify Shiny only when a
   `server_action` is supplied; sustained handlers can use `mode = "stay"` and
   `interval` throttling.
+* Fixed interrupted hit and destruction animations: timers from earlier
+  animations no longer return the sprite to idle prematurely.
 * Moved sprite movement delays from blocking R sleeps to browser timers.
 * Queued sprite physics actions until sprites finish loading so setup calls such as `set_gravity()` are not lost during asynchronous asset initialization.
 
@@ -74,9 +86,26 @@
 
 * Added a Geometry Dash-style runner (`geometry_dash`) with automatic movement,
   jumping, spike obstacles, a finish line, and restart controls.
-* Added the Swamps RPG game example (`swamps_rpg`).
+* Added a compact Swamps RPG exploration example (`swamps_rpg`) with a clearing
+  and crypt, a spirit rescue objective, a mushroom and four skeleton warriors,
+  combat with hit reactions and knockback, an overlaid life bar, scenery
+  footprints and depth ordering, sound, and session-local save/load.
 * Organized games and their assets into individual directories under
   `inst/examples`, with launch instructions using `shiny::runApp()`.
+
+## Vignettes and articles
+
+* Added a step-by-step article on building a Geometry Dash-style runner.
+* Added a guide explaining when to use browser actions, server actions, or both
+  together.
+* Added a tile map tutorial, starting with a simple room and continuing with the
+  Swamps RPG map, terrain collision, and shoreline tiles.
+* Added guides on making enemies approach the hero on sight and letting the
+  hero walk behind scenery while blocking tree trunks and bush footprints.
+* Added a combat tutorial covering close-range attacks, damage cooldowns,
+  life points, defeat, and saving combat state.
+* Organized articles into "Simple game examples", "General", and "Advanced
+  features" sections.
 
 ## README
 
