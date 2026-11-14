@@ -27,11 +27,11 @@ shiny::runApp("inst/examples/swamps_rpg")
 ```
 
 Move with the arrow keys and press Space while touching the mushroom. The
-hero starts with 100 life points, the mushroom with 6, and each of the four skeletons with 8.
+hero starts with 100 life points, each mushroom with 6, and each of the four skeletons with 8.
 Each successful attack removes 2 enemy life points; contact removes 10
 (mushroom) or 12 (skeleton) hero life points, with a shared one-second cooldown.
 Three attacks defeat the mushroom and four defeat each skeleton. Fighting is optional:
-you can also avoid it while rescuing the spirit and reaching the crypt.
+you can also avoid it while entering the crypt and rescuing the spirit inside.
 
 ## Keep rules in session-local R state
 
@@ -40,7 +40,8 @@ share a fight. The example starts with:
 
 ```{r eval=FALSE}
 life_points <- 100
-enemy_max_hit_points <- c(mushroom = 6, skeleton = 8, skeleton_2 = 8,
+enemy_max_hit_points <- c(mushroom = 6, mushroom_2 = 6, mushroom_3 = 6,
+                          mushroom_4 = 6, skeleton = 8, skeleton_2 = 8,
                           skeleton_3 = 8, skeleton_4 = 8)
 enemy_hit_points <- enemy_max_hit_points
 enemy_in_range <- stats::setNames(rep(FALSE, length(enemy_max_hit_points)),
@@ -197,7 +198,7 @@ attacks, and damage. Only left/right attack and movement artwork is available;
 generic right-facing animations provide the fallback for vertical movement.
 There is no skeleton destruction sheet. It shows its hit reaction and then
 hides, whereas the mushroom plays its destruction animation. All enemies stop dealing
-damage immediately at zero health. Save/load and restart manage all five enemies.
+damage immediately at zero health. Save/load and restart manage all eight enemies.
 
 ## Read the example's combat module
 

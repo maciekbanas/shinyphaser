@@ -11,7 +11,7 @@ test_that("compact swamp scenery stays on grass without covering objectives", {
   tiles <- matrix(unlist(terrain$data), nrow = map$height, byrow = TRUE)
   grass <- vapply(Filter(function(tile) grepl("^mushroom_swamps_grass_", tile$name),
                          map$tilesets), function(tile) tile$firstgid, numeric(1))
-  reserved <- rbind(c(150, 150), c(650, 350), c(650, 1090), c(1450, 350), c(1450, 750), c(450, 750), c(1150, 150), c(850, 1050))
+  reserved <- rbind(c(150, 150), c(650, 350), c(1150, 250), c(450, 750), c(850, 850), c(1450, 950), c(1350, 1100), c(1450, 750))
   for (i in seq_len(nrow(reserved))) {
     column <- floor(reserved[i, 1] / map$tilewidth) + 1
     row <- floor(reserved[i, 2] / map$tileheight) + 1
@@ -40,18 +40,21 @@ test_that("clearing objectives, map transitions, restart and saves remain consis
     # Read live closure state, rather than testServer's initial variable copies.
     state <- environment(show_realm)
     session$flushReact()
-    popup_requests <- logical()
-    state$show_objective <- function(locked = FALSE) popup_requests <<- c(popup_requests, locked)
-    session$setInputs(near_door = list(active = TRUE))
-    expect_true(popup_requests[[1]])
-    expect_identical(state$realm, "mushroom_swamps")
-    expect_false(state$completed)
+    popup_requests <- 0L
+    state$show_objective <- function() popup_requests <<- popup_requests + 1L
+    # Spirit events from the wrong realm cannot win the game.
     session$setInputs(near_good_spirit = list(active = TRUE))
-    expect_false(popup_requests[[2]])
-    expect_true(state$spirit_rescued)
-    session$setInputs(near_door = list(active = TRUE, nonce = 2))
+    expect_false(state$spirit_rescued)
+    session$setInputs(near_door = list(active = TRUE))
     expect_identical(state$realm, "crypt")
+    expect_false(state$completed)
+    session$setInputs(near_good_spirit = list(active = TRUE, nonce = 2))
+    expect_equal(popup_requests, 1L)
+    expect_true(state$spirit_rescued)
     expect_true(state$completed)
+    expect_match(notice(), "won")
+    session$setInputs(near_good_spirit = list(active = TRUE, nonce = 3))
+    expect_equal(popup_requests, 1L)
     session$setInputs(near_exit = list(active = FALSE))
     expect_identical(state$realm, "crypt")
     session$setInputs(near_exit = list(active = TRUE))
@@ -178,12 +181,13 @@ test_that("all four skeletons have independent combat state and rescue progress 
   shiny::testServer(app$serverFuncSource(), {
     state <- environment(attack)
     session$flushReact()
-    expect_length(enemies, 5)
+    expect_length(enemies, 8)
     expect_equal(nrow(skeleton_spawns), 4)
     expect_equal(state$enemy_hit_points[skeleton_spawns$id],
       stats::setNames(rep(8, 4), skeleton_spawns$id))
     for (i in 2:4) {
       id <- paste0("skeleton_", i)
+      show_realm(enemy_realm[[id]], 150, 350)
       state$last_damage <- -Inf
       event <- stats::setNames(list(list(nonce = i)), paste0("overlap_hero_", id))
       do.call(session$setInputs, event)
@@ -195,13 +199,13 @@ test_that("all four skeletons have independent combat state and rescue progress 
       expect_equal(state$enemy_hit_points[[id]], 6)
     }
     expect_equal(state$enemy_hit_points[["skeleton"]], 8)
+    show_realm("mushroom_swamps", 150, 150)
     session$setInputs(near_door = list(active = TRUE))
-    expect_identical(state$realm, "mushroom_swamps")
-    expect_match(notice(), "Rescue the good spirit")
+    expect_identical(state$realm, "crypt")
+    expect_false(state$completed)
     session$setInputs(near_good_spirit = list(active = TRUE))
     expect_true(state$spirit_rescued)
-    session$setInputs(near_door = list(active = TRUE, nonce = 2))
-    expect_identical(state$realm, "crypt")
+    expect_true(state$completed)
     game$save_game("progress", state = list(realm = "crypt", spirit_rescued = TRUE,
       completed = TRUE, life_points = state$life_points,
       enemy_hit_points = as.list(state$enemy_hit_points)),
@@ -213,5 +217,37 @@ test_that("all four skeletons have independent combat state and rescue progress 
     expect_true(state$spirit_rescued)
     expect_identical(state$realm, "crypt")
     expect_equal(unname(state$enemy_hit_points[paste0("skeleton_", 2:4)]), rep(6, 3))
+  })
+})
+
+
+test_that("enemy contacts and attacks respect realms", {
+  app <- source(system.file("examples", "swamps_rpg", "app.R", package = "shinyphaser"),
+                local = new.env())$value
+  shiny::testServer(app$serverFuncSource(), {
+    state <- environment(attack)
+    session$flushReact()
+    expect_equal(sum(enemy_realm == "crypt"), 2)
+    expect_equal(sum(startsWith(names(enemies), "mushroom")), 4)
+    session$setInputs(overlap_hero_skeleton_3 = list(nonce = 1))
+    expect_equal(state$life_points, 100)
+    expect_false(state$enemy_in_range[["skeleton_3"]])
+    show_realm("crypt", 150, 350)
+    session$setInputs(overlap_hero_skeleton_3 = list(nonce = 2))
+    expect_equal(state$life_points, 88)
+    attack()
+    expect_equal(state$enemy_hit_points[["skeleton_3"]], 6)
+    state$last_damage <- -Inf
+    session$setInputs(overlap_hero_mushroom_2 = list(nonce = 1))
+    expect_equal(state$life_points, 88)
+    show_realm("mushroom_swamps", 150, 150)
+    session$setInputs(overlap_hero_mushroom_2 = list(nonce = 2))
+    expect_equal(state$life_points, 78)
+    state$last_attack <- -Inf
+    attack()
+    expect_equal(state$enemy_hit_points[["mushroom_2"]], 4)
+    session$setInputs(restart = 1)
+    expect_equal(state$enemy_hit_points, enemy_max_hit_points)
+    expect_false(state$completed)
   })
 })

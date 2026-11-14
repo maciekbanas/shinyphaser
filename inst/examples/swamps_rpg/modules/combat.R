@@ -26,7 +26,7 @@ for (enemy_name in names(enemies)) local({
   actor <- enemies[[id]]
   game$add_overlap("hero", id, input = input, mode = "stay", interval = 1000,
     server_action = function(event) {
-      if (realm != "mushroom_swamps" || life_points <= 0 || enemy_hit_points[[id]] <= 0) return()
+      if (realm != enemy_realm[[id]] || life_points <= 0 || enemy_hit_points[[id]] <= 0) return()
       enemy_in_range[[id]] <<- TRUE
       knockback_direction[[id]] <<- knockback_from_contact(event)
       now <- as.numeric(Sys.time())
@@ -50,13 +50,13 @@ for (enemy_name in names(enemies)) local({
 })
 
 attack <- function(event = NULL) {
-  if (life_points <= 0 || realm != "mushroom_swamps") return()
+  if (life_points <= 0) return()
   now <- as.numeric(Sys.time())
   if (now - last_attack < 0.6) return()
   last_attack <<- now
   hero$play_animation("hero_attack", duration = 500)
   if (isTRUE(input$sound)) attack_sound$play()
-  targets <- names(enemy_in_range)[enemy_in_range & enemy_hit_points > 0]
+  targets <- names(enemy_in_range)[enemy_in_range & enemy_hit_points > 0 & enemy_realm == realm]
   if (!length(targets)) {
     notice("Move closer to an enemy to land a hit.")
     return()
@@ -78,15 +78,15 @@ attack <- function(event = NULL) {
     enemy_in_range[[id]] <<- FALSE
     generation <- combat_generation
     # Only the mushroom has destruction artwork. Skeleton uses its hit reaction.
-    if (id == "mushroom") later::later(function() {
+    if (startsWith(id, "mushroom")) later::later(function() {
       if (session$isClosed() || generation != combat_generation || enemy_hit_points[[id]] > 0) return()
-      actor$play_animation("mushroom_destroy", duration = 500)
+      actor$play_animation(paste0(id, "_destroy"), duration = 500)
     }, delay = 0.3)
     later::later(function() {
       if (session$isClosed() || generation != combat_generation || enemy_hit_points[[id]] > 0) return()
       game$activate_map(realm, hidden_objects = id)
-    }, delay = if (id == "mushroom") 0.95 else 0.65)
-    notice(paste(enemy_labels[[id]], "defeated! Rescue the good spirit and reach the crypt."))
+    }, delay = if (startsWith(id, "mushroom")) 0.95 else 0.65)
+    notice(paste(enemy_labels[[id]], "defeated! Rescue the mushroom spirit inside the crypt."))
   } else notice(sprintf("Hit! %s loses 2 life points.", enemy_labels[[id]]))
 }
 game$add_control("Space", input = input, server_action = attack)

@@ -33,9 +33,9 @@ shiny::observeEvent(input$load, {
   position <- state$phaser$objects$hero
   show_realm(state$realm, position$x, position$y)
   notice(if (life_points <= 0) "Loaded: game over. Start a new game or load another checkpoint." else
-    if (completed) "Loaded: crypt reached; explore or start a new game." else
-    if (spirit_rescued) "Loaded: spirit rescued. Head to the crypt entrance." else
-      "Loaded: rescue the good spirit in the south.")
+    if (completed) "Loaded: you won! Explore or start a new game." else
+    if (spirit_rescued) "Loaded: spirit rescued." else
+      "Loaded: rescue the mushroom spirit inside the crypt.")
   if (life_points <= 0) show_dialog("Game over", "Start a new game or load another checkpoint.", "error")
   else if (!completed) show_objective()
 })

@@ -25,13 +25,20 @@ server <- function(input, output, session) {
   spirit_rescued <- FALSE
   completed <- FALSE
   life_points <- 100
+  mushroom_spawns <- data.frame(
+    id = c("mushroom", "mushroom_2", "mushroom_3", "mushroom_4"),
+    x = c(650, 1150, 450, 850), y = c(350, 250, 750, 850)
+  )
   skeleton_spawns <- data.frame(
     id = c("skeleton", "skeleton_2", "skeleton_3", "skeleton_4"),
-    x = c(1450, 450, 1150, 850), y = c(750, 750, 150, 1050)
+    x = c(1350, 1450, 450, 750), y = c(1100, 750, 250, 350),
+    realm = c("mushroom_swamps", "mushroom_swamps", "crypt", "crypt")
   )
-  enemy_max_hit_points <- c(mushroom = 6,
+  enemy_realm <- c(stats::setNames(rep("mushroom_swamps", nrow(mushroom_spawns)), mushroom_spawns$id),
+    stats::setNames(skeleton_spawns$realm, skeleton_spawns$id))
+  enemy_max_hit_points <- c(stats::setNames(rep(6, nrow(mushroom_spawns)), mushroom_spawns$id),
     stats::setNames(rep(8, nrow(skeleton_spawns)), skeleton_spawns$id))
-  enemy_labels <- c(mushroom = "Mushroom",
+  enemy_labels <- c(stats::setNames(paste("Mushroom", seq_len(nrow(mushroom_spawns))), mushroom_spawns$id),
     stats::setNames(paste("Skeleton", seq_len(nrow(skeleton_spawns))), skeleton_spawns$id))
   enemy_hit_points <- enemy_max_hit_points
   enemy_in_range <- stats::setNames(rep(FALSE, length(enemy_max_hit_points)), names(enemy_max_hit_points))
@@ -39,7 +46,7 @@ server <- function(input, output, session) {
   last_damage <- -Inf
   enemy_hurt_until <- stats::setNames(rep(-Inf, length(enemy_max_hit_points)), names(enemy_max_hit_points))
   combat_generation <- 0L
-  notice <- shiny::reactiveVal("Rescue the good spirit in the south to unlock the crypt.")
+  notice <- shiny::reactiveVal("Enter the crypt in the south and rescue the mushroom spirit.")
   show_dialog <- function(title, text, type = "info") {
     # Let the initial loader finish before pausing its scene.
     session$sendCustomMessage("phaser", list(js = paste0(
@@ -64,17 +71,15 @@ server <- function(input, output, session) {
       }", session = session
     )
   }
-  show_objective <- function(locked = FALSE) {
+  show_objective <- function() {
     show_dialog(
-      title = if (locked) "Crypt sealed" else if (spirit_rescued) "Enter the crypt" else "Rescue the good spirit",
-      text = if (locked) {
-        "You must first find and rescue the good spirit in the south before you can enter the crypt."
-      } else if (spirit_rescued) {
-        "The spirit is safe! Use the stone entrance in the north-east to enter the crypt."
+      title = if (completed) "You won!" else "Rescue the mushroom spirit",
+      text = if (completed) {
+        "The mushroom spirit is safe. You won the game! Explore or start a new game."
       } else {
-        "Find and rescue the good spirit in the south of the clearing. Move with the arrow keys and press Space to fight enemies at close range."
+        "Find the stone crypt entrance at the bottom of the clearing. Rescue the mushroom spirit inside to win. Move with the arrow keys and press Space to fight enemies at close range."
       },
-      type = if (locked) "warning" else if (spirit_rescued) "success" else "info"
+      type = if (completed) "success" else "info"
     )
   }
   session$onFlushed(function() show_objective(), once = TRUE)

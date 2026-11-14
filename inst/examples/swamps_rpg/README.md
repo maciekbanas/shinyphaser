@@ -1,13 +1,9 @@
 # Swamp clearing (Swamps RPG example)
 
-A short exploration demo: rescue the good spirit in the south, face a mushroom
-and four skeleton warriors, and reach the crypt entrance in the north-east.
-Walk through the opening in its south wall to return. Arrow keys move the hero;
-press Space at close range to attack. The hero starts with 100 life points;
-the mushroom has 6 and each skeleton has 8. Three hits defeat the mushroom and
-four defeat each skeleton. Contact costs 10 (mushroom) or 12 (skeleton) life
-points, with one shared one-second damage cooldown. At zero life, use the menu
-to restart or load a save.
+Explore a compact clearing, enter the crypt at its southern edge, and rescue
+its mushroom spirit to win. Four mushrooms roam the clearing, two skeleton
+warriors guard the crypt entrance, and two more wait inside. Arrow keys move
+the hero; press Space at close range to attack.
 
 From the repository root, with the current shinyphaser version and its suggested
 `shinyalert` package installed:
@@ -16,67 +12,56 @@ From the repository root, with the current shinyphaser version and its suggested
 shiny::runApp("inst/examples/swamps_rpg")
 ```
 
-Objective instructions appear in `shinyalert` popups: first rescue the spirit,
-then enter the crypt. The game pauses while you read and resumes on Continue.
-New game and loading unfinished progress show the appropriate objective again.
-Only the hero's life points and bar remain in the top-right HUD. Hit and defeat
-animations provide combat feedback; game-over and missing-save messages use popups.
+Objective instructions appear in `shinyalert` popups. The game pauses while you
+read and resumes on Continue. Entering the crypt does not finish the game:
+approach the spirit inside to display the victory alert. You can return to the
+clearing through the opening in the crypt's south wall.
 
 ## Features to try
 
-- Walk behind a tree or a bush. Its artwork can hide the hero, while a
-  separate invisible footprint blocks only its base. All seven scenery objects
-  have fixed placements on grass.
-- Approach either enemy to see its alert and pursuit; move away to let it wander.
-- Press Space to attack, with a 0.6-second cooldown. Only the hero's life
-  points and bar appear over the map; enemies show hit reactions rather than
-  health labels. The Menu opens over the map.
-- Hits push enemies away by up to 52 pixels and show a damage reaction; the
-  final hit plays the destruction animation
-  before the mushroom disappears. The skeleton has no destruction sheet and
-  disappears after its damage reaction. Defeated enemies cannot deal damage.
-- Approach the spirit to rescue it, enter the crypt, and return. The entrance
-  artwork sits at `(1450, 350)`, with depth set to its base at `y = 450`.
-  An invisible 160 by 24 pixel footprint blocks that base, like the tree and
-  bush footprints. The hero can walk behind the upper art, but stays visible
-  when approaching the solid base from the front. The entry trigger is in front
-  at `(1450, 450)`. The doorway stays sealed until the spirit is safe;
-  approaching it beforehand opens a reminder popup. Map activation changes terrain,
-  collisions, camera bounds, and the visibility and physics of scene objects.
-- Toggle Sound to enable or mute the short spirit/doorway chime.
-- Save, move somewhere else, then Load. One save slot stores the current map,
-  objective progress, life points, enemy health, and hero and all enemy positions for
-  this browser session.
-  Saves are deleted when the Shiny session ends; they are not shared with visitors.
-- New game resets the objective and the hero and all five enemies, leaving the save slot available.
+- Walk behind trees and bushes. Their artwork can hide the hero, while separate
+  invisible footprints block their bases. All seven scenery objects sit on grass.
+- Approach enemies to see their alert and pursuit; move away to let them wander.
+  Only actors belonging to the current map are visible and active.
+- Press Space to attack, with a 0.6-second cooldown. A swing hits one living
+  enemy in contact, in stable list order. Each mushroom has 6 life points and each
+  skeleton has 8; each hit deals 2 damage. Hits push enemies back up to 52 pixels.
+  Mushrooms play destruction artwork on defeat; skeletons disappear after their
+  damage reaction. Defeated enemies cannot hurt the hero.
+- Contact costs 10 (mushroom) or 12 (skeleton) hero life points, with a shared
+  one-second damage cooldown. Only the hero's life and bar appear in the HUD.
+  At zero life, open Menu to restart or load a save.
+- Find the crypt artwork at `(1450, 950)`, sorted by its ground-level base at
+  `y = 1050`. An invisible 160 by 24 pixel footprint blocks its base; approach
+  the entry trigger in front at `(1450, 1050)`. The entrance is open from the start.
+  Map activation switches terrain, collisions, camera bounds, and actor visibility.
+- Find the spirit at `(850, 150)` inside the crypt. Collecting it hides the spirit
+  and displays a victory popup once. Leaving and returning keeps it collected.
+- Toggle Sound to enable the spirit/doorway chime and attack sound.
+- Save, move elsewhere, then Load. One session-local save slot stores the map,
+  objective progress, life points, enemy health, and hero and enemy positions.
+  Saves disappear when the Shiny session ends.
+- New game restores all eight enemies, the spirit, health, and the starting map,
+  while keeping the save slot available.
 
-The encounter stays small: five enemies, one spirit rescue, and one crypt. The clearing
-is 16 by 12 tiles (1600 by 1200 pixels); the crypt is 10 by 6 tiles (1000 by 600 pixels).
-
-A swing hits one living enemy in contact. If both are touching the hero, the
-mushroom is targeted first. The four skeletons start on grass at `(1450, 750)`,
-`(450, 750)`, `(1150, 150)`, and `(850, 1050)`; they use left/right movement and attack sheets, with a
-generic fallback for vertical movement.
-
-The spirit sheet uses 14 frames of 32 by 32 pixels; the two empty cells are
-excluded. Rescuing it changes the objective state and hides the spirit. Saving
-and loading preserves that state; New game brings the spirit back.
+The clearing is 16 by 12 tiles (1600 by 1200 pixels); the crypt is 10 by 6 tiles
+(1000 by 600 pixels). Two skeletons start near the entrance at `(1350, 1100)` and
+`(1450, 750)`; two start inside at `(450, 250)` and `(750, 350)`. Skeletons use
+left/right movement and attack sheets, with a fallback for vertical movement.
+The spirit sheet uses 14 frames of 32 by 32 pixels, excluding two empty cells.
 
 ## Code layout
 
-`ui.R` defines the menu and HUD overlays. `app.R` loads the UI and creates a
-separate game for each Shiny session.
-Its server sources these focused modules in order:
+`ui.R` defines the menu and HUD overlays. `app.R` creates a separate game for each
+Shiny session and declares enemy spawns and map membership. Its server sources:
 
-- `navigation_setup.R`: load the two maps and their embedded tilesets.
-- `hero.R`: movement animations, controls, foot-sized body, and depth sorting.
-- `scenery_layout.R`: the small, deliberate scenery layout (loaded by `app.R`).
-- `scenery.R`: scenery art and footprints, five enemies, the animated spirit, markers, and sound.
-- `combat.R`: attacks, contact damage, cooldowns, health display, and defeat.
-- `navigation.R`: proximity triggers, spirit/crypt objective, and restart.
-- `saving.R`: save/load using the package's R interface.
+- `navigation_setup.R`: load both maps and their embedded tilesets.
+- `hero.R`: controls, animation, foot-sized body, and depth sorting.
+- `scenery.R`: scenery, footprints, eight enemies, spirit, doorway, and sound.
+- `combat.R`: attacks, map-aware contact damage, cooldowns, health, and defeat.
+- `navigation.R`: visibility, proximity triggers, victory, and restart.
+- `saving.R`: session-local save/load through the package's R interface.
 
-All assets live in `www/`. The example registers `swamps-rpg-assets` explicitly.
-The maps are generated JSON in Tiled format; use of the Tiled editor is optional.
-The game uses the shinyphaser R interface and standard Shiny callbacks without
-custom JavaScript.
+`scenery_layout.R`, loaded by `app.R`, defines the fixed scenery placements.
+All assets live in `www/`, registered under `swamps-rpg-assets`. Maps are generated
+Tiled JSON; using the Tiled editor is optional.

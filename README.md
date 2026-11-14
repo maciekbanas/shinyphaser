@@ -86,7 +86,7 @@ Three games are included in `inst/examples`, each with its own assets:
   online](https://maciekbanas.shinyapps.io/hedgehog).
 - **Geometry Dash**: jump over spikes in a one-button runner and reach
   the finish.
-- **Swamps RPG**: rescue a good spirit, fight a mushroom and four skeletons, and enter a crypt;
+- **Swamps RPG**: face mushrooms and skeletons, enter a crypt, and rescue the spirit inside to win;
   try combat, scenery collision, map switching, sound, and saving.
 
 With the current development version of shinyphaser installed, run each
