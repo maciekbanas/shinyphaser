@@ -15,6 +15,17 @@ Swamps RPG uses a clearing and a crypt to demonstrate terrain, shorelines,
 collisions, and map switching. For the basic map-loading API, start with
 [Create a simple tile map](simple-map.html).
 
+## The whole Swamps map
+
+This overview shows the entire 16-by-12 clearing, including its terrain,
+trees and bushes, four mushroom enemies, and two skeleton guards. The crypt
+entrance is at the bottom right; its interior is a separate map. During play,
+the camera shows only part of this world and follows the hero.
+
+```{r swamps-map-overview, echo=FALSE, out.width="100%", fig.cap="The complete Swamps clearing (1600 by 1200 pixels), with the crypt entrance at the bottom right.", fig.alt="Full Swamps clearing with the hero at the top left, trees and bushes, two swamp pools, four mushroom enemies, and two skeletons guarding the crypt at the bottom right"}
+knitr::include_graphics("assets/swamps-map.png")
+```
+
 ## Organize the Swamps RPG map and artwork
 
 Swamps RPG uses the same map-loading API, with more terrain variants, a compact
