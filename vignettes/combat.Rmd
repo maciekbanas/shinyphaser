@@ -17,7 +17,7 @@ interface: a mushroom approaches the hero, contact costs life points, and
 Space attacks at close range. No custom JavaScript is needed.
 
 ```{r, echo=FALSE}
-knitr::include_graphics("assets/combat_example.png")
+knitr::include_graphics("assets/combat_example.gif")
 ```
 
 With the current package installed, run this from the repository root:
