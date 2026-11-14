@@ -23,7 +23,7 @@ entrance is at the bottom right; its interior is a separate map. During play,
 the camera shows only part of this world and follows the hero.
 
 ```{r swamps-map-overview, echo=FALSE, out.width="100%", fig.cap="The complete Swamps clearing (1600 by 1200 pixels), with the crypt entrance at the bottom right.", fig.alt="Full Swamps clearing with the hero at the top left, trees and bushes, two swamp pools, four mushroom enemies, and two skeletons guarding the crypt at the bottom right"}
-knitr::include_graphics("assets/swamps-map.png")
+knitr::include_graphics("assets/swamps-map-overview.png")
 ```
 
 ## Organize the Swamps RPG map and artwork
