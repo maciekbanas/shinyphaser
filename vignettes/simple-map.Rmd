@@ -1,0 +1,119 @@
+---
+title: "Create a simple tile map"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Create a simple tile map}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+A tile map describes which small terrain image belongs at each position in
+a grid. **shinyphaser** loads maps in [Tiled](https://www.mapeditor.org/) JSON
+format through Phaser. These files can be generated programmatically, including
+with LLM assistance, or exported from the Tiled editor using a compatible
+configuration. The Swamps RPG map was created with LLM assistance.
+
+This article builds a tiny room from two tiles.
+
+## Start with a tiny room
+
+Create an **8-by-6 room** with only two tile
+IDs: **1 is floor** and **2 is wall**. Each tile is 64 pixels square. The room
+has a border and two wall tiles in the middle:
+
+```text
+########
+#......#
+#..##..#
+#......#
+#......#
+########
+```
+
+Here `.` means floor and `#` means wall. A small orange square will be the
+player. The complete app, images, and JSON map are already provided in
+`inst/examples/simple-map`, so no file-generation step or Tiled installation
+is needed.
+
+### Run the example
+
+With shinyphaser installed, run this from the repository root:
+
+```{r eval=FALSE, purl=FALSE}
+shiny::runApp("inst/examples/simple-map")
+```
+
+The example contains:
+
+```text
+inst/examples/simple-map/
+  app.R
+  www/
+    room.json
+    floor.png
+    wall.png
+    player.png
+```
+
+`room.json` contains the 8-by-6 tile grid and two embedded tileset definitions.
+Each tileset contains one image, and only the wall tile has the Boolean
+property `collides = true`.
+
+### How the app loads the map
+
+The following code is the supplied **`inst/examples/simple-map/app.R`**:
+
+```{r tiny-map-app, eval=FALSE}
+library(shiny)
+library(shinyphaser)
+
+game <- PhaserGame$new(width = 512, height = 384)
+ui <- tagList(tags$p("Arrow keys: move the orange square. Walls block movement."),
+              game$use_phaser())
+
+server <- function(input, output, session) {
+  game <- PhaserGame$new(width = 512, height = 384)
+  game$set_shiny_session(session)
+  game$set_world_bounds(512, 384)
+  game$add_map(
+    map_key = "room", map_url = "room.json",
+    tileset_urls = c("floor.png", "wall.png"),
+    tileset_names = c("floor", "wall"), layer_name = "terrain"
+  )
+  player <- game$add_sprite(
+    "player", "player.png", x = 96, y = 96,
+    frame_width = 32, frame_height = 32, frame_count = 1, frame_rate = 1
+  )
+  player$add_player_controls(speed = 140)
+  game$enable_terrain_collision("player")
+}
+
+shinyApp(ui, server)
+```
+
+Shiny serves the files in the app's `www/` folder, so the URLs above need no
+extra resource-path setup. The first loaded map becomes active automatically.
+The 512-by-384 canvas matches `8 * 64` by `6 * 64` pixels, and the player
+starts in the center of the first interior floor tile.
+
+Try moving across the floor and into both the border and the middle wall.
+To change the room, edit the tile-data array in `www/room.json` (1 for floor,
+2 for wall), or open that JSON file in Tiled, then restart the app. You now have the same basic ingredients as a larger map: tile IDs,
+tileset images, a terrain layer, and an actor registered for terrain collision.
+Phaser still loads from jsDelivr, so the browser needs Internet access.
+
+### See the example in action
+
+The orange square moves across the floor and stops at the room's border and
+the wall in the middle:
+
+```{r, echo=FALSE, out.width="512px", fig.alt="Orange player moving through a small tile map and colliding with walls"}
+knitr::include_graphics("assets/simple_map_example.gif")
+```
+
+For a larger example with two maps and separate scenery, see
+[Create maps for Swamps RPG](creating-maps.html).

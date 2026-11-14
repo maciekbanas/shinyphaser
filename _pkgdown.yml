@@ -31,9 +31,11 @@ articles:
     navbar: General
     contents:
       - browser-server-actions
-  - title: Advanced features
-    navbar: Advanced features
+      - simple-map
+  - title: Advanced features - RPG example
+    navbar: Advanced features - RPG example
     contents:
       - creating-maps
       - approach-on-sight
       - scenery-and-collision
+      - combat

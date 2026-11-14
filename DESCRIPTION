@@ -25,6 +25,7 @@ Imports:
   shiny
 Suggests: 
   knitr,
+  later,
   rmarkdown,
   shinyalert,
   testthat (>= 3.0.0),

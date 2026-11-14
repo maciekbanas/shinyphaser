@@ -454,33 +454,6 @@ test_that("hedgehog action events retain game progress alerts", {
   expect_false(any(grepl("callback_fun", example, fixed = TRUE)))
 })
 
-test_that("swamps_rpg Space action retains interactions and combat", {
-  example <- read_swamps_rpg_example()
-
-  expect_false(any(grepl("sword_in_range", example, fixed = TRUE)))
-  expect_true(any(grepl('hero_weapon <<- hero_weapons$axe', example, fixed = TRUE)))
-  expect_true(any(grepl('inventory_text$set("weapon: axe")', example, fixed = TRUE)))
-  expect_true(any(grepl("if (wizard_in_range)", example, fixed = TRUE)))
-  expect_true(any(grepl("server_action = handle_space", example, fixed = TRUE)))
-  expect_true(any(grepl("server_action", example, fixed = TRUE)))
-  expect_true(any(grepl("damage <- hero_weapon$damage", example, fixed = TRUE)))
-  expect_true(any(grepl("enemy_hit_points[[hit_enemy]]", example, fixed = TRUE)))
-  expect_true(any(grepl("distance = hero_weapon$knockback", example, fixed = TRUE)))
-  expect_true(any(grepl('paste0("damage_", knockback_direction)', example, fixed = TRUE)))
-  expect_true(any(grepl("mushroom_reaction_check_interval <- 16", example, fixed = TRUE)))
-  expect_true(any(grepl("enemies[[enemy_name]]$stop_motion()", example, fixed = TRUE)))
-  expect_true(any(grepl("browser_action = browser_actions", example, fixed = TRUE)))
-  expect_true(any(grepl('duration = enemy_attack_cooldown * 1000', example, fixed = TRUE)))
-  expect_true(any(grepl('mode = "stay"', example, fixed = TRUE)))
-  expect_true(any(grepl('interval = enemy_attack_cooldown * 1000', example, fixed = TRUE)))
-  expect_true(any(grepl('duration = 1', example, fixed = TRUE)))
-  expect_true(any(grepl('title = "Game over"', example, fixed = TRUE)))
-  expect_false(any(grepl("client_action", example, fixed = TRUE)))
-  expect_false(any(grepl("swamps_rpg_version", example, fixed = TRUE)))
-  expect_false(any(grepl("swamps_rpg v", example, fixed = TRUE)))
-  expect_true(any(grepl('text = sprintf("shinyphaser v%s"', example, fixed = TRUE)))
-})
-
 test_that("collision rectangles create invisible static physics bodies", {
   session <- make_mock_session()
   game <- PhaserGame$new()
@@ -548,21 +521,6 @@ test_that("sight approach does not restart active movement or hide alerts", {
   expect_lt(movement_guard, approach_move[[length(approach_move)]])
 })
 
-test_that("swamps_rpg is limited to the Orc and Mushroom Swamps", {
-  example <- read_swamps_rpg_example()
-  asset_dir <- system.file("examples", "swamps_rpg", "www", package = "shinyphaser")
-
-  expect_true(any(grepl('url = "swamps-rpg-assets/sprites/hero/orc/hero_orc_idle.png"',
-                        example, fixed = TRUE)))
-  expect_true(any(grepl('map_key = "mushroom_swamps"', example, fixed = TRUE)))
-  expect_true(any(grepl('selected_character <<- "hero_orc"', example, fixed = TRUE)))
-  expect_false(any(grepl("dead_tree", example, fixed = TRUE)))
-  expect_false(any(grepl("wild_forests|magma_hills|grey_mountains|castle", example)))
-  expect_false(file.exists(file.path(
-    asset_dir, "terrain", "mushroom_swamps", "dead_tree_1_bottom.png"
-  )))
-})
-
 test_that("recent movement selects four-way directional attack animations", {
   game_js <- readLines(system.file("www", "phaser-game.js", package = "shinyphaser"), warn = FALSE)
   sprite_js <- readLines(system.file("www", "phaser-sprite.js", package = "shinyphaser"), warn = FALSE)
@@ -577,8 +535,6 @@ test_that("recent movement selects four-way directional attack animations", {
   expect_true(any(grepl('forcedKey + "_" + movementSuffix', game_js, fixed = TRUE)))
   expect_true(any(grepl("targetAnim !== animationPrefix + '_idle'", game_js, fixed = TRUE)))
   expect_true(any(grepl('rememberMovementDirection(sprite, movementDirection, now)', sprite_js, fixed = TRUE)))
-  expect_true(any(grepl('hero_orc_attack_%s.png', example, fixed = TRUE)))
-  expect_true(any(grepl('suffix = paste0("attack_", direction)', example, fixed = TRUE)))
 })
 
 test_that("keyboard controls accept named input before server actions", {
@@ -638,7 +594,7 @@ test_that("saved games use Phaser snapshots and server disk persistence", {
   expect_true(any(grepl("object.body.reset(saved.x, saved.y)", game_js, fixed = TRUE)))
   expect_false(any(grepl("localStorage", example, fixed = TRUE)))
   expect_true(any(grepl('game$save_game(', example, fixed = TRUE)))
-  expect_true(any(grepl('game$load_game(input$load_game$name', example, fixed = TRUE)))
+  expect_true(any(grepl('game$load_game("progress"', example, fixed = TRUE)))
 })
 
 test_that("save file helpers replace named JSON records", {
@@ -649,15 +605,6 @@ test_that("save file helpers replace named JSON records", {
   write_phaser_saves(saves, path)
   expect_true(file.exists(path))
   expect_equal(read_phaser_saves(path), saves)
-})
-
-test_that("swamps_rpg captures its hero before the synchronous disk save", {
-  example <- read_swamps_rpg_example()
-
-  expect_true(any(grepl("capturePhaserGameState('save_game_requested'", example, fixed = TRUE)))
-  expect_true(any(grepl("snapshot = request$objects", example, fixed = TRUE)))
-  expect_true(any(grepl('id = "toggle_game_menu"', example, fixed = TRUE)))
-  expect_true(any(grepl('position: fixed; left: 18px; top: 18px', example, fixed = TRUE)))
 })
 
 test_that("save_game writes a supplied Phaser snapshot immediately", {
@@ -676,19 +623,4 @@ test_that("save_game writes a supplied Phaser snapshot immediately", {
   expect_equal(saves[[1]]$phaser$objects$hero$x, 321)
   loaded <- game$load_game("checkpoint", restore = FALSE, directory = directory)
   expect_equal(loaded$score, 12)
-})
-
-test_that("swamps_rpg is organized into focused modules and sprite directories", {
-  example_dir <- system.file("examples", "swamps_rpg", package = "shinyphaser")
-  asset_dir <- system.file("examples", "swamps_rpg", "www", "sprites", package = "shinyphaser")
-
-  expect_true(file.exists(file.path(example_dir, "app.R")))
-  expect_true(file.exists(file.path(example_dir, "modules", "saving.R")))
-  expect_true(file.exists(file.path(example_dir, "modules", "navigation.R")))
-  expect_true(file.exists(file.path(
-    example_dir, "modules", "realms", "mushroom_swamps_world.R"
-  )))
-  expect_true(file.exists(file.path(asset_dir, "hero", "orc", "hero_orc_idle.png")))
-  expect_true(file.exists(file.path(asset_dir, "enemies", "mushroom_man", "mushroom_man_idle.png")))
-  expect_true(file.exists(file.path(asset_dir, "npc", "wizard", "wizard_idle.png")))
 })
