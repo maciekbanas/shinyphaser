@@ -32,10 +32,3 @@ articles:
     contents:
       - browser-server-actions
       - simple-map
-  - title: Advanced features - RPG example
-    navbar: Advanced features - RPG example
-    contents:
-      - creating-maps
-      - approach-on-sight
-      - scenery-and-collision
-      - combat
