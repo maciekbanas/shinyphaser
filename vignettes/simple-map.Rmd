@@ -114,6 +114,3 @@ the wall in the middle:
 ```{r, echo=FALSE, out.width="512px", fig.alt="Orange player moving through a small tile map and colliding with walls"}
 knitr::include_graphics("assets/simple_map_example.gif")
 ```
-
-For a larger example with two maps and separate scenery, see
-[Create maps for Swamps RPG](creating-maps.html).
