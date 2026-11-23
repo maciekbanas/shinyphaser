@@ -446,10 +446,10 @@ function loadNextMap() {
     GameBridge.maps[mapKey] = { map, layer: groundLayer };
     groundLayer.setVisible(false).setActive(false);
 
-    if (!GameBridge.activeMapKey) {
-      activateMap(mapKey);
-    } else if (GameBridge.pendingActiveMap?.mapKey === mapKey) {
+    if (GameBridge.pendingActiveMap?.mapKey === mapKey) {
       activateMap(...GameBridge.pendingActiveMap.args);
+    } else if (!GameBridge.activeMapKey && !GameBridge.pendingActiveMap) {
+      activateMap(mapKey);
     }
     GameBridge.mapLoading = false;
     loadNextMap();
