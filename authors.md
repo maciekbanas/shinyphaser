@@ -7,7 +7,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/maciekbanas/shinyphaser/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/maciekbanas/shinyphaser/blob/v0.2.0/DESCRIPTION)
 
 Banas M (2026). *shinyphaser: An Interface to the 'Phaser.js' Game
 Framework*. R package version 0.2.0,

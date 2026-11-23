@@ -137,8 +137,15 @@ parameters.
 - Added a step-by-step article on building a Geometry Dash-style runner.
 - Added a guide explaining when to use browser actions, server actions,
   or both together.
-- Added a tile map tutorial.
-- Organized articles into “Simple game examples” and “General” sections.
+- Added a tile map tutorial, starting with a simple room and continuing
+  with the Swamps RPG map, terrain collision, and shoreline tiles.
+- Added guides on making enemies approach the hero on sight and letting
+  the hero walk behind scenery while blocking tree trunks and bush
+  footprints.
+- Added a combat tutorial covering close-range attacks, damage
+  cooldowns, life points, defeat, and saving combat state.
+- Organized articles into “Simple game examples”, “General”, and
+  “Advanced features” sections.
 
 ### README
 
